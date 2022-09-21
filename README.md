@@ -1,15 +1,12 @@
 # api-training
 
-1. Rodrigo => Excepciones, Errores y validationes. Referencia:
-https://www.toptal.com/java/spring-boot-rest-api-error-handling
+Desarrollo de un API con Spring Boot
 
-2. Emilio => Spring HATEOS. CRUD y Paginacion
-
-3. Charly => Cache
-
-Todos los proyectos deben incluir:
-- Unit Testing
-- API doc con Swagger
-- Logging con lombok
-
-Base de datos: MySQL 
+1. Controlador con varios servicios tipo (POST, GET , PUT o PATCH) y con acceso a BBDD
+2. Implementar algún mecanismo de seguridad en el API 
+3. Llamada a un API externo con restTemplate o algún otro cliente como WebClient.
+4. Cache
+5. Validaciones y logs
+6. Manejo de errores y excepciones
+7. Documentación OpenAPI Swagger
+8. Circuit breaker // resilience4j
