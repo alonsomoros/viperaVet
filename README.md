@@ -8,5 +8,5 @@ Desarrollo de un API con Spring Boot
 4. Cache
 5. Validaciones y logs
 6. Manejo de errores y excepciones
-7. Documentación OpenAPI Swagger
+7. Documentación OpenAPI Swagger con springdoc
 8. Circuit breaker // resilience4j
