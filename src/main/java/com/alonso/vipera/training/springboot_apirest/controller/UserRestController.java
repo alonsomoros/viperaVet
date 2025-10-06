@@ -4,15 +4,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alonso.vipera.training.springboot_apirest.model.User;
 import com.alonso.vipera.training.springboot_apirest.model.dto.out.UserOutDTO;
+import com.alonso.vipera.training.springboot_apirest.service.UserService;
 
-import jakarta.servlet.http.HttpServletRequest;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
 
 @RestController
 @RequestMapping("/api")
@@ -31,6 +29,9 @@ public class UserRestController {
             new User(1L, "user1", "password1", "user1@gmail.com"),
             new User(2L, "user2", "password2", "user2@gmail.com"),
             new User(3L, "user3", "password3", "user3@gmail.com"));
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/all")
     public Map<String, Object> getUsers() {
@@ -65,11 +66,10 @@ public class UserRestController {
                 .collect(Collectors.toList());
 
     }
-    
+
     @PostMapping("create")
     public User createUser(@RequestBody User user) {
         return user;
     }
-    
 
 }
