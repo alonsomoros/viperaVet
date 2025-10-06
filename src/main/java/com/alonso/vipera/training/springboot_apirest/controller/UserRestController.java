@@ -5,38 +5,71 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alonso.vipera.training.springboot_apirest.model.User;
 import com.alonso.vipera.training.springboot_apirest.model.dto.out.UserOutDTO;
 
+import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
 @RequestMapping("/api")
 public class UserRestController {
 
-@GetMapping("/users")
-public Map<String, Object> getUsers() {
-    Map<String, Object> body = new HashMap<String,Object>();
+    // Simulación de la "base de datos"
+    private final List<User> allUsers = List.of(
+            new User(1L, "user1", "password1", "user1@gmail.com"),
+            new User(2L, "user2", "password2", "user2@gmail.com"),
+            new User(3L, "user3", "password3", "user3@gmail.com"));
 
-    User user = new User(1L ,"user1", "password1", "user1@gmail.com");
-    UserOutDTO userDTO = UserOutDTO.toDTO(user);
+    @GetMapping("/all")
+    public Map<String, Object> getUsers() {
+        Map<String, Object> body = new HashMap<String, Object>();
 
-    body.put("username", userDTO);
+        UserOutDTO userDTO1 = UserOutDTO.toDTO(allUsers.get(0));
+        UserOutDTO userDTO2 = UserOutDTO.toDTO(allUsers.get(1));
+        UserOutDTO userDTO3 = UserOutDTO.toDTO(allUsers.get(2));
 
-    return body;
-}
+        body.put("user1", userDTO1);
+        body.put("user2", userDTO2);
+        body.put("user3", userDTO3);
 
-@GetMapping("/users/{id}")
-public ResponseEntity<User> getUser(@PathVariable Long id) {
-    User user = new User(id, "user" + id, "password" + id, "user" + id + "@gmail.com");
-   return ResponseEntity.ok(user);
-}
+        return body;
+    }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        User user = new User(id, "user" + id, "password" + id, "user" + id + "@gmail.com");
+        return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/users")
+    public List<User> getUserByUsername(@RequestParam(required = false) String username) {
+
+        if (username == null || username.isEmpty()) {
+            return allUsers;
+        }
+
+        return allUsers.stream()
+                .filter(user -> user.getUsername().contains(username))
+                .collect(Collectors.toList());
+
+    }
+    
+    @PostMapping("create")
+    public User createUser(@RequestBody User user) {
+        return user;
+    }
+    
 
 }
