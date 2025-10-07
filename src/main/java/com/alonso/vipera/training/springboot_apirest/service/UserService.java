@@ -2,7 +2,6 @@ package com.alonso.vipera.training.springboot_apirest.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameNotFoundException;
@@ -19,7 +18,6 @@ public class UserService {
 
     private UserRepositoryAdapter userRepositoryAdapter;
 
-    @Autowired
     public UserService(UserRepositoryAdapter userRepositoryAdapter) {
         this.userRepositoryAdapter = userRepositoryAdapter;
     }

@@ -1,6 +1,5 @@
 package com.alonso.vipera.training.springboot_apirest.persistence;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.alonso.vipera.training.springboot_apirest.model.User;
@@ -13,7 +12,6 @@ public class UserRepositoryAdapter {
 
     private UserRepository userRepository;
 
-    @Autowired
     public UserRepositoryAdapter(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
