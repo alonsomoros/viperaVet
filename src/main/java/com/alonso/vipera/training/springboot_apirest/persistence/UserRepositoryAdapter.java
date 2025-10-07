@@ -34,6 +34,10 @@ public class UserRepositoryAdapter {
         return userRepository.findAll();
     }
 
+    public boolean existsById(Long id) {
+        return userRepository.existsById(id);
+    }
+    
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
