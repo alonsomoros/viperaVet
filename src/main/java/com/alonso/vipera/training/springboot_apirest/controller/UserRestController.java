@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alonso.vipera.training.springboot_apirest.exception.EmailTakenException;
+import com.alonso.vipera.training.springboot_apirest.exception.IdNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameTakenException;
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameWithSpacesException;
 import com.alonso.vipera.training.springboot_apirest.model.User;
@@ -56,8 +58,12 @@ public class UserRestController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        userService.delete(id);
-        return ResponseEntity.noContent().build();
+        try {
+            userService.delete(id);
+            return ResponseEntity.noContent().build();
+        } catch (IdNotFoundException e) {
+            return ResponseEntity.badRequest().body("ID no encontrado");
+        }
     }
 
     private ResponseEntity<?> handleRegisterOperation(Runnable operation) {
@@ -68,6 +74,8 @@ public class UserRestController {
             return ResponseEntity.badRequest().body("Nombre de usuario no puede contener espacios");
         } catch (UsernameTakenException e) {
             return ResponseEntity.badRequest().body("Nombre de usuario ya está en uso");
+        } catch (EmailTakenException e) {
+            return ResponseEntity.badRequest().body("Correo electrónico ya usado");
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
