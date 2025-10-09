@@ -1,5 +1,9 @@
 package com.alonso.vipera.training.springboot_apirest.model;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,4 +35,7 @@ public class User {
 
     @Column(nullable = false, unique = true)
     private String email;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 }

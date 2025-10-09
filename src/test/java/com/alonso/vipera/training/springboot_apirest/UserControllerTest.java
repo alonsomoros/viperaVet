@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -60,8 +61,8 @@ public class UserControllerTest {
 
     @Test
     void testGetAllUsers_whenValidResponse_shouldReturnOkAndUserList() throws Exception {
-        User createdUser1 = new User(1L, "Juan", "juan@gmail.com", "password123");
-        User createdUser2 = new User(2L, "Cesar", "cesar@gmail.com", "password123");
+        User createdUser1 = new User(1L, "Juan", "juan@gmail.com", "password123", LocalDateTime.now());
+        User createdUser2 = new User(2L, "Cesar", "cesar@gmail.com", "password123", LocalDateTime.now());
         List<User> createdUsersList = List.of(createdUser1, createdUser2);
 
         when(userService.getAll()).thenReturn(createdUsersList);
@@ -76,7 +77,7 @@ public class UserControllerTest {
 
     @Test
     void testGetUserById_whenIdExists_shouldReturnOkAndUser() throws Exception {
-        User createdUser1 = new User(1L, "Juan", "juan@gmail.com", "password123");
+        User createdUser1 = new User(1L, "Juan", "juan@gmail.com", "password123", LocalDateTime.now());
         when(userService.getById(createdUser1.getId())).thenReturn(createdUser1);
 
         mockMvc.perform(get("/users/{id}", createdUser1.getId())

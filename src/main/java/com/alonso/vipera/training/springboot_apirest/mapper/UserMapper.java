@@ -18,6 +18,6 @@ public class UserMapper {
 
     public UserOutDTO toOutDTO(User entity) {
         if (entity == null) return null;
-        return new UserOutDTO(entity.getId(), entity.getUsername(), entity.getEmail());
+        return new UserOutDTO(entity.getId(), entity.getUsername(), entity.getEmail(), entity.getCreatedAt());
     }
 }
