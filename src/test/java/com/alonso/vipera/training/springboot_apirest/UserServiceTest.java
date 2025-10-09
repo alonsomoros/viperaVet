@@ -9,8 +9,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +23,7 @@ import com.alonso.vipera.training.springboot_apirest.exception.UsernameWithSpace
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
 import com.alonso.vipera.training.springboot_apirest.model.User;
 import com.alonso.vipera.training.springboot_apirest.model.dto.in.UserInDTO;
+import com.alonso.vipera.training.springboot_apirest.model.dto.out.UserOutDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.UserRepositoryAdapter;
 import com.alonso.vipera.training.springboot_apirest.service.UserService;
 
@@ -42,26 +41,21 @@ class UserServiceTest {
 
     private UserInDTO userInDTO;
     private User userEntity;
-    private User savedEntity;
+    private UserOutDTO userOutDTO;
 
     @BeforeEach
     void setUp() {
+        UserMapper userMapper = new UserMapper();
 
         userInDTO = new UserInDTO();
         userInDTO.setUsername("Juan");
-        userInDTO.setEmail("juan@example.com");
+        userInDTO.setEmail("juan@gmail.com");
         userInDTO.setPassword("password123");
 
-        userEntity = new User();
-        userEntity.setUsername(userInDTO.getUsername());
-        userEntity.setEmail(userInDTO.getEmail());
-        userEntity.setPassword(userInDTO.getPassword());
+        userEntity = userMapper.toEntity(userInDTO);
+        userEntity.setId(1L);
 
-        savedEntity = new User();
-        savedEntity.setId(1L);
-        savedEntity.setUsername(userInDTO.getUsername());
-        savedEntity.setEmail(userInDTO.getEmail());
-        savedEntity.setPassword(userInDTO.getPassword());
+        userOutDTO = userMapper.toOutDTO(userEntity);
     }
 
     @Test
@@ -69,9 +63,10 @@ class UserServiceTest {
         when(userRepositoryAdapter.existsByUsername(userInDTO.getUsername())).thenReturn(false);
         when(userRepositoryAdapter.existsByEmail(userInDTO.getEmail())).thenReturn(false);
         when(userMapper.toEntity(userInDTO)).thenReturn(userEntity);
-        when(userRepositoryAdapter.save(any(User.class))).thenReturn(savedEntity);
+        when(userRepositoryAdapter.save(any(User.class))).thenReturn(userEntity);
+        when(userMapper.toOutDTO(userEntity)).thenReturn(userOutDTO);
 
-        User result = userService.create(userInDTO);
+        UserOutDTO result = userService.create(userInDTO);
 
         assertNotNull(result);
         assertEquals(1L, result.getId());
@@ -113,23 +108,23 @@ class UserServiceTest {
 
     @Test
     void testDeleteUser_whenValidResponse_shouldDeleteUserSuccesfully() {
-        when(userRepositoryAdapter.existsById(savedEntity.getId())).thenReturn(true);
-        doNothing().when(userRepositoryAdapter).delete(savedEntity.getId());
+        when(userRepositoryAdapter.existsById(userEntity.getId())).thenReturn(true);
+        doNothing().when(userRepositoryAdapter).delete(userEntity.getId());
 
-        userService.delete(savedEntity.getId());
+        userService.delete(userEntity.getId());
 
-        verify(userRepositoryAdapter).existsById(savedEntity.getId());
-        verify(userRepositoryAdapter).delete(savedEntity.getId());
+        verify(userRepositoryAdapter).existsById(userEntity.getId());
+        verify(userRepositoryAdapter).delete(userEntity.getId());
     }
 
     @Test
     void testDeleteUser_whenIdNotFound_shouldThrowIdNotFoundException() {
-        when(userRepositoryAdapter.existsById(savedEntity.getId())).thenReturn(false);
-        
-        assertThrows(IdNotFoundException.class, () -> userService.delete(savedEntity.getId()));
+        when(userRepositoryAdapter.existsById(userEntity.getId())).thenReturn(false);
 
-        verify(userRepositoryAdapter).existsById(savedEntity.getId());
-        verify(userRepositoryAdapter, times(0)).delete(savedEntity.getId());
+        assertThrows(IdNotFoundException.class, () -> userService.delete(userEntity.getId()));
+
+        verify(userRepositoryAdapter).existsById(userEntity.getId());
+        verify(userRepositoryAdapter, times(0)).delete(userEntity.getId());
     }
 
 }
