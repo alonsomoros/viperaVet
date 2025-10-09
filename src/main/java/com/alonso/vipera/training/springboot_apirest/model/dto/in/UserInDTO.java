@@ -1,14 +1,14 @@
 package com.alonso.vipera.training.springboot_apirest.model.dto.in;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
-@Getter
-@Setter
+@NoArgsConstructor
+@EqualsAndHashCode
 public class UserInDTO {
     private String username;
     private String password;

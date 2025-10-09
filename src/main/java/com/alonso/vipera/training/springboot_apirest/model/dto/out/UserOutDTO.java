@@ -1,22 +1,16 @@
 package com.alonso.vipera.training.springboot_apirest.model.dto.out;
 
-import com.alonso.vipera.training.springboot_apirest.model.User;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 public class UserOutDTO {
+    private Long id;
     private String username;
     private String email;
-
-    public UserOutDTO(String username, String email) {
-        this.username = username;
-        this.email = email;
-    }
-
-    public static UserOutDTO toDTO(User user) {
-        return new UserOutDTO(user.getUsername(), user.getEmail());
-    }
 }
