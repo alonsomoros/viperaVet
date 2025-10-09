@@ -12,6 +12,7 @@ import com.alonso.vipera.training.springboot_apirest.exception.UsernameWithSpace
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
 import com.alonso.vipera.training.springboot_apirest.model.User;
 import com.alonso.vipera.training.springboot_apirest.model.dto.in.UserInDTO;
+import com.alonso.vipera.training.springboot_apirest.model.dto.out.UserOutDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.UserRepositoryAdapter;
 
 import jakarta.transaction.Transactional;
@@ -44,17 +45,16 @@ public class UserService {
     }
 
     @Transactional
-    public User create(UserInDTO userInDTO) {
+    public UserOutDTO create(UserInDTO userInDTO) {
         verifyRegisterInputs(userInDTO);
 
-        User userEntity = userMapper.toEntity(userInDTO);
-        User userSaved = userRepositoryAdapter.save(userEntity);
-
+        User userSaved = userRepositoryAdapter.save(userMapper.toEntity(userInDTO));
+        
         if (userSaved == null || userSaved.getId() == null) {
             throw new UserCreationException();
         }
-
-        return userSaved;
+        
+        return userMapper.toOutDTO(userSaved);
     }
 
     public void delete(Long id) {
