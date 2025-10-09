@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.alonso.vipera.training.springboot_apirest.exception.EmailNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.exception.EmailTakenException;
 import com.alonso.vipera.training.springboot_apirest.exception.IdNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.exception.UserCreationException;
+import com.alonso.vipera.training.springboot_apirest.exception.UsernameNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameTakenException;
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameWithSpacesException;
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
@@ -33,15 +35,15 @@ public class UserService {
     }
 
     public User getById(Long id) {
-        return userRepositoryAdapter.findById(id).orElse(null);
+        return userRepositoryAdapter.findById(id).orElseThrow(() -> new IdNotFoundException());
     }
 
     public User getByEmail(String email) {
-        return userRepositoryAdapter.findByEmail(email).orElse(null);
+        return userRepositoryAdapter.findByEmail(email).orElseThrow(() -> new EmailNotFoundException());
     }
 
     public User getByUsername(String username) {
-        return userRepositoryAdapter.findByUsername(username).orElse(null);
+        return userRepositoryAdapter.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException());
     }
 
     @Transactional
@@ -50,24 +52,23 @@ public class UserService {
 
         User userSaved = userRepositoryAdapter.save(userMapper.toEntity(userInDTO));
         
-        if (userSaved == null || userSaved.getId() == null) {
-            throw new UserCreationException();
-        }
+        verifyRegisterOutputs(userSaved);
         
         return userMapper.toOutDTO(userSaved);
     }
 
+    
     public void delete(Long id) {
         if (!userRepositoryAdapter.existsById(id)) {
             throw new IdNotFoundException();
         }
         userRepositoryAdapter.delete(id);
     }
-
+    
     public boolean existsByUsername(String username) {
         return userRepositoryAdapter.existsByUsername(username);
     }
-
+    
     public void verifyRegisterInputs(UserInDTO userInDTO) {
         if (userInDTO.getUsername().matches(".*\\s.*")) { // Nombre contiene espacios, tabs, saltos de línea...
             throw new UsernameWithSpacesException();
@@ -77,6 +78,11 @@ public class UserService {
         }
         if (userRepositoryAdapter.existsByEmail(userInDTO.getEmail())) {
             throw new EmailTakenException();
+        }
+    }
+    private void verifyRegisterOutputs(User userSaved) {
+        if (userSaved == null || userSaved.getId() == null) {
+            throw new UserCreationException();
         }
     }
 }
