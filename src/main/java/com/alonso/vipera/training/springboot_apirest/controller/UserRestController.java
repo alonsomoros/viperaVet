@@ -1,6 +1,9 @@
 package com.alonso.vipera.training.springboot_apirest.controller;
 
+import java.util.function.Supplier;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +20,7 @@ import com.alonso.vipera.training.springboot_apirest.exception.UsernameTakenExce
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameWithSpacesException;
 import com.alonso.vipera.training.springboot_apirest.model.User;
 import com.alonso.vipera.training.springboot_apirest.model.dto.in.UserInDTO;
+import com.alonso.vipera.training.springboot_apirest.model.dto.out.UserOutDTO;
 import com.alonso.vipera.training.springboot_apirest.service.UserService;
 
 @RestController
@@ -29,12 +33,12 @@ public class UserRestController {
 
     @GetMapping("/all")
     public ResponseEntity<?> getAllUsers() {
-        return ResponseEntity.ok(userService.getAll());
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getById(id));
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getById(id));
     }
 
     // Esto se usará más como filtro ya que no interesa buscar un usuario por
@@ -42,9 +46,9 @@ public class UserRestController {
     @GetMapping("/by-username")
     public ResponseEntity<?> getUserByUsername(@RequestParam(required = false) String username) {
         if (username == null || username.isBlank()) {
-            return ResponseEntity.badRequest().body("Parámetro 'username' es obligatorio");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Parámetro 'username' es obligatorio");
         }
-        return ResponseEntity.ok(userService.getByUsername(username));
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getByUsername(username));
     }
 
     // POST calls
@@ -60,24 +64,24 @@ public class UserRestController {
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         try {
             userService.delete(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (IdNotFoundException e) {
-            return ResponseEntity.badRequest().body("ID no encontrado");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID no encontrado");
         }
     }
 
-    private ResponseEntity<?> handleRegisterOperation(Runnable operation) {
+    private ResponseEntity<?> handleRegisterOperation(Supplier<UserOutDTO> operation) {
         try {
-            operation.run();
-            return ResponseEntity.ok("Usuario creado exitosamente");
+            UserOutDTO createdUser = operation.get();
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
         } catch (UsernameWithSpacesException e) {
-            return ResponseEntity.badRequest().body("Nombre de usuario no puede contener espacios");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nombre de usuario no puede contener espacios");
         } catch (UsernameTakenException e) {
-            return ResponseEntity.badRequest().body("Nombre de usuario ya está en uso");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nombre de usuario ya está en uso");
         } catch (EmailTakenException e) {
-            return ResponseEntity.badRequest().body("Correo electrónico ya usado");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Correo electrónico ya usado");
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }
