@@ -19,8 +19,8 @@ import com.alonso.vipera.training.springboot_apirest.exception.IdNotFoundExcepti
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameTakenException;
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameWithSpacesException;
 import com.alonso.vipera.training.springboot_apirest.model.User;
-import com.alonso.vipera.training.springboot_apirest.model.dto.in.UserInDTO;
-import com.alonso.vipera.training.springboot_apirest.model.dto.out.UserOutDTO;
+import com.alonso.vipera.training.springboot_apirest.model.userDto.in.UserInDTO;
+import com.alonso.vipera.training.springboot_apirest.model.userDto.out.UserOutDTO;
 import com.alonso.vipera.training.springboot_apirest.service.UserService;
 
 @RestController

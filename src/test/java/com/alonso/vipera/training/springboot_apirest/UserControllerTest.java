@@ -21,8 +21,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.alonso.vipera.training.springboot_apirest.controller.UserRestController;
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
 import com.alonso.vipera.training.springboot_apirest.model.User;
-import com.alonso.vipera.training.springboot_apirest.model.dto.in.UserInDTO;
-import com.alonso.vipera.training.springboot_apirest.model.dto.out.UserOutDTO;
+import com.alonso.vipera.training.springboot_apirest.model.userDto.in.UserInDTO;
+import com.alonso.vipera.training.springboot_apirest.model.userDto.out.UserOutDTO;
 import com.alonso.vipera.training.springboot_apirest.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

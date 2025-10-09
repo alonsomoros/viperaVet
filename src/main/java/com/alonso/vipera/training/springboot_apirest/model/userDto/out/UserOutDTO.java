@@ -1,4 +1,6 @@
-package com.alonso.vipera.training.springboot_apirest.model.dto.in;
+package com.alonso.vipera.training.springboot_apirest.model.userDto.out;
+
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,8 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class UserInDTO {
+public class UserOutDTO {
+    private Long id;
     private String username;
-    private String password;
     private String email;
+    private LocalDateTime createdAt;
 }

@@ -22,8 +22,8 @@ import com.alonso.vipera.training.springboot_apirest.exception.UsernameTakenExce
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameWithSpacesException;
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
 import com.alonso.vipera.training.springboot_apirest.model.User;
-import com.alonso.vipera.training.springboot_apirest.model.dto.in.UserInDTO;
-import com.alonso.vipera.training.springboot_apirest.model.dto.out.UserOutDTO;
+import com.alonso.vipera.training.springboot_apirest.model.userDto.in.UserInDTO;
+import com.alonso.vipera.training.springboot_apirest.model.userDto.out.UserOutDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.UserRepositoryAdapter;
 import com.alonso.vipera.training.springboot_apirest.service.UserService;
 
