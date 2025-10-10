@@ -69,17 +69,22 @@ public class UserService {
         return userRepositoryAdapter.existsByUsername(username);
     }
     
+    public boolean existsByEmail(String email) {
+        return userRepositoryAdapter.existsByEmail(email);
+    }
+    
     public void verifyRegisterInputs(UserInDTO userInDTO) {
         if (userInDTO.getUsername().matches(".*\\s.*")) { // Nombre contiene espacios, tabs, saltos de línea...
             throw new UsernameWithSpacesException();
         }
-        if (userRepositoryAdapter.existsByUsername(userInDTO.getUsername())) {
+        if (existsByUsername(userInDTO.getUsername())) {
             throw new UsernameTakenException();
         }
-        if (userRepositoryAdapter.existsByEmail(userInDTO.getEmail())) {
+        if (existsByEmail(userInDTO.getEmail())) {
             throw new EmailTakenException();
         }
     }
+    
     private void verifyRegisterOutputs(User userSaved) {
         if (userSaved == null || userSaved.getId() == null) {
             throw new UserCreationException();
