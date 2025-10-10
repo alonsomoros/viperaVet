@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.alonso.vipera.training.springboot_apirest.controller.UserRestController;
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
 import com.alonso.vipera.training.springboot_apirest.model.User;
-import com.alonso.vipera.training.springboot_apirest.model.userDto.in.UserInDTO;
+import com.alonso.vipera.training.springboot_apirest.model.userDto.in.RegisterRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.model.userDto.out.UserOutDTO;
 import com.alonso.vipera.training.springboot_apirest.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,14 +40,14 @@ public class UserControllerTest {
 
     private User createdUser1;
 
-    private UserInDTO userInDTO;
+    private RegisterRequestDTO userInDTO;
     private UserOutDTO userOutDTO;
 
     @BeforeEach
     void setUp() {
         UserMapper userMapper = new UserMapper();
 
-        userInDTO = new UserInDTO();
+        userInDTO = new RegisterRequestDTO();
         userInDTO.setUsername("Juan");
         userInDTO.setEmail("juan@gmail.com");
         userInDTO.setPassword("password123");

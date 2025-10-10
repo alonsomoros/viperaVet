@@ -22,7 +22,7 @@ import com.alonso.vipera.training.springboot_apirest.exception.UsernameTakenExce
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameWithSpacesException;
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
 import com.alonso.vipera.training.springboot_apirest.model.User;
-import com.alonso.vipera.training.springboot_apirest.model.userDto.in.UserInDTO;
+import com.alonso.vipera.training.springboot_apirest.model.userDto.in.RegisterRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.model.userDto.out.UserOutDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.UserRepositoryAdapter;
 import com.alonso.vipera.training.springboot_apirest.service.UserService;
@@ -39,7 +39,7 @@ class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
-    private UserInDTO userInDTO;
+    private RegisterRequestDTO userInDTO;
     private User userEntity;
     private UserOutDTO userOutDTO;
 
@@ -47,7 +47,7 @@ class UserServiceTest {
     void setUp() {
         UserMapper userMapper = new UserMapper();
 
-        userInDTO = new UserInDTO();
+        userInDTO = new RegisterRequestDTO();
         userInDTO.setUsername("Juan");
         userInDTO.setEmail("juan@gmail.com");
         userInDTO.setPassword("password123");

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class UserInDTO {
+public class RegisterRequestDTO {
     private String username;
     private String password;
     private String email;
