@@ -14,10 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alonso.vipera.training.springboot_apirest.exception.EmailTakenException;
-import com.alonso.vipera.training.springboot_apirest.exception.IdNotFoundException;
-import com.alonso.vipera.training.springboot_apirest.exception.UsernameTakenException;
-import com.alonso.vipera.training.springboot_apirest.exception.UsernameWithSpacesException;
 import com.alonso.vipera.training.springboot_apirest.model.User;
 import com.alonso.vipera.training.springboot_apirest.model.userDto.in.UserInDTO;
 import com.alonso.vipera.training.springboot_apirest.model.userDto.out.UserOutDTO;
@@ -62,26 +58,12 @@ public class UserRestController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        try {
-            userService.delete(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } catch (IdNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID no encontrado");
-        }
+        userService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     private ResponseEntity<?> handleRegisterOperation(Supplier<UserOutDTO> operation) {
-        try {
-            UserOutDTO createdUser = operation.get();
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
-        } catch (UsernameWithSpacesException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nombre de usuario no puede contener espacios");
-        } catch (UsernameTakenException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nombre de usuario ya está en uso");
-        } catch (EmailTakenException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Correo electrónico ya usado");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        UserOutDTO createdUser = operation.get();
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 }
