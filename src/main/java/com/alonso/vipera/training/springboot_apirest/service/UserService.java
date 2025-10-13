@@ -2,92 +2,68 @@ package com.alonso.vipera.training.springboot_apirest.service;
 
 import java.util.List;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import com.alonso.vipera.training.springboot_apirest.exception.EmailNotFoundException;
-import com.alonso.vipera.training.springboot_apirest.exception.EmailTakenException;
 import com.alonso.vipera.training.springboot_apirest.exception.IdNotFoundException;
-import com.alonso.vipera.training.springboot_apirest.exception.UserCreationException;
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameNotFoundException;
-import com.alonso.vipera.training.springboot_apirest.exception.UsernameTakenException;
-import com.alonso.vipera.training.springboot_apirest.exception.UsernameWithSpacesException;
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
 import com.alonso.vipera.training.springboot_apirest.model.User;
-import com.alonso.vipera.training.springboot_apirest.model.userDto.in.UserInDTO;
 import com.alonso.vipera.training.springboot_apirest.model.userDto.out.UserOutDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.UserRepositoryAdapter;
 
-import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @Service
-public class UserService {
+@RequiredArgsConstructor
+public class UserService implements UserDetailsService {
 
-    private UserRepositoryAdapter userRepositoryAdapter;
-    private UserMapper userMapper;
+    private final UserRepositoryAdapter userRepositoryAdapter;
+    private final UserMapper userMapper;
 
-    public UserService(UserRepositoryAdapter userRepositoryAdapter, UserMapper userMapper) {
-        this.userRepositoryAdapter = userRepositoryAdapter;
-        this.userMapper = userMapper;
+    public List<UserOutDTO> getAll() {
+        return userRepositoryAdapter.findAll()
+                .stream()
+                .map(userMapper::toOutDTO)
+                .toList();
     }
 
-    public List<User> getAll() {
-        return userRepositoryAdapter.findAll();
-    }
-
-    public User getById(Long id) {
-        return userRepositoryAdapter.findById(id).orElseThrow(() -> new IdNotFoundException());
-    }
-
-    public User getByEmail(String email) {
-        return userRepositoryAdapter.findByEmail(email).orElseThrow(() -> new EmailNotFoundException());
-    }
-
-    public User getByUsername(String username) {
-        return userRepositoryAdapter.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException());
-    }
-
-    @Transactional
-    public UserOutDTO create(UserInDTO userInDTO) {
-        verifyRegisterInputs(userInDTO);
-
-        User userSaved = userRepositoryAdapter.save(userMapper.toEntity(userInDTO));
-        
-        verifyRegisterOutputs(userSaved);
-        
+    public UserOutDTO getById(Long id) {
+        User userSaved = userRepositoryAdapter.findById(id).orElseThrow(() -> new IdNotFoundException());
         return userMapper.toOutDTO(userSaved);
     }
 
-    
+    public UserOutDTO getByEmail(String email) {
+        User userSaved = userRepositoryAdapter.findByEmail(email).orElseThrow(() -> new EmailNotFoundException());
+        return userMapper.toOutDTO(userSaved);
+    }
+
+    public UserOutDTO getByUsername(String username) {
+        User userSaved = userRepositoryAdapter.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException());
+        return userMapper.toOutDTO(userSaved);
+    }
+
+    // Hacer un update en el futuro
+    // public User update(Long id, UpdateUserDTO updateDTO) {
+    // User existingUser = getById(id);
+    // // Lógica de actualización sin cambiar password
+    // return userRepositoryAdapter.save(updatedUser);
+    // }
+
     public void delete(Long id) {
         if (!userRepositoryAdapter.existsById(id)) {
             throw new IdNotFoundException();
         }
         userRepositoryAdapter.delete(id);
     }
-    
-    public boolean existsByUsername(String username) {
-        return userRepositoryAdapter.existsByUsername(username);
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepositoryAdapter.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException());
     }
-    
-    public boolean existsByEmail(String email) {
-        return userRepositoryAdapter.existsByEmail(email);
-    }
-    
-    public void verifyRegisterInputs(UserInDTO userInDTO) {
-        if (userInDTO.getUsername().matches(".*\\s.*")) { // Nombre contiene espacios, tabs, saltos de línea...
-            throw new UsernameWithSpacesException();
-        }
-        if (existsByUsername(userInDTO.getUsername())) {
-            throw new UsernameTakenException();
-        }
-        if (existsByEmail(userInDTO.getEmail())) {
-            throw new EmailTakenException();
-        }
-    }
-    
-    private void verifyRegisterOutputs(User userSaved) {
-        if (userSaved == null || userSaved.getId() == null) {
-            throw new UserCreationException();
-        }
-    }
+
 }
