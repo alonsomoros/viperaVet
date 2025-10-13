@@ -1,21 +1,15 @@
 package com.alonso.vipera.training.springboot_apirest.controller;
 
-import java.util.function.Supplier;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alonso.vipera.training.springboot_apirest.model.User;
-import com.alonso.vipera.training.springboot_apirest.model.userDto.in.UserInDTO;
 import com.alonso.vipera.training.springboot_apirest.model.userDto.out.UserOutDTO;
 import com.alonso.vipera.training.springboot_apirest.service.UserService;
 
@@ -33,7 +27,7 @@ public class UserRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserOutDTO> getUserById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getById(id));
     }
 
@@ -47,23 +41,11 @@ public class UserRestController {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getByUsername(username));
     }
 
-    // POST calls
-
-    @PostMapping("/create")
-    public ResponseEntity<?> createUsuario(@RequestBody UserInDTO userInDTO) {
-        return handleRegisterOperation(() -> userService.create(userInDTO));
-    }
-
     // DELETE calls
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         userService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    private ResponseEntity<?> handleRegisterOperation(Supplier<UserOutDTO> operation) {
-        UserOutDTO createdUser = operation.get();
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 }
