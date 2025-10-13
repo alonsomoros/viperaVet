@@ -1,7 +1,7 @@
 package com.alonso.vipera.training.springboot_apirest.exception;
 
-public class UsernameWithSpacesException extends RuntimeException {
-    public UsernameWithSpacesException() {
+public class InvalidUsernameException extends RuntimeException {
+    public InvalidUsernameException() {
         super("Username cannot contain spaces");
     }    
 }
