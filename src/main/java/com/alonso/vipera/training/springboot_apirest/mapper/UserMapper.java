@@ -1,9 +1,10 @@
 package com.alonso.vipera.training.springboot_apirest.mapper;
 
 import org.springframework.stereotype.Component;
-import com.alonso.vipera.training.springboot_apirest.model.User;
-import com.alonso.vipera.training.springboot_apirest.model.userDto.in.RegisterRequestDTO;
-import com.alonso.vipera.training.springboot_apirest.model.userDto.out.UserOutDTO;
+
+import com.alonso.vipera.training.springboot_apirest.model.user.User;
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.RegisterRequestDTO;
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutDTO;
 
 @Component
 public class UserMapper {

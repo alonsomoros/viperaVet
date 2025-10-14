@@ -18,8 +18,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
-import com.alonso.vipera.training.springboot_apirest.model.User;
-import com.alonso.vipera.training.springboot_apirest.model.userDto.out.UserOutDTO;
+import com.alonso.vipera.training.springboot_apirest.model.user.User;
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutDTO;
 import com.alonso.vipera.training.springboot_apirest.service.UserService;
 
 @SpringBootTest

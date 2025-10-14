@@ -1,4 +1,4 @@
-package com.alonso.vipera.training.springboot_apirest.model.userDto.out;
+package com.alonso.vipera.training.springboot_apirest.model.user.dto.out;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

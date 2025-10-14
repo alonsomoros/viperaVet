@@ -1,4 +1,4 @@
-package com.alonso.vipera.training.springboot_apirest.model;
+package com.alonso.vipera.training.springboot_apirest.model.user;
 
 import java.time.LocalDateTime;
 import java.util.Collection;

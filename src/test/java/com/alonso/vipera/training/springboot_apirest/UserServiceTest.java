@@ -15,8 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.alonso.vipera.training.springboot_apirest.exception.IdNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
-import com.alonso.vipera.training.springboot_apirest.model.User;
-import com.alonso.vipera.training.springboot_apirest.model.userDto.in.RegisterRequestDTO;
+import com.alonso.vipera.training.springboot_apirest.model.user.User;
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.RegisterRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.UserRepositoryAdapter;
 import com.alonso.vipera.training.springboot_apirest.service.UserService;
 

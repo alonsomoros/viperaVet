@@ -25,9 +25,9 @@ import com.alonso.vipera.training.springboot_apirest.exception.InvalidUsernameEx
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameTakenException;
 import com.alonso.vipera.training.springboot_apirest.exception.WeakPasswordException;
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
-import com.alonso.vipera.training.springboot_apirest.model.User;
-import com.alonso.vipera.training.springboot_apirest.model.userDto.in.RegisterRequestDTO;
-import com.alonso.vipera.training.springboot_apirest.model.userDto.out.AuthResponseDTO;
+import com.alonso.vipera.training.springboot_apirest.model.user.User;
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.RegisterRequestDTO;
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.AuthResponseDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.UserRepositoryAdapter;
 import com.alonso.vipera.training.springboot_apirest.service.AuthService;
 import com.alonso.vipera.training.springboot_apirest.service.JwtService;

@@ -2,7 +2,7 @@ package com.alonso.vipera.training.springboot_apirest.persistence;
 
 import org.springframework.stereotype.Component;
 
-import com.alonso.vipera.training.springboot_apirest.model.User;
+import com.alonso.vipera.training.springboot_apirest.model.user.User;
 
 import java.util.List;
 import java.util.Optional;

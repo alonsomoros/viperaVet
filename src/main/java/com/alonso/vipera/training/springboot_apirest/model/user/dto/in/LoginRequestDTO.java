@@ -1,16 +1,16 @@
-package com.alonso.vipera.training.springboot_apirest.model.userDto.in;
+package com.alonso.vipera.training.springboot_apirest.model.user.dto.in;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
-public class RegisterRequestDTO {
+public class LoginRequestDTO {
+
     private String username;
     private String password;
     private String email;
+
 }
