@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alonso.vipera.training.springboot_apirest.model.userDto.in.LoginRequestDTO;
-import com.alonso.vipera.training.springboot_apirest.model.userDto.in.RegisterRequestDTO;
-import com.alonso.vipera.training.springboot_apirest.model.userDto.out.AuthResponseDTO;
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.LoginRequestDTO;
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.RegisterRequestDTO;
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.AuthResponseDTO;
 import com.alonso.vipera.training.springboot_apirest.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
