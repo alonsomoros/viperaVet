@@ -1,11 +1,13 @@
 package com.alonso.vipera.training.springboot_apirest.service;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.alonso.vipera.training.springboot_apirest.exception.EmailTakenException;
+import com.alonso.vipera.training.springboot_apirest.exception.BadCredentialsInputException;
 import com.alonso.vipera.training.springboot_apirest.exception.InvalidEmailException;
 import com.alonso.vipera.training.springboot_apirest.exception.InvalidUsernameException;
 import com.alonso.vipera.training.springboot_apirest.exception.UserCreationException;
@@ -69,6 +71,7 @@ public class AuthService {
     }
 
     public AuthResponseDTO login(LoginRequestDTO loginRequestDTO) {
+        try{
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequestDTO.getUsername(),
@@ -80,6 +83,9 @@ public class AuthService {
         String token = jwtService.generateToken(user);
 
         return new AuthResponseDTO(token, user.getUsername());
+        } catch (BadCredentialsException e) {
+            throw new BadCredentialsInputException();
+        }
     }
 
     public boolean existsByUsername(String username) {

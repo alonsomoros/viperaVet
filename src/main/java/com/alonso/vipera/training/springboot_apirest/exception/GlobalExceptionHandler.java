@@ -98,6 +98,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    // Credenciales inválidas
+    @ExceptionHandler({ BadCredentialsInputException.class })
+    public ResponseEntity<ErrorResponse> handleBadCredentialsInputException(BadCredentialsInputException exception) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                exception.getMessage(),
+                System.currentTimeMillis());
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler({ RuntimeException.class })
     public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException exception) {
         ErrorResponse error = new ErrorResponse(
