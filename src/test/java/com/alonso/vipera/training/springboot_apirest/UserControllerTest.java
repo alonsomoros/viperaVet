@@ -74,7 +74,7 @@ public class UserControllerTest {
 
         when(userService.getAll()).thenReturn(usersOutDtoList);
 
-        mockMvc.perform(get("/users/all")
+        mockMvc.perform(get("/users")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(usersOutDtoList.size()))
@@ -88,20 +88,6 @@ public class UserControllerTest {
         when(userService.getById(createdUser1.getId())).thenReturn(userOutDTO1);
 
         mockMvc.perform(get("/users/{id}", createdUser1.getId())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(createdUser1.getId()))
-                .andExpect(jsonPath("$.username").value(createdUser1.getUsername()))
-                .andExpect(jsonPath("$.email").value(createdUser1.getEmail()));
-    }
-
-    @Test
-    @WithMockUser
-    void testGetUserByUsername_whenUsernameExists_shouldReturnOkAndUser() throws Exception {
-        when(userService.getByUsername(createdUser1.getUsername())).thenReturn(userOutDTO1);
-
-        mockMvc.perform(get("/users/by-username")
-                .param("username", createdUser1.getUsername())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(createdUser1.getId()))

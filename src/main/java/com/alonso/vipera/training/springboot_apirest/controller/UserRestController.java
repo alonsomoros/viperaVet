@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutDTO;
@@ -29,16 +28,6 @@ public class UserRestController {
     @GetMapping("/{id}")
     public ResponseEntity<UserOutDTO> getUserById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getById(id));
-    }
-
-    // Esto se usará más como filtro ya que no interesa buscar un usuario por
-    // username como identificador.
-    @GetMapping("/by-username")
-    public ResponseEntity<?> getUserByUsername(@RequestParam(required = false) String username) {
-        if (username == null || username.isBlank()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Parámetro 'username' es obligatorio");
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getByUsername(username));
     }
 
     // DELETE calls
