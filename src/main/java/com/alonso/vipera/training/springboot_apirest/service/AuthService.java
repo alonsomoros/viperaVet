@@ -44,7 +44,7 @@ public class AuthService {
     }
 
     public void verifyRegisterInputs(RegisterRequestDTO registerRequestDTO) {
-        if (registerRequestDTO.getUsername().matches(".*\\s.*")) { // Nombre contiene espacios, tabs, saltos de línea...
+        if (registerRequestDTO.getUsername().isEmpty() || registerRequestDTO.getUsername().matches(".*\\s.*")) { // Nombre contiene espacios, tabs, saltos de línea...
             throw new InvalidUsernameException();
         }
         if (registerRequestDTO.getPassword().length() < 6) {
