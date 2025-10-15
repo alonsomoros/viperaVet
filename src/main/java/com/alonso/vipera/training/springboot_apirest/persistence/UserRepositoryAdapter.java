@@ -1,20 +1,19 @@
 package com.alonso.vipera.training.springboot_apirest.persistence;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
 
-import java.util.List;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class UserRepositoryAdapter {
 
     private UserRepository userRepository;
-
-    public UserRepositoryAdapter(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
@@ -35,7 +34,7 @@ public class UserRepositoryAdapter {
     public boolean existsById(Long id) {
         return userRepository.existsById(id);
     }
-    
+
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
