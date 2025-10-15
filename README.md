@@ -56,6 +56,9 @@ El objetivo del proyecto es desarrollar una **API funcional con Spring Boot** qu
 ## 🗄️ Base de datos
 - **Motor de base de datos:** MySQL  
 - Se utiliza **Spring Data JPA** y **Jakarta Persistence** para el mapeo objeto-relacional (ORM) y la gestión de entidades.
+- **Diagrama de Entidad-Relación:**
+![Diagrama Entidad-Relación](./src/main/resources/static/diagramaER.jpg)
+
 
 ---
 
