@@ -21,7 +21,7 @@ public class UserRestController {
 
     // GET calls
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<?> getAllUsers() {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAll());
     }
