@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.in.PetInDTO;
@@ -32,6 +33,26 @@ public class PetController {
     public ResponseEntity<?> getMyPets(@AuthenticationPrincipal UserDetails userDetails) {
         String username = userDetails.getUsername();
         return ResponseEntity.status(HttpStatus.OK).body(petService.getPetsByOwnerUsername(username));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchPets(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String breed,
+            @RequestParam(required = false) String specie) {
+
+        if (name != null) {
+            return ResponseEntity.ok(petService.getByName(name));
+        }
+        if (breed != null) {
+            return ResponseEntity.ok(petService.getByBreed(breed));
+        }
+        if (specie != null) {
+            return ResponseEntity.ok(petService.getBySpecie(specie));
+        }
+
+        // Si no hay parámetros, devolver todos
+        return ResponseEntity.ok(petService.getAll());
     }
 
     // POST calls
