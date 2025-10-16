@@ -1,6 +1,9 @@
 package com.alonso.vipera.training.springboot_apirest.model.pet;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
 
@@ -47,6 +50,9 @@ public class Pet {
 
     @Column(nullable = true, unique = false)
     private String diet_info;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     @Column(nullable = true, unique = false)
     private String photo_url;
