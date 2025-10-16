@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
 
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Component
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class UserRepositoryAdapter {
 
     private UserRepository userRepository;
