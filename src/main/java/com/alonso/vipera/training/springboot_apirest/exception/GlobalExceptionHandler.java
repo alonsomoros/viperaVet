@@ -108,6 +108,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
+    // Address no encontrado
+    @ExceptionHandler({ AddressNotFoundException.class })
+    public ResponseEntity<ErrorResponse> handleAddressNotFoundException(AddressNotFoundException exception) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                exception.getMessage(),
+                System.currentTimeMillis());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler({ RuntimeException.class })
     public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException exception) {
         ErrorResponse error = new ErrorResponse(
