@@ -43,6 +43,10 @@ public class UserRepositoryAdapter {
         return userRepository.existsByUsername(username);
     }
 
+    public List<User> findByAddressContainig(String address) {
+        return userRepository.findByAddressContaining(address);
+    }
+
     public User save(User user) {
         return userRepository.save(user);
     }

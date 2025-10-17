@@ -14,6 +14,8 @@ public interface UserService {
 
     UserOutDTO getByUsername(String username);
 
+    List<UserOutDTO> getByAddressContaining(String address);
+
     void delete(Long id);
     
 }

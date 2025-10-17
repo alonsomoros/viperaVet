@@ -50,6 +50,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userMapper.toOutDTO(userSaved);
     }
 
+    @Override
+    public List<UserOutDTO> getByAddressContaining(String address) {
+        List<User> usersSaved = userRepositoryAdapter.findByAddressContainig(address);
+        return usersSaved.stream().map(userMapper::toOutDTO).toList();
+    }
+
     // Hacer un update en el futuro
     // public User update(Long id, UpdateUserDTO updateDTO) {
     // User existingUser = getById(id);
