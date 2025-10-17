@@ -2,7 +2,7 @@ package com.alonso.vipera.training.springboot_apirest.exception;
 
 public class InvalidEmailException extends RuntimeException {
     public InvalidEmailException() {
-        super("Invalid email format");
+        super("Formato de email inválido");
     }
     
 }
