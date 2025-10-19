@@ -31,7 +31,8 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/webjars/**",
                                 "/configuration/ui",
-                                "/configuration/security")
+                                "/configuration/security",
+                                "/api/dog-breeds")
                         .permitAll() // Endpoints de autenticación son públicos
                         .anyRequest().authenticated() // Todos los demás requieren autenticación
                 )
