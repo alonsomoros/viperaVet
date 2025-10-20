@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class DogBreedService {
+public class DogApiBreedsService {
 
     private final DogApiClient dogApiClient;
 
-    public DogBreedService(DogApiClient dogApiClient) {
+    public DogApiBreedsService(DogApiClient dogApiClient) {
         this.dogApiClient = dogApiClient;
     }
 

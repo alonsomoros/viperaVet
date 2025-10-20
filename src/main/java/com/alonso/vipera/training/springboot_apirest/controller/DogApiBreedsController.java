@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alonso.vipera.training.springboot_apirest.model.dogBreedAPI.dto.DogBreedDTO;
-import com.alonso.vipera.training.springboot_apirest.service.DogBreedService;
+import com.alonso.vipera.training.springboot_apirest.service.DogApiBreedsService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +17,13 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Dog Breeds", description = "External API endpoints for retrieving dog breed information")
 @RequestMapping("/api/dog-breeds")
 @RequiredArgsConstructor
-public class DogBreedsController {
+public class DogApiBreedsController {
 
-    private final DogBreedService dogBreedService;
+    private final DogApiBreedsService dogApiBreedsService;
 
     @GetMapping
     public ResponseEntity<List<DogBreedDTO>> getAllBreeds() {
-        List<DogBreedDTO> breeds = dogBreedService.getAllDogBreeds();
+        List<DogBreedDTO> breeds = dogApiBreedsService.getAllDogBreeds();
         return ResponseEntity.ok(breeds);
     }
 }
