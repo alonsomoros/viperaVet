@@ -31,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/pets")
-@Tag(name = "Pets", description = "API endpoints for managing pets")
+@Tag(name = "Pets", description = "API endpoints para gestionar las mascotas")
 @RequiredArgsConstructor
 public class PetController {
 

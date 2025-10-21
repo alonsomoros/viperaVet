@@ -13,6 +13,9 @@ import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.SpecieOut
 import com.alonso.vipera.training.springboot_apirest.service.BreedService;
 import com.alonso.vipera.training.springboot_apirest.service.SpecieService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Prueba", description = "API endpoints de prueba para obtener razas y especies")
 @RestController
 @RequestMapping("/prueba")
 public class PruebaController {
