@@ -43,16 +43,16 @@ public class PetRepositoryAdapter {
                 .toList();
     }
 
-    public List<Pet> findByBreed(String breed) {
-        return petRepository.findByBreed(breed)
+    public List<Pet> findByBreedName(String breed) {
+        return petRepository.findByBreedName(breed)
                 .stream()
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .toList();
     }
 
-    public List<Pet> findBySpecie(String specie) {
-        return petRepository.findBySpecie(specie)
+    public List<Pet> findBySpecieName(String specie) {
+        return petRepository.findBySpecieName(specie)
                 .stream()
                 .filter(Optional::isPresent)
                 .map(Optional::get)

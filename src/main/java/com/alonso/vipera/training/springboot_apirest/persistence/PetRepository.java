@@ -15,9 +15,9 @@ public interface PetRepository extends JpaRepository<Pet, Long> {
 
     List<Optional<Pet>> findByBirthDate(Date birthDate);
 
-    List<Optional<Pet>> findByBreed(String breed);
+    List<Optional<Pet>> findByBreedName(String breed);
 
-    List<Optional<Pet>> findBySpecie(String specie);
+    List<Optional<Pet>> findBySpecieName(String specie);
 
     List<Optional<Pet>> findByUserUsername(String username);
 

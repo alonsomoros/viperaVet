@@ -14,9 +14,9 @@ public interface PetService {
 
     List<PetOutDTO> getByBirthDate(Date birthDate);
 
-    List<PetOutDTO> getByBreed(String breed);
+    List<PetOutDTO> getByBreedName(String breed);
 
-    List<PetOutDTO> getBySpecie(String specie);
+    List<PetOutDTO> getBySpecieName(String specie);
 
     List<PetOutDTO> getAll();
 
