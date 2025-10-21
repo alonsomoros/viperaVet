@@ -50,7 +50,7 @@ public class DogApiBreedsService {
         // Las vuelve a insertar todas (MAL!)
         List<BreedOutDTO> savedBreeds = breedRepositoryAdapter.saveAllBreeds(breedsToSave)
                 .stream()
-                .map(Breed::toDTO)
+                .map(breedMapper::toDTO)
                 .toList();
 
         log.info("Sincronización completada: {} razas guardadas/actualizadas", savedBreeds.size());

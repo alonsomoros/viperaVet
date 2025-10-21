@@ -1,7 +1,5 @@
 package com.alonso.vipera.training.springboot_apirest.model.pet;
 
-import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.BreedOutDTO;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,9 +35,5 @@ public class Breed {
 
     @Column(name = "external_api_id")
     private Long externalApiId;
-
-    public BreedOutDTO toDTO() {
-        return new BreedOutDTO(this.id, this.name, this.specie.getId(), this.externalApiId);
-    }
 
 }

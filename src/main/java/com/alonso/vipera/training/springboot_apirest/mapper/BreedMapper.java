@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import com.alonso.vipera.training.springboot_apirest.model.dogBreedAPI.dto.DogApiBreedDTO;
 import com.alonso.vipera.training.springboot_apirest.model.pet.Breed;
 import com.alonso.vipera.training.springboot_apirest.model.pet.Specie;
+import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.BreedOutDTO;
 
 @Component
 public class BreedMapper {
@@ -22,5 +23,9 @@ public class BreedMapper {
                             dto.getId()))
                     .toList();
         }
+    }
+
+    public BreedOutDTO toDTO(Breed breedEntity) {
+        return new BreedOutDTO(breedEntity.getId(), breedEntity.getName(), breedEntity.getSpecie().getId(), breedEntity.getExternalApiId());
     }
 }
