@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @Builder
-@Table(name = "breeds")
+@Table(name = "breeds", uniqueConstraints = @UniqueConstraint(columnNames = { "external_api_id", "specie_id" }))
 @AllArgsConstructor
 @NoArgsConstructor
 public class Breed {
@@ -37,7 +38,7 @@ public class Breed {
     @Column(name = "external_api_id")
     private Long externalApiId;
 
-    public BreedOutDTO toDTO(){
+    public BreedOutDTO toDTO() {
         return new BreedOutDTO(this.id, this.name, this.specie.getId(), this.externalApiId);
     }
 
