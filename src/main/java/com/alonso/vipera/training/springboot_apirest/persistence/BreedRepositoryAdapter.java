@@ -12,9 +12,8 @@ import lombok.AllArgsConstructor;
 @Component
 @AllArgsConstructor
 public class BreedRepositoryAdapter {
-    
-    private final BreedRepository breedRepository;
 
+    private final BreedRepository breedRepository;
 
     public Optional<Breed> findByName(String name) {
         return breedRepository.findByName(name);
@@ -30,6 +29,14 @@ public class BreedRepositoryAdapter {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .toList();
+    }
+
+    public Breed save(Breed breed) {
+        return breedRepository.save(breed);
+    }
+
+    public List<Breed> saveAllBreeds(List<Breed> breeds) {
+        return breedRepository.saveAll(breeds);
     }
 
 }
