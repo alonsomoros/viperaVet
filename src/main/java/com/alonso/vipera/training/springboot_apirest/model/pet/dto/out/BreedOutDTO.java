@@ -13,5 +13,5 @@ public class BreedOutDTO {
     private Long id;
     private String name;
     private Long specieId;
-    private String externalApiId;
+    private Long externalApiId;
 }

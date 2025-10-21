@@ -40,12 +40,6 @@ public class Pet {
     private Date birthDate;
 
     @Column(nullable = false, unique = false)
-    private String specie;
-
-    @Column(nullable = false, unique = false)
-    private String breed;
-
-    @Column(nullable = false, unique = false)
     private Double weight;
 
     @Column(nullable = true, unique = false)
@@ -58,9 +52,21 @@ public class Pet {
     private String photo_url;
 
     // ManyToOne (N Pets -> 1 User)
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    // ManyToOne (N Pets -> 1 Specie)
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "specie_id", nullable = false)
+    private Specie specie;
+
+    // ManyToOne (N Pets -> 1 Breed)
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "breed_id", nullable = false)
+    private Breed breed;
 
 }

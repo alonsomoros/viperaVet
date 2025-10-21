@@ -11,11 +11,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@Builder
 @Table(name = "breeds")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,7 +35,7 @@ public class Breed {
     private Specie specie;
 
     @Column(name = "external_api_id")
-    private String externalApiId;
+    private Long externalApiId;
 
     public BreedOutDTO toDTO(){
         return new BreedOutDTO(this.id, this.name, this.specie.getId(), this.externalApiId);

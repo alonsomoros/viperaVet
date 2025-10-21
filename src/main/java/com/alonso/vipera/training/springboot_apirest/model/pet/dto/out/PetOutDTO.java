@@ -17,8 +17,6 @@ public class PetOutDTO {
     private Long id;
     private String name;
     private Date birthDate;
-    private String specie;
-    private String breed;
     private Double weight;
     private String diet_info;
     private LocalDate createdAt;
