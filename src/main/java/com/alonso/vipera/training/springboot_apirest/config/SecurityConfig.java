@@ -33,6 +33,7 @@ public class SecurityConfig {
                                 "/configuration/ui",
                                 "/configuration/security",
                                 "/api/dog-breeds",
+                                "/api/dog-breeds/save-all",
                                 "/prueba/**")
                         .permitAll() // Endpoints de autenticación son públicos
                         .anyRequest().authenticated() // Todos los demás requieren autenticación
