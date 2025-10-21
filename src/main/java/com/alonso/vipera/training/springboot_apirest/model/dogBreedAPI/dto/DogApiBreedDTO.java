@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DogBreedDTO {
+public class DogApiBreedDTO {
     private Long id;
     private String name;
     private String bred_for;
