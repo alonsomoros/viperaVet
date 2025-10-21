@@ -68,10 +68,10 @@ public class PetController {
             return ResponseEntity.ok(petService.getByName(name));
         }
         if (breed != null) {
-            return ResponseEntity.ok(petService.getByBreed(breed));
+            return ResponseEntity.ok(petService.getByBreedName(breed));
         }
         if (specie != null) {
-            return ResponseEntity.ok(petService.getBySpecie(specie));
+            return ResponseEntity.ok(petService.getBySpecieName(specie));
         }
 
         // Si no hay parámetros, devolver todos
