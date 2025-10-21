@@ -15,7 +15,7 @@ public class SpecieServiceImpl implements SpecieService {
 
     @Override
     public SpecieOutDTO findByName(String name){
-        return specieRepositoryAdapter.findByName(name).get().tDtoO();
+        return specieRepositoryAdapter.findByName(name).get().tDto();
     }
 
     @Override
