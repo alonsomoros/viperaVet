@@ -1,6 +1,8 @@
 package com.alonso.vipera.training.springboot_apirest.service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -41,12 +43,34 @@ public class DogApiBreedsService {
         Specie dogSpecie = specieRepository.findByName("Perro")
                 .orElseThrow(() -> new IllegalStateException("Especie 'Perro' no encontrada en la BBDD."));
 
-        // Obtener todas las razas desde la API externa
+        // Coger las razas de la API externa
         List<DogApiBreedDTO> dogBreeds = getAllDogBreeds();
+        if (dogBreeds == null || dogBreeds.isEmpty()) {
+            log.info("No se encontraron razas en la API externa.");
+            return List.of();
+        }
+
+        // Filtrar las razas que ya existen en la BBDD
+        List<Breed> existingBreeds = breedRepositoryAdapter.findBreedsBySpecieId(dogSpecie.getId());
+
+        // Y obtener los IDs externos de las razas existentes
+        Set<Long> existingBreedsExternalIds = existingBreeds.stream()
+                .map(Breed::getExternalApiId)
+                .collect(Collectors.toSet());
+
+        // Para filtrar las razas nuevas que no estén en nuestra BBDD
+        List<DogApiBreedDTO> newApiBreedsFiltered = dogBreeds.stream()
+                .filter(dto -> !existingBreedsExternalIds.contains(dto.getId()))
+                .toList();
+
+        if (newApiBreedsFiltered.isEmpty()) {
+            log.info("No hay razas nuevas para guardar. La BBDD está actualizada.");
+            return List.of();
+        }
 
         // Mapear DTO -> Entity
-        List<Breed> breedsToSave = breedMapper.fromApiToEntity(dogBreeds, dogSpecie);
-        
+        List<Breed> breedsToSave = breedMapper.fromApiToEntity(newApiBreedsFiltered, dogSpecie);
+
         // Las vuelve a insertar todas (MAL!)
         List<BreedOutDTO> savedBreeds = breedRepositoryAdapter.saveAllBreeds(breedsToSave)
                 .stream()
