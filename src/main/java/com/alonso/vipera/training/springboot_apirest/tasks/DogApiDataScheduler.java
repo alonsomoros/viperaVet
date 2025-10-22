@@ -19,22 +19,22 @@ public class DogApiDataScheduler implements ApplicationRunner {
     private final DogApiBreedsService dogService;
 
     // Tiempos configurados en el properties
-    @Scheduled(cron = "${scheduler.dog.cron}", zone = "${scheduler.dog.zone}")
+    @Scheduled(cron = "${scheduler.cron}", zone = "${scheduler.zone}")
     @SchedulerLock(name = "ApiDataScheduler_syncBreeds", lockAtLeastFor = "${scheduler.lock.min:PT1M}", lockAtMostFor = "${scheduler.lock.max:PT30M}")
     public void syncBreeds() {
-        log.info("TAREA PROGRAMADA: iniciando sync de razas...");
+        log.info("TAREA PROGRAMADA: iniciando sync de razas de perro...");
         try {
             dogService.saveAllDogsBreeds();
         } catch (Exception e) {
-            log.error("Error en el sync programado de razas: ", e);
+            log.error("Error en el sync programado de razas de perro: ", e);
         }
-        log.info("TAREA PROGRAMADA: sync de razas finalizado.");
+        log.info("TAREA PROGRAMADA: sync de razas de perro finalizado.");
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        log.info("🚀 ARRANQUE: Ejecutando ETL de datos inicial...");
+        log.info("🚀 ARRANQUE: Ejecutando ETL de datos de perro inicial...");
         this.syncBreeds();
-        log.info("✅ ARRANQUE: ETL de datos inicial completado.");
+        log.info("✅ ARRANQUE: ETL de datos de perro inicial completado.");
     }
 }
