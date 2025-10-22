@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -35,7 +36,7 @@ public class AuthController {
             @ApiResponse(responseCode = "409", description = "'X' parámetro está ya está en uso", content = @Content)
     })
     @PostMapping("/register")
-    public ResponseEntity<AuthResponseDTO> register(@RequestBody RegisterRequestDTO registerRequestDto) {
+    public ResponseEntity<AuthResponseDTO> register(@Valid @RequestBody RegisterRequestDTO registerRequestDto) {
         AuthResponseDTO authResponseDto = authService.register(registerRequestDto);
         return ResponseEntity.ok(authResponseDto);
     }
@@ -46,7 +47,7 @@ public class AuthController {
             @ApiResponse(responseCode = "401", description = "Credenciales de entrada inválidas", content = @Content)
     })
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDto) {
+    public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginRequestDTO loginRequestDto) {
         AuthResponseDTO authResponseDto = authService.login(loginRequestDto);
         return ResponseEntity.ok(authResponseDto);
     }

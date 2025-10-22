@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -88,7 +89,7 @@ public class PetController {
     })
     @PostMapping("/register")
     public ResponseEntity<PetOutDTO> registerPet(@AuthenticationPrincipal UserDetails userDetails,
-            @RequestBody PetInDTO petInDTO) {
+            @Valid @RequestBody PetInDTO petInDTO) {
         String username = userDetails.getUsername();
         return ResponseEntity.status(HttpStatus.OK).body(petService.save(petInDTO, username));
     }

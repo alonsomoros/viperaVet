@@ -6,13 +6,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.alonso.vipera.training.springboot_apirest.exception.EmailTakenException;
 import com.alonso.vipera.training.springboot_apirest.exception.BadCredentialsInputException;
-import com.alonso.vipera.training.springboot_apirest.exception.InvalidEmailException;
-import com.alonso.vipera.training.springboot_apirest.exception.InvalidUsernameException;
+import com.alonso.vipera.training.springboot_apirest.exception.EmailTakenException;
 import com.alonso.vipera.training.springboot_apirest.exception.UserCreationException;
+import com.alonso.vipera.training.springboot_apirest.exception.UsernameNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameTakenException;
-import com.alonso.vipera.training.springboot_apirest.exception.WeakPasswordException;
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.LoginRequestDTO;
@@ -47,15 +45,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void verifyRegisterInputs(RegisterRequestDTO registerRequestDTO) {
-        if (registerRequestDTO.getUsername().isEmpty() || registerRequestDTO.getUsername().matches(".*\\s.*")) { // Nombre contiene espacios, tabs, saltos de línea...
-            throw new InvalidUsernameException();
-        }
-        if (registerRequestDTO.getPassword().length() < 6) {
-            throw new WeakPasswordException();
-        }
-        if (!isValidEmail(registerRequestDTO.getEmail())) {
-            throw new InvalidEmailException();
-        }
         if (existsByUsername(registerRequestDTO.getUsername())) {
             throw new UsernameTakenException();
         }
@@ -80,7 +69,7 @@ public class AuthServiceImpl implements AuthService {
                         loginRequestDTO.getPassword()));
 
         User user = userRepositoryAdapter.findByUsername(loginRequestDTO.getUsername())
-                .orElseThrow(() -> new UsernameTakenException());
+                .orElseThrow(() -> new UsernameNotFoundException());
 
         String token = jwtService.generateToken(user);
 
@@ -98,9 +87,5 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public boolean existsByEmail(String email) {
         return userRepositoryAdapter.existsByEmail(email);
-    }
-
-    private boolean isValidEmail(String email) {
-        return email != null && email.matches("^[A-Za-z0-9+_.-]+@(.+)$");
     }
 }

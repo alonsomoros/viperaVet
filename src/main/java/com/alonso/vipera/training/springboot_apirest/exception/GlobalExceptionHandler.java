@@ -36,16 +36,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-    // Email con formato inválido
-    @ExceptionHandler({ InvalidEmailException.class })
-    public ResponseEntity<ErrorResponse> handleInvalidEmailException(InvalidEmailException exception) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                exception.getMessage(),
-                System.currentTimeMillis());
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
-
     // Username ya existente
     @ExceptionHandler({ UsernameTakenException.class })
     public ResponseEntity<ErrorResponse> handleUsernameTakenException(UsernameTakenException exception) {
@@ -66,16 +56,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-    // Username con formato inválido
-    @ExceptionHandler({ InvalidUsernameException.class })
-    public ResponseEntity<ErrorResponse> handleInvalidUsernameException(InvalidUsernameException exception) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                exception.getMessage(),
-                System.currentTimeMillis());
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
-
     // Id no encontrado
     @ExceptionHandler({ IdNotFoundException.class })
     public ResponseEntity<ErrorResponse> handleIdNotFoundException(IdNotFoundException exception) {
@@ -84,16 +64,6 @@ public class GlobalExceptionHandler {
                 exception.getMessage(),
                 System.currentTimeMillis());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-    }
-
-    // Password con formato inválido
-    @ExceptionHandler({ WeakPasswordException.class })
-    public ResponseEntity<ErrorResponse> handleInvalidPasswordException(WeakPasswordException exception) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                exception.getMessage(),
-                System.currentTimeMillis());
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     // Error en creación de usuario
@@ -114,16 +84,6 @@ public class GlobalExceptionHandler {
                 exception.getMessage(),
                 System.currentTimeMillis());
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
-    }
-
-    // Address no encontrado
-    @ExceptionHandler({ AddressNotFoundException.class })
-    public ResponseEntity<ErrorResponse> handleAddressNotFoundException(AddressNotFoundException exception) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                exception.getMessage(),
-                System.currentTimeMillis());
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({ RuntimeException.class })
