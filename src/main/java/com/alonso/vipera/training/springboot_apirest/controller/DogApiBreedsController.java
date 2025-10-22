@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alonso.vipera.training.springboot_apirest.model.dogBreedAPI.dto.DogApiBreedDTO;
+import com.alonso.vipera.training.springboot_apirest.model.dogBreedAPI.dto.in.DogApiBreedInDTO;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.BreedOutDTO;
 import com.alonso.vipera.training.springboot_apirest.service.DogApiBreedsService;
 
@@ -30,13 +30,13 @@ public class DogApiBreedsController {
 
     @Operation(summary = "Obtener todas las razas de perros", description = "Consulta la API externa para obtener la lista completa de razas de perros disponibles con su información detallada")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de razas de perros obtenida exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = DogApiBreedDTO.class))),
+            @ApiResponse(responseCode = "200", description = "Lista de razas de perros obtenida exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = DogApiBreedInDTO.class))),
             @ApiResponse(responseCode = "404", description = "No se encontraron razas de perros o la API externa no está disponible", content = @Content),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor al consultar la API externa", content = @Content)
     })
     @GetMapping
-    public ResponseEntity<List<DogApiBreedDTO>> getAllBreeds() {
-        List<DogApiBreedDTO> breeds = dogApiBreedsService.getAllDogBreeds();
+    public ResponseEntity<List<DogApiBreedInDTO>> getAllBreeds() {
+        List<DogApiBreedInDTO> breeds = dogApiBreedsService.getAllDogBreeds();
         return ResponseEntity.ok(breeds);
     }
 

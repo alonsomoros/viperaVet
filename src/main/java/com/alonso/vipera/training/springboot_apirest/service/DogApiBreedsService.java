@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.alonso.vipera.training.springboot_apirest.clients.DogApiClient;
 import com.alonso.vipera.training.springboot_apirest.mapper.BreedMapper;
-import com.alonso.vipera.training.springboot_apirest.model.dogBreedAPI.dto.DogApiBreedDTO;
+import com.alonso.vipera.training.springboot_apirest.model.dogBreedAPI.dto.in.DogApiBreedInDTO;
 import com.alonso.vipera.training.springboot_apirest.model.pet.Breed;
 import com.alonso.vipera.training.springboot_apirest.model.pet.Specie;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.BreedOutDTO;
@@ -31,22 +31,22 @@ public class DogApiBreedsService {
     private final BreedMapper breedMapper;
 
     @CircuitBreaker(name = "dog-api-breeds", fallbackMethod = "getBreedsFallback")
-    public List<DogApiBreedDTO> getAllDogBreeds() {
+    public List<DogApiBreedInDTO> getAllDogBreeds() {
         return dogApiClient.getAllBreeds();
     }
 
     @Transactional
     public List<BreedOutDTO> saveAllDogsBreeds() {
-        log.info("Iniciando sincronización de razas desde Dog API");
+        log.info("Iniciando sincronización de razas de perro desde Dog API");
 
         // Buscar especie 'Perro' en la BBDD
         Specie dogSpecie = specieRepository.findByName("Perro")
                 .orElseThrow(() -> new IllegalStateException("Especie 'Perro' no encontrada en la BBDD."));
 
         // Coger las razas de la API externa
-        List<DogApiBreedDTO> dogBreeds = getAllDogBreeds();
+        List<DogApiBreedInDTO> dogBreeds = getAllDogBreeds();
         if (dogBreeds == null || dogBreeds.isEmpty()) {
-            log.info("No se encontraron razas en la API externa.");
+            log.info("No se encontraron razas de perro en la API externa.");
             return List.of();
         }
 
@@ -54,22 +54,22 @@ public class DogApiBreedsService {
         List<Breed> existingBreeds = breedRepositoryAdapter.findBreedsBySpecieId(dogSpecie.getId());
 
         // Y obtener los IDs externos de las razas existentes
-        Set<Long> existingBreedsExternalIds = existingBreeds.stream()
+        Set<String> existingBreedsExternalIds = existingBreeds.stream()
                 .map(Breed::getExternalApiId)
                 .collect(Collectors.toSet());
 
         // Para filtrar las razas nuevas que no estén en nuestra BBDD
-        List<DogApiBreedDTO> newApiBreedsFiltered = dogBreeds.stream()
-                .filter(dto -> !existingBreedsExternalIds.contains(dto.getId()))
+        List<DogApiBreedInDTO> newApiBreedsFiltered = dogBreeds.stream()
+                .filter(dto -> !existingBreedsExternalIds.contains(dto.getId().toString()))
                 .toList();
 
         if (newApiBreedsFiltered.isEmpty()) {
-            log.info("No hay razas nuevas para guardar. La BBDD está actualizada.");
+            log.info("No hay razas de perro nuevas para guardar. La BBDD está actualizada.");
             return List.of();
         }
 
         // Mapear DTO -> Entity
-        List<Breed> breedsToSave = breedMapper.fromApiToEntity(newApiBreedsFiltered, dogSpecie);
+        List<Breed> breedsToSave = breedMapper.fromDogApiToEntity(newApiBreedsFiltered, dogSpecie);
 
         // Las vuelve a insertar todas (MAL!)
         List<BreedOutDTO> savedBreeds = breedRepositoryAdapter.saveAllBreeds(breedsToSave)
@@ -77,7 +77,7 @@ public class DogApiBreedsService {
                 .map(breedMapper::toDTO)
                 .toList();
 
-        log.info("Sincronización completada: {} razas guardadas/actualizadas", savedBreeds.size());
+        log.info("Sincronización completada: {} razas de perro guardadas/actualizadas", savedBreeds.size());
         return savedBreeds;
     }
 
@@ -86,8 +86,8 @@ public class DogApiBreedsService {
      * Debe tener la misma firma que el método original, más un parámetro Throwable
      * (opcional).
      */
-    public List<DogApiBreedDTO> getBreedsFallback(Throwable throwable) {
-        log.error("Fallo al obtener razas desde Dog API: {}", throwable.toString());
+    public List<DogApiBreedInDTO> getBreedsFallback(Throwable throwable) {
+        log.error("Fallo al obtener razas de perro desde Dog API: {}", throwable.toString());
         return List.of();
     }
 }
