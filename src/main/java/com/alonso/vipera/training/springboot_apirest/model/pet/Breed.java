@@ -34,6 +34,6 @@ public class Breed {
     private Specie specie;
 
     @Column(name = "external_api_id")
-    private Long externalApiId;
+    private String externalApiId;
 
 }
