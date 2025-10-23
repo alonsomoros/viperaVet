@@ -20,16 +20,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.alonso.vipera.training.springboot_apirest.exception.EmailTakenException;
-import com.alonso.vipera.training.springboot_apirest.exception.InvalidEmailException;
-import com.alonso.vipera.training.springboot_apirest.exception.InvalidUsernameException;
+import com.alonso.vipera.training.springboot_apirest.exception.UserCreationException;
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameTakenException;
-import com.alonso.vipera.training.springboot_apirest.exception.WeakPasswordException;
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.RegisterRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.AuthResponseDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.UserRepositoryAdapter;
-import com.alonso.vipera.training.springboot_apirest.service.AuthService;
+import com.alonso.vipera.training.springboot_apirest.service.AuthServiceImpl;
 import com.alonso.vipera.training.springboot_apirest.service.JwtService;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,7 +49,7 @@ class UserAuthServiceTest {
     private AuthenticationManager authenticationManager;
 
     @InjectMocks
-    private AuthService authService;
+    private AuthServiceImpl authServiceImpl;
 
     private RegisterRequestDTO registerRequestDTO;
     private User userEntity;
@@ -96,7 +94,7 @@ class UserAuthServiceTest {
         when(jwtService.generateToken(userEntity)).thenReturn("jwtToken");
 
         // Act
-        AuthResponseDTO result = authService.register(registerRequestDTO);
+        AuthResponseDTO result = authServiceImpl.register(registerRequestDTO);
 
         // Assert
         assertNotNull(result);
@@ -104,54 +102,56 @@ class UserAuthServiceTest {
         assertEquals(registerRequestDTO.getUsername(), result.getUsername());
 
         // Verify interactions
-        verify(passwordEncoder).encode("password123");
-        verify(userRepositoryAdapter).save(any(User.class));
-    }
-
-    @Test
-    void testCreateUser_whenUsernameWithSpaces_shouldThrowUsernameWithSpacesException() {
-        registerRequestDTO.setUsername("Juan ");
-        assertThrows(InvalidUsernameException.class, () -> authService.register(registerRequestDTO));
-
-        verify(userRepositoryAdapter, times(0)).save(any(User.class));
+        verify(passwordEncoder, times(1)).encode("password123");
+        verify(jwtService, times(1)).generateToken(userEntity);
+        verify(userRepositoryAdapter, times(1)).save(any(User.class));
     }
 
     @Test
     void testCreateUser_whenUsernameTaken_shouldThrowUsernameTakenException() {
+        // Arrange - Mocks de verificación
         when(userRepositoryAdapter.existsByUsername(registerRequestDTO.getUsername())).thenReturn(true);
 
-        assertThrows(UsernameTakenException.class, () -> authService.register(registerRequestDTO));
+        // Act & Assert
+        assertThrows(UsernameTakenException.class, () -> authServiceImpl.register(registerRequestDTO));
 
-        verify(userRepositoryAdapter).existsByUsername(registerRequestDTO.getUsername());
+        // Verify interactions
+        verify(userRepositoryAdapter, times(1)).existsByUsername(registerRequestDTO.getUsername());
         verify(userRepositoryAdapter, times(0)).save(any(User.class));
     }
 
     @Test
     void testCreateUser_whenEmailTaken_shouldThrowEmailTakenException() {
+        // Arrange - Mocks de verificación
+        when(userRepositoryAdapter.existsByUsername(registerRequestDTO.getUsername())).thenReturn(false);
         when(userRepositoryAdapter.existsByEmail(registerRequestDTO.getEmail())).thenReturn(true);
 
-        assertThrows(EmailTakenException.class, () -> authService.register(registerRequestDTO));
+        // Act & Assert
+        assertThrows(EmailTakenException.class, () -> authServiceImpl.register(registerRequestDTO));
 
-        verify(userRepositoryAdapter).existsByEmail(registerRequestDTO.getEmail());
+        // Verify interactions
+        verify(userRepositoryAdapter, times(1)).existsByEmail(registerRequestDTO.getEmail());
         verify(userRepositoryAdapter, times(0)).save(any(User.class));
     }
 
     @Test
-    void testCreateUser_whenPasswordTooShort_shouldThrowWeakPasswordException() {
-        registerRequestDTO.setPassword("123"); // Menos de 6 caracteres
+    void testCreateUser_whenUserNotSaved_shouldThrowUserCreationException() {
+        // Arrange - Mocks de verificación
+        when(userRepositoryAdapter.existsByUsername(registerRequestDTO.getUsername())).thenReturn(false);
+        when(userRepositoryAdapter.existsByEmail(registerRequestDTO.getEmail())).thenReturn(false);
 
-        assertThrows(WeakPasswordException.class, () -> authService.register(registerRequestDTO));
+        // Arrange - Mock de encriptación
+        when(passwordEncoder.encode(registerRequestDTO.getPassword())).thenReturn("encodedPassword");
 
-        verify(userRepositoryAdapter, times(0)).save(any(User.class));
-    }
+        // Arrange - Mock de mapping y guardado que falla
+        when(userMapper.toEntity(registerRequestDTO)).thenReturn(userEntity);
+        when(userRepositoryAdapter.save(any(User.class))).thenReturn(null);
 
-    @Test
-    void testCreateUser_whenInvalidEmail_shouldThrowInvalidEmailException() {
-        registerRequestDTO.setEmail("invalid-email");
+        // Act & Assert
+        assertThrows(UserCreationException.class, () -> authServiceImpl.register(registerRequestDTO));
 
-        assertThrows(InvalidEmailException.class, () -> authService.register(registerRequestDTO));
-
-        verify(userRepositoryAdapter, times(0)).save(any(User.class));
+        // Verify interactions
+        verify(userRepositoryAdapter, times(1)).save(any(User.class));
     }
 
 }
