@@ -19,7 +19,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/auth")
 @Tag(name = "Auth", description = "API endpoints para gestionar el proceso de autenticación")
@@ -37,6 +39,7 @@ public class AuthController {
     })
     @PostMapping("/register")
     public ResponseEntity<AuthResponseDTO> register(@Valid @RequestBody RegisterRequestDTO registerRequestDto) {
+        log.info("Iniciando proceso de registro para el usuario: {}", registerRequestDto.getEmail());
         AuthResponseDTO authResponseDto = authService.register(registerRequestDto);
         return ResponseEntity.ok(authResponseDto);
     }
@@ -48,6 +51,7 @@ public class AuthController {
     })
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginRequestDTO loginRequestDto) {
+        log.info("Iniciando proceso de login para el usuario: {}", loginRequestDto.getEmail());
         AuthResponseDTO authResponseDto = authService.login(loginRequestDto);
         return ResponseEntity.ok(authResponseDto);
     }

@@ -32,6 +32,7 @@ public class DogApiBreedsService {
 
     @CircuitBreaker(name = "dog-api-breeds", fallbackMethod = "getBreedsFallback")
     public List<DogApiBreedInDTO> getAllDogBreeds() {
+        log.debug("Contactando a Dog API para obtener razas...");
         return dogApiClient.getAllBreeds();
     }
 
@@ -39,29 +40,33 @@ public class DogApiBreedsService {
     public List<BreedOutDTO> saveAllDogsBreeds() {
         log.info("Iniciando sincronización de razas de perro desde Dog API");
 
-        // Buscar especie 'Perro' en la BBDD
+        log.debug("Buscando especie 'Perro' en la BBDD...");
         Specie dogSpecie = specieRepository.findByName("Perro")
-                .orElseThrow(() -> new IllegalStateException("Especie 'Perro' no encontrada en la BBDD."));
+                .orElseThrow(() -> {
+                    log.error("La especie 'Perro' no fue encontrada en la BBDD. No se puede sincronizar.");
+                    return new IllegalStateException("Especie 'Perro' no encontrada en la BBDD.");
+                });
+        log.debug("Especie 'Perro' encontrada con ID: {}", dogSpecie.getId());
 
-        // Coger las razas de la API externa
         List<DogApiBreedInDTO> dogBreeds = getAllDogBreeds();
         if (dogBreeds == null || dogBreeds.isEmpty()) {
             log.info("No se encontraron razas de perro en la API externa.");
             return List.of();
         }
+        log.debug("Obtenidas {} razas desde Dog API", dogBreeds.size());
 
-        // Filtrar las razas que ya existen en la BBDD
+        log.debug("Buscando razas de perro existentes en la BBDD para la especie ID: {}", dogSpecie.getId());
         List<Breed> existingBreeds = breedRepositoryAdapter.findBreedsBySpecieId(dogSpecie.getId());
-
-        // Y obtener los IDs externos de las razas existentes
         Set<String> existingBreedsExternalIds = existingBreeds.stream()
                 .map(Breed::getExternalApiId)
                 .collect(Collectors.toSet());
+        log.debug("Razas existentes encontradas en la BBDD: {}", existingBreedsExternalIds);
 
-        // Para filtrar las razas nuevas que no estén en nuestra BBDD
+        log.debug("Filtrando razas nuevas que no existen en la BBDD...");
         List<DogApiBreedInDTO> newApiBreedsFiltered = dogBreeds.stream()
                 .filter(dto -> !existingBreedsExternalIds.contains(dto.getId().toString()))
                 .toList();
+        log.debug("Hay {} razas nuevas", newApiBreedsFiltered.size());
 
         if (newApiBreedsFiltered.isEmpty()) {
             log.info("No hay razas de perro nuevas para guardar. La BBDD está actualizada.");
@@ -71,7 +76,7 @@ public class DogApiBreedsService {
         // Mapear DTO -> Entity
         List<Breed> breedsToSave = breedMapper.fromDogApiToEntity(newApiBreedsFiltered, dogSpecie);
 
-        // Las vuelve a insertar todas (MAL!)
+        log.debug("Guardando/actualizando {} razas de perro en la BBDD...", breedsToSave.size());
         List<BreedOutDTO> savedBreeds = breedRepositoryAdapter.saveAllBreeds(breedsToSave)
                 .stream()
                 .map(breedMapper::toDTO)
@@ -87,7 +92,7 @@ public class DogApiBreedsService {
      * (opcional).
      */
     public List<DogApiBreedInDTO> getBreedsFallback(Throwable throwable) {
-        log.error("Fallo al obtener razas de perro desde Dog API: {}", throwable.toString());
+        log.error("Fallo al obtener razas de perro desde Dog API: {}", throwable);
         return List.of();
     }
 }

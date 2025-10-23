@@ -13,12 +13,16 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     // Email ya existente
     @ExceptionHandler({ EmailTakenException.class })
     public ResponseEntity<ErrorResponse> handleEmailTakenException(EmailTakenException exception) {
+        log.warn("Conflicto al registrar email: {}", exception.getMessage());
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.CONFLICT.value(),
                 exception.getMessage(),
@@ -29,6 +33,7 @@ public class GlobalExceptionHandler {
     // Email no encontrado
     @ExceptionHandler({ EmailNotFoundException.class })
     public ResponseEntity<ErrorResponse> handleEmailNotFoundException(EmailNotFoundException exception) {
+        log.warn("Email no encontrado: {}", exception.getMessage());
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 exception.getMessage(),
@@ -39,6 +44,7 @@ public class GlobalExceptionHandler {
     // Username ya existente
     @ExceptionHandler({ UsernameTakenException.class })
     public ResponseEntity<ErrorResponse> handleUsernameTakenException(UsernameTakenException exception) {
+        log.warn("Conflicto al registrar username: {}", exception.getMessage());
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.CONFLICT.value(),
                 exception.getMessage(),
@@ -49,6 +55,7 @@ public class GlobalExceptionHandler {
     // Username no encontrado
     @ExceptionHandler({ UsernameNotFoundException.class })
     public ResponseEntity<ErrorResponse> handleUsernameNotFoundException(UsernameNotFoundException exception) {
+        log.warn("Username no encontrado: {}", exception.getMessage());
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 exception.getMessage(),
@@ -59,6 +66,7 @@ public class GlobalExceptionHandler {
     // Id no encontrado
     @ExceptionHandler({ IdNotFoundException.class })
     public ResponseEntity<ErrorResponse> handleIdNotFoundException(IdNotFoundException exception) {
+        log.warn("ID no encontrado: {}", exception.getMessage());
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 exception.getMessage(),
@@ -69,6 +77,7 @@ public class GlobalExceptionHandler {
     // Error en creación de usuario
     @ExceptionHandler({ UserCreationException.class })
     public ResponseEntity<ErrorResponse> handleUserCreationException(UserCreationException exception) {
+        log.error("Error al crear usuario: {}", exception.getMessage(), exception);
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 exception.getMessage(),
@@ -79,6 +88,7 @@ public class GlobalExceptionHandler {
     // Credenciales inválidas
     @ExceptionHandler({ BadCredentialsInputException.class })
     public ResponseEntity<ErrorResponse> handleBadCredentialsInputException(BadCredentialsInputException exception) {
+        log.warn("Credenciales inválidas: {}", exception.getMessage());
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.UNAUTHORIZED.value(),
                 exception.getMessage(),
@@ -86,8 +96,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
+    // Runtime Exception genérica
     @ExceptionHandler({ RuntimeException.class })
     public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException exception) {
+        log.error("Error de runtime no esperado: {}", exception.getMessage(), exception);
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 exception.getMessage(),
@@ -95,10 +107,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    // Errores de validación de campos (@Valid)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, List<String>>> handleValidationErrors(MethodArgumentNotValidException ex) {
         List<String> errors = ex.getBindingResult().getFieldErrors()
                 .stream().map(FieldError::getDefaultMessage).collect(Collectors.toList());
+        log.warn("Errores de validación: {}", errors);
         return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 

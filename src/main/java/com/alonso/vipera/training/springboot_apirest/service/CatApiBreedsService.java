@@ -32,6 +32,7 @@ public class CatApiBreedsService {
 
     @CircuitBreaker(name = "cat-api-breeds", fallbackMethod = "getBreedsFallback")
     public List<CatApiBreedInDTO> getAllCatBreeds() {
+        log.debug("Contactando a Cat API para obtener razas...");
         return catApiClient.getAllBreeds();
     }
 
@@ -39,29 +40,33 @@ public class CatApiBreedsService {
     public List<BreedOutDTO> saveAllCatsBreeds() {
         log.info("Iniciando sincronización de razas de gato desde Cat API");
 
-        // Buscar especie 'Gato' en la BBDD
+        log.debug("Buscando especie 'Gato' en la BBDD...");
         Specie catSpecie = specieRepository.findByName("Gato")
-                .orElseThrow(() -> new IllegalStateException("Especie 'Gato' no encontrada en la BBDD."));
+                .orElseThrow(() -> {
+                    log.error("La especie 'Gato' no fue encontrada en la BBDD. No se puede sincronizar.");
+                    return new IllegalStateException("Especie 'Gato' no encontrada en la BBDD.");
+                });
+        log.debug("Especie 'Gato' encontrada con ID: {}", catSpecie.getId());
 
-        // Coger las razas de la API externa
         List<CatApiBreedInDTO> catBreeds = getAllCatBreeds();
         if (catBreeds == null || catBreeds.isEmpty()) {
             log.info("No se encontraron razas de gato en la API externa.");
             return List.of();
         }
+        log.debug("Obtenidas {} razas desde Cat API: {}", catBreeds.size());
 
-        // Filtrar las razas que ya existen en la BBDD
+        log.debug("Buscando razas de gato existentes en la BBDD para la especie ID: {}", catSpecie.getId());
         List<Breed> existingBreeds = breedRepositoryAdapter.findBreedsBySpecieId(catSpecie.getId());
-
-        // Y obtener los IDs externos de las razas existentes
         Set<String> existingBreedsExternalIds = existingBreeds.stream()
                 .map(Breed::getExternalApiId)
                 .collect(Collectors.toSet());
+        log.debug("Razas existentes encontradas en la BBDD: {}", existingBreedsExternalIds);
 
-        // Para filtrar las razas nuevas que no estén en nuestra BBDD
+        log.debug("Filtrando razas nuevas que no existen en la BBDD...");
         List<CatApiBreedInDTO> newApiBreedsFiltered = catBreeds.stream()
                 .filter(dto -> !existingBreedsExternalIds.contains(dto.getId()))
                 .toList();
+        log.debug("Hay {} razas nuevas", newApiBreedsFiltered.size());
 
         if (newApiBreedsFiltered.isEmpty()) {
             log.info("No hay razas de gato nuevas para guardar. La BBDD está actualizada.");
@@ -71,7 +76,7 @@ public class CatApiBreedsService {
         // Mapear DTO -> Entity
         List<Breed> breedsToSave = breedMapper.fromCatApiToEntity(newApiBreedsFiltered, catSpecie);
 
-        // Las vuelve a insertar todas (MAL!)
+        log.debug("Guardando/actualizando {} razas de gato en la BBDD...", breedsToSave.size());
         List<BreedOutDTO> savedBreeds = breedRepositoryAdapter.saveAllBreeds(breedsToSave)
                 .stream()
                 .map(breedMapper::toDTO)
@@ -87,7 +92,7 @@ public class CatApiBreedsService {
      * (opcional).
      */
     public List<CatApiBreedInDTO> getBreedsFallback(Throwable throwable) {
-        log.error("Fallo al obtener razas de gato desde Cat API: {}", throwable.toString());
+        log.error("Fallo al obtener razas de gato desde Cat API: {}", throwable);
         return List.of();
     }
 }

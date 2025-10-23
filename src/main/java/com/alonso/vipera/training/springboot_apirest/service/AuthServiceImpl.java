@@ -19,7 +19,9 @@ import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.AuthResp
 import com.alonso.vipera.training.springboot_apirest.persistence.UserRepositoryAdapter;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -32,23 +34,35 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponseDTO register(RegisterRequestDTO registerRequestDTO) {
-        verifyRegisterInputs(registerRequestDTO);
+        log.info("Iniciando registro para el usuario: {}", registerRequestDTO.getUsername());
 
+        log.debug("Verificando inputs para el registro...");
+        verifyRegisterInputs(registerRequestDTO);
+        log.debug("Inputs verificados con éxito.");
+
+        log.debug("Codificando la contraseña del usuario...");
         registerRequestDTO.setPassword(passwordEncoder.encode(registerRequestDTO.getPassword()));
 
+        log.debug("Guardando el usuario en la base de datos...");
         User user = userRepositoryAdapter.save(userMapper.toEntity(registerRequestDTO));
         verifyRegisterOutputs(user);
 
+        log.info("Usuario {} registrado con éxito. ID: {}", user.getUsername(), user.getId());
+
+        log.debug("Generando token JWT para el usuario ID: {}", user.getId());
         String token = jwtService.generateToken(user);
+        log.debug("Token JWT generado.");
 
         return new AuthResponseDTO(token, user.getUsername());
     }
 
     private void verifyRegisterInputs(RegisterRequestDTO registerRequestDTO) {
         if (existsByUsername(registerRequestDTO.getUsername())) {
+            log.warn("El nombre de usuario {} ya está en uso.", registerRequestDTO.getUsername());
             throw new UsernameTakenException();
         }
         if (existsByEmail(registerRequestDTO.getEmail())) {
+            log.warn("El email {} ya está en uso.", registerRequestDTO.getEmail());
             throw new EmailTakenException();
         }
 
@@ -56,25 +70,33 @@ public class AuthServiceImpl implements AuthService {
 
     private void verifyRegisterOutputs(User userSaved) {
         if (userSaved == null || userSaved.getId() == null) {
+            log.error("Error al crear el usuario en la base de datos.");
             throw new UserCreationException();
         }
     }
 
     @Override
     public AuthResponseDTO login(LoginRequestDTO loginRequestDTO) {
-        try{
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequestDTO.getUsername(),
-                        loginRequestDTO.getPassword()));
+        try {
+            log.info("Autenticando al usuario {}...", loginRequestDTO.getUsername());
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequestDTO.getUsername(),
+                            loginRequestDTO.getPassword()));
+            log.info("Usuario {} autenticado con éxito.", loginRequestDTO.getUsername());
 
-        User user = userRepositoryAdapter.findByUsername(loginRequestDTO.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException());
+            log.info("Recuperando los detalles del usuario {}...", loginRequestDTO.getUsername());
+            User user = userRepositoryAdapter.findByUsername(loginRequestDTO.getUsername())
+                    .orElseThrow(() -> new UsernameNotFoundException());
+            log.info("Detalles del usuario {} recuperados con éxito.", loginRequestDTO.getUsername());
 
-        String token = jwtService.generateToken(user);
+            log.info("Generando token de autenticación para el usuario {}...", loginRequestDTO.getUsername());
+            String token = jwtService.generateToken(user);
+            log.info("Token de autenticación generado con éxito para el usuario {}.", loginRequestDTO.getUsername());
 
-        return new AuthResponseDTO(token, user.getUsername());
+            return new AuthResponseDTO(token, user.getUsername());
         } catch (BadCredentialsException e) {
+            log.warn("Credenciales inválidas para el usuario {}.", loginRequestDTO.getUsername());
             throw new BadCredentialsInputException();
         }
     }

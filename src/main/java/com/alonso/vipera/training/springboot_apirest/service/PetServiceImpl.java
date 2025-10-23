@@ -20,7 +20,9 @@ import com.alonso.vipera.training.springboot_apirest.persistence.SpecieRepositor
 import com.alonso.vipera.training.springboot_apirest.persistence.UserRepositoryAdapter;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PetServiceImpl implements PetService {
@@ -33,81 +35,108 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public List<PetOutDTO> getPetsByOwnerUsername(String username) {
-        return petRepositoryAdapter.findPetsByOwnerUsername(username)
+        log.debug("Buscando mascotas del usuario dueño: {}", username);
+        List<PetOutDTO> pets = petRepositoryAdapter.findPetsByOwnerUsername(username)
                 .stream()
                 .map(petMapper::toOutDTO)
                 .toList();
+        log.debug("Se han encontrado {} mascotas para el usuario: {}", pets.size(), username);
+        return pets;
     }
 
     @Override
     public List<PetOutDTO> getByName(String name) {
-        return petRepositoryAdapter.findByName(name)
+        log.debug("Buscando mascotas con el nombre: {}", name);
+        List<PetOutDTO> pets = petRepositoryAdapter.findByName(name)
                 .stream()
                 .map(petMapper::toOutDTO)
                 .toList();
+        log.debug("Se han encontrado {} mascotas con el nombre: {}", pets.size(), name);
+        return pets;
     }
 
     @Override
     public List<PetOutDTO> getByBirthDate(Date birthDate) {
-        return petRepositoryAdapter.findByBirthDate(birthDate)
+        log.debug("Buscando mascotas con la fecha de nacimiento: {}", birthDate);
+        List<PetOutDTO> pets = petRepositoryAdapter.findByBirthDate(birthDate)
                 .stream()
                 .map(petMapper::toOutDTO)
                 .toList();
+        log.debug("Se han encontrado {} mascotas con la fecha de nacimiento: {}", pets.size(), birthDate);
+        return pets;
     }
 
     @Override
     public List<PetOutDTO> getByBreedName(String breed) {
-        return petRepositoryAdapter.findByBreedName(breed)
+        log.debug("Buscando mascotas de la raza: {}", breed);
+        List<PetOutDTO> pets = petRepositoryAdapter.findByBreedName(breed)
                 .stream()
                 .map(petMapper::toOutDTO)
                 .toList();
+        log.debug("Se han encontrado {} mascotas de la raza: {}", pets.size(), breed);
+        return pets;
     }
 
     @Override
     public List<PetOutDTO> getBySpecieName(String specie) {
-        return petRepositoryAdapter.findBySpecieName(specie)
+        log.debug("Buscando mascotas de la especie: {}", specie);
+        List<PetOutDTO> pets = petRepositoryAdapter.findBySpecieName(specie)
                 .stream()
                 .map(petMapper::toOutDTO)
                 .toList();
+        log.debug("Se han encontrado {} mascotas de la especie: {}", pets.size(), specie);
+        return pets;
     }
 
     @Override
     public List<PetOutDTO> getAll() {
-        return petRepositoryAdapter.findAll()
+        log.debug("Recuperando todas las mascotas de la base de datos...");
+        List<PetOutDTO> pets = petRepositoryAdapter.findAll()
                 .stream()
                 .map(petMapper::toOutDTO)
                 .toList();
+        log.debug("Se han recuperado {} mascotas en total.", pets.size());
+        return pets;
     }
 
     @Override
     public PetOutDTO save(PetInDTO petInDTO, String username) {
-        // Buscar Usuario Dueño
+        log.info("Guardando nueva mascota para el usuario: {}", username);
+
+        log.debug("Buscando usuario dueño: {}", username);
         User user = userRepositoryAdapter.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException());
-        // Buscar la Especie
-        Specie specie = specieRepositoryAdapter.findByName(petInDTO.getSpecie()).orElseThrow(() -> new IdNotFoundException());
-        // Buscar la Raza
-        Breed breed = breedRepositoryAdapter.findByName(petInDTO.getBreed()).orElseThrow(() -> new IdNotFoundException());
-        
-        // Convertir DTO a Entity
+        log.debug("Usuario {} encontrado. ID: {}", username, user.getId());
+
+        log.debug("Buscando especie: {}", petInDTO.getSpecie());
+        Specie specie = specieRepositoryAdapter.findByName(petInDTO.getSpecie())
+                .orElseThrow(() -> new IdNotFoundException());
+        log.debug("Especie {} encontrada. ID: {}", petInDTO.getSpecie(), specie.getId());
+
+        log.debug("Buscando raza: {}", petInDTO.getBreed());
+        Breed breed = breedRepositoryAdapter.findByName(petInDTO.getBreed())
+                .orElseThrow(() -> new IdNotFoundException());
+        log.debug("Raza {} encontrada. ID: {}", petInDTO.getBreed(), breed.getId());
+
         Pet pet = petMapper.toEntity(petInDTO);
 
-        // Asignar Usuario Dueño
         pet.setUser(user);
-        // Asignar Especie
         pet.setSpecie(specie);
-        // Asignar Raza
         pet.setBreed(breed);
 
-        // Guardar Entity
+        log.debug("Guardando mascota en la base de datos...");
         Pet petSaved = petRepositoryAdapter.save(pet);
+        log.info("Mascota {} guardada con éxito. ID: {}", petSaved.getName(), petSaved.getId());
 
         return petMapper.toOutDTO(petSaved);
     }
 
     @Override
     public void delete(Long id) {
+        log.debug("Buscando mascota con ID: {} para eliminar...", id);
         Pet pet = petRepositoryAdapter.findById(id).orElseThrow(() -> new IdNotFoundException());
+        log.debug("Mascota con ID: {} encontrada. Procediendo a eliminar...", id);
         petRepositoryAdapter.delete(pet);
+        log.info("Mascota con ID: {} eliminada con éxito.", id);
     }
 
 }

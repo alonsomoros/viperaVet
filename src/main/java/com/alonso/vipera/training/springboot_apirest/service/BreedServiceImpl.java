@@ -10,7 +10,9 @@ import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.BreedOutD
 import com.alonso.vipera.training.springboot_apirest.persistence.BreedRepositoryAdapter;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BreedServiceImpl implements BreedService {
@@ -20,20 +22,31 @@ public class BreedServiceImpl implements BreedService {
 
     @Override
     public BreedOutDTO findByName(String name) {
-        return breedRepositoryAdapter.findByName(name).map(breedMapper::toDTO).get();
+        log.debug("Buscando raza por nombre: {}", name);
+        BreedOutDTO breed = breedRepositoryAdapter.findByName(name)
+                .map(breedMapper::toDTO)
+                .orElse(null);
+        log.debug("Raza encontrada: {}", breed != null ? breed.getName() : "Ninguna");
+        return breed;
     }
 
     @Override
     public boolean existsByName(String name) {
-        return breedRepositoryAdapter.existsByName(name);
+        log.debug("Verificando existencia de raza por nombre: {}", name);
+        boolean exists = breedRepositoryAdapter.existsByName(name);
+        log.debug("¿Existe la raza '{}'? {}", name, exists);
+        return exists;
     }
 
     @Override
     public List<BreedOutDTO> findBySpecieId(Long id) {
-        return breedRepositoryAdapter.findBreedsBySpecieId(id)
+        log.debug("Buscando razas por ID de especie: {}", id);
+        List<BreedOutDTO> breeds = breedRepositoryAdapter.findBreedsBySpecieId(id)
                 .stream()
                 .map(breedMapper::toDTO)
                 .collect(Collectors.toList());
+        log.debug("Número de razas encontradas para la especie ID {}: {}", id, breeds.size());
+        return breeds;
     }
 
 }

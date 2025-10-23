@@ -15,7 +15,9 @@ import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutD
 import com.alonso.vipera.training.springboot_apirest.persistence.UserRepositoryAdapter;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService, UserDetailsService {
@@ -25,34 +27,45 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public List<UserOutDTO> getAll() {
-        return userRepositoryAdapter.findAll()
+        log.debug("Recuperando todos los usuarios de la base de datos...");
+        List<UserOutDTO> users = userRepositoryAdapter.findAll()
                 .stream()
                 .map(userMapper::toOutDTO)
                 .toList();
+        log.debug("Se han recuperado {} usuarios en total.", users.size());
+        return users;
     }
 
     @Override
     public UserOutDTO getById(Long id) {
+        log.debug("Buscando usuario por ID: {}", id);
         User userSaved = userRepositoryAdapter.findById(id).orElseThrow(() -> new IdNotFoundException());
+        log.debug("Usuario encontrado: {} (ID: {})", userSaved.getUsername(), userSaved.getId());
         return userMapper.toOutDTO(userSaved);
     }
 
     @Override
     public UserOutDTO getByEmail(String email) {
+        log.debug("Buscando usuario por email: {}", email);
         User userSaved = userRepositoryAdapter.findByEmail(email).orElseThrow(() -> new EmailNotFoundException());
+        log.debug("Usuario encontrado: {} (Email: {})", userSaved.getUsername(), userSaved.getEmail());
         return userMapper.toOutDTO(userSaved);
     }
 
     @Override
     public UserOutDTO getByUsername(String username) {
+        log.debug("Buscando usuario por username: {}", username);
         User userSaved = userRepositoryAdapter.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException());
+        log.debug("Usuario encontrado: {} (ID: {})", userSaved.getUsername(), userSaved.getId());
         return userMapper.toOutDTO(userSaved);
     }
 
     @Override
     public List<UserOutDTO> getByAddressContaining(String address) {
+        log.debug("Buscando usuarios con dirección que contenga: {}", address);
         List<User> usersSaved = userRepositoryAdapter.findByAddressContainig(address);
+        log.debug("Se han encontrado {} usuarios con dirección que contiene: {}", usersSaved.size(), address);
         return usersSaved.stream().map(userMapper::toOutDTO).toList();
     }
 
@@ -65,10 +78,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public void delete(Long id) {
+        log.debug("Eliminando usuario con ID: {}", id);
         if (!userRepositoryAdapter.existsById(id)) {
+            log.warn("Usuario con ID: {} no encontrado para eliminar.", id);
             throw new IdNotFoundException();
         }
         userRepositoryAdapter.delete(id);
+        log.debug("Usuario con ID: {} eliminado con éxito.", id);
     }
 
     @Override
