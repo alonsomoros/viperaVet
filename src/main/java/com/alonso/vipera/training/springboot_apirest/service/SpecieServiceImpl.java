@@ -2,6 +2,7 @@ package com.alonso.vipera.training.springboot_apirest.service;
 
 import org.springframework.stereotype.Service;
 
+import com.alonso.vipera.training.springboot_apirest.exception.SpecieNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.SpecieOutDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.SpecieRepositoryAdapter;
 
@@ -18,7 +19,8 @@ public class SpecieServiceImpl implements SpecieService {
     @Override
     public SpecieOutDTO findByName(String name) {
         log.debug("Buscando especie por nombre: {}", name);
-        SpecieOutDTO specie = specieRepositoryAdapter.findByName(name).get().tDto();
+        SpecieOutDTO specie = specieRepositoryAdapter.findByName(name).orElseThrow(() -> new SpecieNotFoundException())
+                .toDto();
         log.debug("Especie encontrada: {}", specie);
         return specie;
     }

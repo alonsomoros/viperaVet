@@ -32,7 +32,7 @@ public class Specie {
     @OneToMany(mappedBy = "specie")
     private Set<Breed> breeds;
 
-    public SpecieOutDTO tDto() {
+    public SpecieOutDTO toDto() {
         return new SpecieOutDTO(this.id, this.name);
     }
 

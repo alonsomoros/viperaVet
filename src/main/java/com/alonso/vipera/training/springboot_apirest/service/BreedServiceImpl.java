@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.alonso.vipera.training.springboot_apirest.exception.BreedNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.mapper.BreedMapper;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.BreedOutDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.BreedRepositoryAdapter;
@@ -25,7 +26,7 @@ public class BreedServiceImpl implements BreedService {
         log.debug("Buscando raza por nombre: {}", name);
         BreedOutDTO breed = breedRepositoryAdapter.findByName(name)
                 .map(breedMapper::toDTO)
-                .orElse(null);
+                .orElseThrow(() -> new BreedNotFoundException());
         log.debug("Raza encontrada: {}", breed != null ? breed.getName() : "Ninguna");
         return breed;
     }

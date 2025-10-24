@@ -74,6 +74,28 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
+    // Raza no encontrada
+    @ExceptionHandler({ BreedNotFoundException.class })
+    public ResponseEntity<ErrorResponse> handleBreedNotFoundException(BreedNotFoundException exception) {
+        log.warn("Raza no encontrada: {}", exception.getMessage());
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                exception.getMessage(),
+                System.currentTimeMillis());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    // Especie no encontrada
+    @ExceptionHandler({ SpecieNotFoundException.class })
+    public ResponseEntity<ErrorResponse> handleSpecieNotFoundException(SpecieNotFoundException exception) {
+        log.warn("Especie no encontrada: {}", exception.getMessage());
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                exception.getMessage(),
+                System.currentTimeMillis());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
     // Error en creación de usuario
     @ExceptionHandler({ UserCreationException.class })
     public ResponseEntity<ErrorResponse> handleUserCreationException(UserCreationException exception) {
