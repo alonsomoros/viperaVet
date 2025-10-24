@@ -31,7 +31,7 @@ import com.alonso.vipera.training.springboot_apirest.service.AuthServiceImpl;
 import com.alonso.vipera.training.springboot_apirest.service.JwtService;
 
 @ExtendWith(MockitoExtension.class)
-class UserAuthServiceTest {
+class AuthServiceTest {
 
     @Mock
     private UserRepositoryAdapter userRepositoryAdapter;
