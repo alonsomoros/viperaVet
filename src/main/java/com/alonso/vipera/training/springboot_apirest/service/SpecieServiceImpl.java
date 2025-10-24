@@ -1,8 +1,11 @@
 package com.alonso.vipera.training.springboot_apirest.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.alonso.vipera.training.springboot_apirest.exception.SpecieNotFoundException;
+import com.alonso.vipera.training.springboot_apirest.mapper.SpecieMapper;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.SpecieOutDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.SpecieRepositoryAdapter;
 
@@ -15,6 +18,18 @@ import lombok.extern.slf4j.Slf4j;
 public class SpecieServiceImpl implements SpecieService {
 
     private final SpecieRepositoryAdapter specieRepositoryAdapter;
+    private final SpecieMapper specieMapper;
+
+    @Override
+    public List<SpecieOutDTO> getAll() {
+        log.debug("Recuperando todos las razas de la base de datos...");
+        List<SpecieOutDTO> species = specieRepositoryAdapter.findAll()
+                .stream()
+                .map(specieMapper::toDTO)
+                .toList();
+        log.debug("Se han recuperado {} razas en total.", species.size());
+        return species;
+    }
 
     @Override
     public SpecieOutDTO findByName(String name) {

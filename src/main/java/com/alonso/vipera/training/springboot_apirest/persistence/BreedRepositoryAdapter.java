@@ -15,6 +15,10 @@ public class BreedRepositoryAdapter {
 
     private final BreedRepository breedRepository;
 
+    public List<Breed> findAll() {
+        return breedRepository.findAll();
+    }
+
     public Optional<Breed> findByName(String name) {
         return breedRepository.findByName(name);
     }

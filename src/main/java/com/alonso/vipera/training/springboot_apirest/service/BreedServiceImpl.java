@@ -22,6 +22,17 @@ public class BreedServiceImpl implements BreedService {
     private final BreedMapper breedMapper;
 
     @Override
+    public List<BreedOutDTO> getAll() {
+        log.debug("Recuperando todos las razas de la base de datos...");
+        List<BreedOutDTO> breeds = breedRepositoryAdapter.findAll()
+                .stream()
+                .map(breedMapper::toDTO)
+                .toList();
+        log.debug("Se han recuperado {} razas en total.", breeds.size());
+        return breeds;
+    }
+
+    @Override
     public BreedOutDTO findByName(String name) {
         log.debug("Buscando raza por nombre: {}", name);
         BreedOutDTO breed = breedRepositoryAdapter.findByName(name)
