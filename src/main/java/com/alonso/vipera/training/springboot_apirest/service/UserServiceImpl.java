@@ -2,6 +2,8 @@ package com.alonso.vipera.training.springboot_apirest.service;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -53,6 +55,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Cacheable(value = "usersByUsername", key = "#username")
     public UserOutDTO getByUsername(String username) {
         log.debug("Buscando usuario por username: {}", username);
         User userSaved = userRepositoryAdapter.findByUsername(username)
@@ -77,6 +80,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     // }
 
     @Override
+    @CacheEvict(value = { "usersByUsername", "detailsByUsername" }, key = "#id", condition = "#result != null")
     public void delete(Long id) {
         log.debug("Eliminando usuario con ID: {}", id);
         if (!userRepositoryAdapter.existsById(id)) {
@@ -88,6 +92,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Cacheable(value = "detailsByUsername", key = "#username")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepositoryAdapter.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException());

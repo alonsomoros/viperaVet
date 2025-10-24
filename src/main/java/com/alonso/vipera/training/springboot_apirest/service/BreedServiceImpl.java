@@ -3,6 +3,7 @@ package com.alonso.vipera.training.springboot_apirest.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.alonso.vipera.training.springboot_apirest.exception.BreedNotFoundException;
@@ -22,6 +23,7 @@ public class BreedServiceImpl implements BreedService {
     private final BreedMapper breedMapper;
 
     @Override
+    @Cacheable("breeds")
     public List<BreedOutDTO> getAll() {
         log.debug("Recuperando todos las razas de la base de datos...");
         List<BreedOutDTO> breeds = breedRepositoryAdapter.findAll()

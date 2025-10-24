@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.alonso.vipera.training.springboot_apirest.clients.DogApiClient;
@@ -30,6 +32,7 @@ public class DogApiBreedsService {
     private final SpecieRepositoryAdapter specieRepository;
     private final BreedMapper breedMapper;
 
+    @Cacheable("dog-api-breeds")
     @CircuitBreaker(name = "dog-api-breeds", fallbackMethod = "getBreedsFallback")
     public List<DogApiBreedInDTO> getAllDogBreeds() {
         log.debug("Contactando a Dog API para obtener razas...");
@@ -37,6 +40,7 @@ public class DogApiBreedsService {
     }
 
     @Transactional
+    @CacheEvict(value = "breeds", allEntries = true)
     public List<BreedOutDTO> saveAllDogsBreeds() {
         log.info("Iniciando sincronización de razas de perro desde Dog API");
 
@@ -92,7 +96,7 @@ public class DogApiBreedsService {
      * (opcional).
      */
     public List<DogApiBreedInDTO> getBreedsFallback(Throwable throwable) {
-        log.error("Fallo al obtener razas de perro desde Dog API: {}", throwable);
+        log.error("Fallo al obtener razas de perro desde Dog API. Fallback: ", throwable);
         return List.of();
     }
 }

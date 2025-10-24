@@ -2,6 +2,7 @@ package com.alonso.vipera.training.springboot_apirest.service;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.alonso.vipera.training.springboot_apirest.exception.SpecieNotFoundException;
@@ -21,6 +22,7 @@ public class SpecieServiceImpl implements SpecieService {
     private final SpecieMapper specieMapper;
 
     @Override
+    @Cacheable("species")
     public List<SpecieOutDTO> getAll() {
         log.debug("Recuperando todos las razas de la base de datos...");
         List<SpecieOutDTO> species = specieRepositoryAdapter.findAll()

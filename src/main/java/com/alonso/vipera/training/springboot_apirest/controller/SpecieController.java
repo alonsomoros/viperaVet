@@ -21,8 +21,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/specie")
-@Tag(name = "Specie", description = "API endpoints para gestionar especies de mascotas")
+@RequestMapping("/species")
+@Tag(name = "Species", description = "API endpoints para gestionar especies de mascotas")
 @RequiredArgsConstructor
 public class SpecieController {
 
