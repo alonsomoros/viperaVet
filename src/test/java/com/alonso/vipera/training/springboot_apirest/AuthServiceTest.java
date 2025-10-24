@@ -33,6 +33,14 @@ import com.alonso.vipera.training.springboot_apirest.service.JwtService;
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
 
+    // Constants
+    private static final String USERNAME = "Juan";
+    private static final String EMAIL = "juan@gmail.com";
+    private static final String PASSWORD = "password123";
+    private static final String ENCODED_PASSWORD = "encodedPassword";
+    private static final String JWT_TOKEN = "jwtToken";
+    private static final Long USER_ID = 1L;
+
     @Mock
     private UserRepositoryAdapter userRepositoryAdapter;
 
@@ -56,102 +64,106 @@ class AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-
         registerRequestDTO = new RegisterRequestDTO();
-        registerRequestDTO.setUsername("Juan");
-        registerRequestDTO.setEmail("juan@gmail.com");
-        registerRequestDTO.setPassword("password123");
+        registerRequestDTO.setUsername(USERNAME);
+        registerRequestDTO.setEmail(EMAIL);
+        registerRequestDTO.setPassword(PASSWORD);
 
         userEntity = new User();
-        userEntity.setId(1L);
-        userEntity.setUsername("Juan");
-        userEntity.setEmail("juan@gmail.com");
-        userEntity.setPassword("encodedPassword");
+        userEntity.setId(USER_ID);
+        userEntity.setUsername(USERNAME);
+        userEntity.setEmail(EMAIL);
+        userEntity.setPassword(ENCODED_PASSWORD);
     }
 
     @Test
-    void testPasswordEncryption() {
+    void testPasswordEncryption_shouldEncryptAndMatchPassword() {
+        // Arrange
         PasswordEncoder realEncoder = new BCryptPasswordEncoder();
-        String encoded = realEncoder.encode("password123");
 
-        assertTrue(realEncoder.matches("password123", encoded));
+        // Act
+        String encoded = realEncoder.encode(PASSWORD);
+
+        // Assert
+        assertTrue(realEncoder.matches(PASSWORD, encoded));
     }
 
     @Test
-    void testCreateUser_whenValidResponse_shouldCreateUserSuccesfully() {
-        // Arrange - Mocks de verificación
-        when(userRepositoryAdapter.existsByUsername(registerRequestDTO.getUsername())).thenReturn(false);
-        when(userRepositoryAdapter.existsByEmail(registerRequestDTO.getEmail())).thenReturn(false);
-
-        // Arrange - Mock de encriptación
-        when(passwordEncoder.encode(registerRequestDTO.getPassword())).thenReturn("encodedPassword");
-
-        // Arrange - Mock de mapping y guardado
+    void testRegister_whenValidData_shouldCreateUserSuccessfully() {
+        // Arrange
+        when(userRepositoryAdapter.existsByUsername(USERNAME)).thenReturn(false);
+        when(userRepositoryAdapter.existsByEmail(EMAIL)).thenReturn(false);
+        when(passwordEncoder.encode(PASSWORD)).thenReturn(ENCODED_PASSWORD);
         when(userMapper.toEntity(registerRequestDTO)).thenReturn(userEntity);
         when(userRepositoryAdapter.save(any(User.class))).thenReturn(userEntity);
-
-        // Arrange - Mock de JWT
-        when(jwtService.generateToken(userEntity)).thenReturn("jwtToken");
+        when(jwtService.generateToken(userEntity)).thenReturn(JWT_TOKEN);
 
         // Act
         AuthResponseDTO result = authServiceImpl.register(registerRequestDTO);
 
         // Assert
         assertNotNull(result);
-        assertEquals("jwtToken", result.getToken());
-        assertEquals(registerRequestDTO.getUsername(), result.getUsername());
+        assertEquals(JWT_TOKEN, result.getToken());
+        assertEquals(USERNAME, result.getUsername());
 
-        // Verify interactions
-        verify(passwordEncoder, times(1)).encode("password123");
-        verify(jwtService, times(1)).generateToken(userEntity);
+        // Verify
+        verify(userRepositoryAdapter, times(1)).existsByUsername(USERNAME);
+        verify(userRepositoryAdapter, times(1)).existsByEmail(EMAIL);
+        verify(passwordEncoder, times(1)).encode(PASSWORD);
+        verify(userMapper, times(1)).toEntity(registerRequestDTO);
         verify(userRepositoryAdapter, times(1)).save(any(User.class));
+        verify(jwtService, times(1)).generateToken(userEntity);
     }
 
     @Test
-    void testCreateUser_whenUsernameTaken_shouldThrowUsernameTakenException() {
-        // Arrange - Mocks de verificación
-        when(userRepositoryAdapter.existsByUsername(registerRequestDTO.getUsername())).thenReturn(true);
+    void testRegister_whenUsernameTaken_shouldThrowUsernameTakenException() {
+        // Arrange
+        when(userRepositoryAdapter.existsByUsername(USERNAME)).thenReturn(true);
 
         // Act & Assert
         assertThrows(UsernameTakenException.class, () -> authServiceImpl.register(registerRequestDTO));
 
-        // Verify interactions
-        verify(userRepositoryAdapter, times(1)).existsByUsername(registerRequestDTO.getUsername());
+        // Verify
+        verify(userRepositoryAdapter, times(1)).existsByUsername(USERNAME);
+        verify(userRepositoryAdapter, times(0)).existsByEmail(EMAIL);
+        verify(passwordEncoder, times(0)).encode(any());
         verify(userRepositoryAdapter, times(0)).save(any(User.class));
     }
 
     @Test
-    void testCreateUser_whenEmailTaken_shouldThrowEmailTakenException() {
-        // Arrange - Mocks de verificación
-        when(userRepositoryAdapter.existsByUsername(registerRequestDTO.getUsername())).thenReturn(false);
-        when(userRepositoryAdapter.existsByEmail(registerRequestDTO.getEmail())).thenReturn(true);
+    void testRegister_whenEmailTaken_shouldThrowEmailTakenException() {
+        // Arrange
+        when(userRepositoryAdapter.existsByUsername(USERNAME)).thenReturn(false);
+        when(userRepositoryAdapter.existsByEmail(EMAIL)).thenReturn(true);
 
         // Act & Assert
         assertThrows(EmailTakenException.class, () -> authServiceImpl.register(registerRequestDTO));
 
-        // Verify interactions
-        verify(userRepositoryAdapter, times(1)).existsByEmail(registerRequestDTO.getEmail());
+        // Verify
+        verify(userRepositoryAdapter, times(1)).existsByUsername(USERNAME);
+        verify(userRepositoryAdapter, times(1)).existsByEmail(EMAIL);
+        verify(passwordEncoder, times(0)).encode(any());
         verify(userRepositoryAdapter, times(0)).save(any(User.class));
     }
 
     @Test
-    void testCreateUser_whenUserNotSaved_shouldThrowUserCreationException() {
-        // Arrange - Mocks de verificación
-        when(userRepositoryAdapter.existsByUsername(registerRequestDTO.getUsername())).thenReturn(false);
-        when(userRepositoryAdapter.existsByEmail(registerRequestDTO.getEmail())).thenReturn(false);
-
-        // Arrange - Mock de encriptación
-        when(passwordEncoder.encode(registerRequestDTO.getPassword())).thenReturn("encodedPassword");
-
-        // Arrange - Mock de mapping y guardado que falla
+    void testRegister_whenUserNotSaved_shouldThrowUserCreationException() {
+        // Arrange
+        when(userRepositoryAdapter.existsByUsername(USERNAME)).thenReturn(false);
+        when(userRepositoryAdapter.existsByEmail(EMAIL)).thenReturn(false);
+        when(passwordEncoder.encode(PASSWORD)).thenReturn(ENCODED_PASSWORD);
         when(userMapper.toEntity(registerRequestDTO)).thenReturn(userEntity);
         when(userRepositoryAdapter.save(any(User.class))).thenReturn(null);
 
         // Act & Assert
         assertThrows(UserCreationException.class, () -> authServiceImpl.register(registerRequestDTO));
 
-        // Verify interactions
+        // Verify
+        verify(userRepositoryAdapter, times(1)).existsByUsername(USERNAME);
+        verify(userRepositoryAdapter, times(1)).existsByEmail(EMAIL);
+        verify(passwordEncoder, times(1)).encode(PASSWORD);
+        verify(userMapper, times(1)).toEntity(registerRequestDTO);
         verify(userRepositoryAdapter, times(1)).save(any(User.class));
+        verify(jwtService, times(0)).generateToken(any());
     }
-
 }

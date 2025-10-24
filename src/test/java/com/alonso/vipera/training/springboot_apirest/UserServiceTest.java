@@ -1,5 +1,6 @@
 package com.alonso.vipera.training.springboot_apirest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
@@ -32,6 +33,14 @@ import com.alonso.vipera.training.springboot_apirest.service.UserServiceImpl;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
+    private static final String USERNAME = "Juan";
+    private static final String EMAIL = "juan@gmail.com";
+    private static final String PASSWORD = "password123";
+    private static final String ENCODED_PASSWORD = "encodedPassword";
+    private static final String ADDRESS = "Calle Falsa 123";
+    private static final Long USER_ID = 1L;
+    private static final LocalDateTime CREATED_AT = LocalDateTime.now();
+
     @Mock
     private UserRepositoryAdapter userRepositoryAdapter;
 
@@ -47,187 +56,237 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-
         registerRequestDTO = new RegisterRequestDTO();
-        registerRequestDTO.setUsername("Juan");
-        registerRequestDTO.setEmail("juan@gmail.com");
-        registerRequestDTO.setPassword("password123");
+        registerRequestDTO.setUsername(USERNAME);
+        registerRequestDTO.setEmail(EMAIL);
+        registerRequestDTO.setPassword(PASSWORD);
 
         userEntity = new User();
-        userEntity.setId(1L);
-        userEntity.setUsername("Juan");
-        userEntity.setEmail("juan@gmail.com");
-        userEntity.setPassword("encodedPassword");
+        userEntity.setId(USER_ID);
+        userEntity.setUsername(USERNAME);
+        userEntity.setEmail(EMAIL);
+        userEntity.setPassword(ENCODED_PASSWORD);
+        userEntity.setAddress(ADDRESS);
 
         userOutDTO = new UserOutDTO();
-        userOutDTO.setId(1L);
-        userOutDTO.setUsername("Juan");
-        userOutDTO.setEmail("juan@gmail.com");
-        userOutDTO.setCreatedAt(LocalDateTime.now());
-
+        userOutDTO.setId(USER_ID);
+        userOutDTO.setUsername(USERNAME);
+        userOutDTO.setEmail(EMAIL);
+        userOutDTO.setCreatedAt(CREATED_AT);
     }
 
     @Test
-    void testGetAllUsers_whenValidResponse_shouldReturnUserList() {
+    void testGetAllUsers_whenUsersFound_shouldReturnUserList() {
         // Arrange
         when(userRepositoryAdapter.findAll()).thenReturn(List.of(userEntity));
+        when(userMapper.toOutDTO(userEntity)).thenReturn(userOutDTO);
+
+        // Act
+        List<UserOutDTO> users = userServiceImpl.getAll();
+
+        // Assert
+        assertNotNull(users);
+        assertEquals(1, users.size());
+
+        // Verify
+        verify(userRepositoryAdapter, times(1)).findAll();
+        verify(userMapper, times(1)).toOutDTO(userEntity);
+    }
+
+    @Test
+    void testGetAllUsers_whenNoUsersFound_shouldReturnEmptyList() {
+        // Arrange
+        when(userRepositoryAdapter.findAll()).thenReturn(List.of());
 
         // Act
         List<?> users = userServiceImpl.getAll();
 
         // Assert
         assertNotNull(users);
+        assertEquals(0, users.size());
 
         // Verify
         verify(userRepositoryAdapter, times(1)).findAll();
     }
 
     @Test
-    void testGetUserById_whenValidResponse_shouldReturnUser() {
+    void testGetUserById_whenUserFound_shouldReturnUser() {
         // Arrange
-        when(userRepositoryAdapter.findById(userEntity.getId())).thenReturn(Optional.of(userEntity));
+        when(userRepositoryAdapter.findById(USER_ID)).thenReturn(Optional.of(userEntity));
         when(userMapper.toOutDTO(userEntity)).thenReturn(userOutDTO);
 
         // Act
-        UserOutDTO user = userServiceImpl.getById(userEntity.getId());
+        UserOutDTO user = userServiceImpl.getById(USER_ID);
 
         // Assert
         assertNotNull(user);
+        assertEquals(USERNAME, user.getUsername());
 
         // Verify
-        verify(userRepositoryAdapter, times(1)).findById(userEntity.getId());
+        verify(userRepositoryAdapter, times(1)).findById(USER_ID);
+        verify(userMapper, times(1)).toOutDTO(userEntity);
     }
 
     @Test
-    void testGetUserById_whenIdNotFound_shouldReturnIdNotFoundException() {
+    void testGetUserById_whenIdNotFound_shouldThrowIdNotFoundException() {
         // Arrange
-        when(userRepositoryAdapter.findById(userEntity.getId())).thenReturn(Optional.empty());
+        when(userRepositoryAdapter.findById(USER_ID)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(IdNotFoundException.class, () -> userServiceImpl.getById(userEntity.getId()));
+        assertThrows(IdNotFoundException.class, () -> userServiceImpl.getById(USER_ID));
 
         // Verify
-        verify(userRepositoryAdapter, times(1)).findById(userEntity.getId());
+        verify(userRepositoryAdapter, times(1)).findById(USER_ID);
+        verify(userMapper, times(0)).toOutDTO(userEntity);
     }
 
     @Test
-    void testGetUserByUsername_whenValidResponse_shouldReturnUser() {
+    void testGetUserByUsername_whenUserFound_shouldReturnUser() {
         // Arrange
-        when(userRepositoryAdapter.findByUsername(userEntity.getUsername())).thenReturn(Optional.of(userEntity));
+        when(userRepositoryAdapter.findByUsername(USERNAME)).thenReturn(Optional.of(userEntity));
         when(userMapper.toOutDTO(userEntity)).thenReturn(userOutDTO);
 
         // Act
-        UserOutDTO user = userServiceImpl.getByUsername(userEntity.getUsername());
+        UserOutDTO user = userServiceImpl.getByUsername(USERNAME);
 
         // Assert
         assertNotNull(user);
+        assertEquals(USERNAME, user.getUsername());
 
         // Verify
-        verify(userRepositoryAdapter, times(1)).findByUsername(userEntity.getUsername());
+        verify(userRepositoryAdapter, times(1)).findByUsername(USERNAME);
+        verify(userMapper, times(1)).toOutDTO(userEntity);
     }
 
     @Test
-    void testGetUserByUsername_whenUsernameNotFound_shouldReturnUsernameNotFoundException() {
+    void testGetUserByUsername_whenUsernameNotFound_shouldThrowUsernameNotFoundException() {
         // Arrange
-        when(userRepositoryAdapter.findByUsername(userEntity.getUsername())).thenReturn(Optional.empty());
+        when(userRepositoryAdapter.findByUsername(USERNAME)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(UsernameNotFoundException.class, () -> userServiceImpl.getByUsername(userEntity.getUsername()));
+        assertThrows(UsernameNotFoundException.class, () -> userServiceImpl.getByUsername(USERNAME));
 
         // Verify
-        verify(userRepositoryAdapter, times(1)).findByUsername(userEntity.getUsername());
+        verify(userRepositoryAdapter, times(1)).findByUsername(USERNAME);
+        verify(userMapper, times(0)).toOutDTO(userEntity);
     }
 
     @Test
-    void testGetUserByEmail_whenValidResponse_shouldReturnUser() {
+    void testGetUserByEmail_whenUserFound_shouldReturnUser() {
         // Arrange
-        when(userRepositoryAdapter.findByEmail(userEntity.getEmail())).thenReturn(Optional.of(userEntity));
+        when(userRepositoryAdapter.findByEmail(EMAIL)).thenReturn(Optional.of(userEntity));
         when(userMapper.toOutDTO(userEntity)).thenReturn(userOutDTO);
 
         // Act
-        UserOutDTO user = userServiceImpl.getByEmail(userEntity.getEmail());
+        UserOutDTO user = userServiceImpl.getByEmail(EMAIL);
 
         // Assert
         assertNotNull(user);
+        assertEquals(EMAIL, user.getEmail());
 
         // Verify
-        verify(userRepositoryAdapter, times(1)).findByEmail(userEntity.getEmail());
+        verify(userRepositoryAdapter, times(1)).findByEmail(EMAIL);
+        verify(userMapper, times(1)).toOutDTO(userEntity);
     }
 
     @Test
-    void testGetUserByEmail_whenEmailNotFound_shouldReturnEmailNotFoundException() {
+    void testGetUserByEmail_whenEmailNotFound_shouldThrowEmailNotFoundException() {
         // Arrange
-        when(userRepositoryAdapter.findByEmail(userEntity.getEmail())).thenReturn(Optional.empty());
+        when(userRepositoryAdapter.findByEmail(EMAIL)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(EmailNotFoundException.class, () -> userServiceImpl.getByEmail(userEntity.getEmail()));
+        assertThrows(EmailNotFoundException.class, () -> userServiceImpl.getByEmail(EMAIL));
 
         // Verify
-        verify(userRepositoryAdapter, times(1)).findByEmail(userEntity.getEmail());
+        verify(userRepositoryAdapter, times(1)).findByEmail(EMAIL);
+        verify(userMapper, times(0)).toOutDTO(userEntity);
     }
 
     @Test
-    void testGetUserByAddress_whenValidResponse_shouldReturnUser() {
+    void testGetUserByAddress_whenUsersFound_shouldReturnUserList() {
         // Arrange
-        when(userRepositoryAdapter.findByAddressContainig(userEntity.getAddress())).thenReturn(List.of());
+        when(userRepositoryAdapter.findByAddressContainig(ADDRESS)).thenReturn(List.of(userEntity));
+        when(userMapper.toOutDTO(userEntity)).thenReturn(userOutDTO);
 
         // Act
-        List<UserOutDTO> users = userServiceImpl.getByAddressContaining(userEntity.getAddress());
+        List<UserOutDTO> users = userServiceImpl.getByAddressContaining(ADDRESS);
 
         // Assert
         assertNotNull(users);
+        assertEquals(1, users.size());
 
         // Verify
-        verify(userRepositoryAdapter, times(1)).findByAddressContainig(userEntity.getAddress());
+        verify(userRepositoryAdapter, times(1)).findByAddressContainig(ADDRESS);
     }
 
     @Test
-    void testLoadUserDetails_whenValidResponse_shouldReturnUserDetails() {
+    void testGetUserByAddress_whenNoUsersFound_shouldReturnEmptyList() {
         // Arrange
-        when(userRepositoryAdapter.findByUsername(userEntity.getUsername())).thenReturn(Optional.of(userEntity));
+        when(userRepositoryAdapter.findByAddressContainig(ADDRESS)).thenReturn(List.of());
 
         // Act
-        UserDetails userDetails = userServiceImpl.loadUserByUsername(userEntity.getUsername());
+        List<UserOutDTO> users = userServiceImpl.getByAddressContaining(ADDRESS);
+
+        // Assert
+        assertNotNull(users);
+        assertEquals(0, users.size());
+
+        // Verify
+        verify(userRepositoryAdapter, times(1)).findByAddressContainig(ADDRESS);
+    }
+
+    @Test
+    void testLoadUserDetails_whenUserFound_shouldReturnUserDetails() {
+        // Arrange
+        when(userRepositoryAdapter.findByUsername(USERNAME)).thenReturn(Optional.of(userEntity));
+
+        // Act
+        UserDetails userDetails = userServiceImpl.loadUserByUsername(USERNAME);
 
         // Assert
         assertNotNull(userDetails);
+        assertEquals(USERNAME, userDetails.getUsername());
 
         // Verify
-        verify(userRepositoryAdapter, times(1)).findByUsername(userEntity.getUsername());
+        verify(userRepositoryAdapter, times(1)).findByUsername(USERNAME);
     }
 
     @Test
-    void testLoadUserDetails_whenUsernameNotFound_shouldReturnUsernameNotFoundException() {
+    void testLoadUserDetails_whenUsernameNotFound_shouldThrowUsernameNotFoundException() {
         // Arrange
-        when(userRepositoryAdapter.findByUsername(userEntity.getUsername())).thenReturn(Optional.empty());
+        when(userRepositoryAdapter.findByUsername(USERNAME)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(UsernameNotFoundException.class,
-                () -> userServiceImpl.loadUserByUsername(userEntity.getUsername()));
+        assertThrows(UsernameNotFoundException.class, () -> userServiceImpl.loadUserByUsername(USERNAME));
 
         // Verify
-        verify(userRepositoryAdapter, times(1)).findByUsername(userEntity.getUsername());
+        verify(userRepositoryAdapter, times(1)).findByUsername(USERNAME);
     }
 
     @Test
-    void testDeleteUser_whenValidResponse_shouldDeleteUserSuccesfully() {
-        when(userRepositoryAdapter.existsById(userEntity.getId())).thenReturn(true);
-        doNothing().when(userRepositoryAdapter).delete(userEntity.getId());
+    void testDeleteUser_whenUserExists_shouldDeleteUserSuccessfully() {
+        // Arrange
+        when(userRepositoryAdapter.existsById(USER_ID)).thenReturn(true);
+        doNothing().when(userRepositoryAdapter).delete(USER_ID);
 
-        userServiceImpl.delete(userEntity.getId());
+        // Act
+        userServiceImpl.delete(USER_ID);
 
-        verify(userRepositoryAdapter).existsById(userEntity.getId());
-        verify(userRepositoryAdapter).delete(userEntity.getId());
+        // Verify
+        verify(userRepositoryAdapter, times(1)).existsById(USER_ID);
+        verify(userRepositoryAdapter, times(1)).delete(USER_ID);
     }
 
     @Test
     void testDeleteUser_whenIdNotFound_shouldThrowIdNotFoundException() {
-        when(userRepositoryAdapter.existsById(userEntity.getId())).thenReturn(false);
+        // Arrange
+        when(userRepositoryAdapter.existsById(USER_ID)).thenReturn(false);
 
-        assertThrows(IdNotFoundException.class, () -> userServiceImpl.delete(userEntity.getId()));
+        // Act & Assert
+        assertThrows(IdNotFoundException.class, () -> userServiceImpl.delete(USER_ID));
 
-        verify(userRepositoryAdapter).existsById(userEntity.getId());
-        verify(userRepositoryAdapter, times(0)).delete(userEntity.getId());
+        // Verify
+        verify(userRepositoryAdapter, times(1)).existsById(USER_ID);
+        verify(userRepositoryAdapter, times(0)).delete(USER_ID);
     }
-
 }

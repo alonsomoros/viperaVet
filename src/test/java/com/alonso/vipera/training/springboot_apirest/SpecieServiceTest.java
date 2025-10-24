@@ -1,8 +1,10 @@
 package com.alonso.vipera.training.springboot_apirest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -24,6 +26,9 @@ import com.alonso.vipera.training.springboot_apirest.service.SpecieServiceImpl;
 @ExtendWith(MockitoExtension.class)
 public class SpecieServiceTest {
 
+    private static final String SPECIE_NAME = "Perro";
+    private static final Long SPECIE_ID = 1L;
+
     @Mock
     private SpecieRepositoryAdapter specieRepositoryAdapter;
 
@@ -31,73 +36,70 @@ public class SpecieServiceTest {
     private SpecieServiceImpl specieServiceImpl;
 
     private Specie specie;
-    private SpecieOutDTO specieOutDTO;
 
     @BeforeEach
     void setUp() {
         specie = new Specie();
-        specie.setId(1L);
-        specie.setName("Perro");
-
-        specieOutDTO = new SpecieOutDTO(1L, "Perro");
+        specie.setId(SPECIE_ID);
+        specie.setName(SPECIE_NAME);
     }
 
     @Test
-    void testGetSpecieByName_whenNameFound_shouldReturnSpecie() {
+    void testFindByName_whenNameFound_shouldReturnSpecie() {
         // Arrange
-        when(specieRepositoryAdapter.findByName(specie.getName())).thenReturn(Optional.of(specie));
+        when(specieRepositoryAdapter.findByName(SPECIE_NAME)).thenReturn(Optional.of(specie));
 
         // Act
-        SpecieOutDTO result = specieServiceImpl.findByName(specie.getName());
+        SpecieOutDTO result = specieServiceImpl.findByName(SPECIE_NAME);
 
         // Assert
         assertNotNull(result);
-        assertEquals(specieOutDTO, result);
+        assertEquals(SPECIE_NAME, result.getName());
+        assertEquals(SPECIE_ID, result.getId());
 
         // Verify
-        verify(specieRepositoryAdapter, times(1)).findByName(specie.getName());
+        verify(specieRepositoryAdapter, times(1)).findByName(SPECIE_NAME);
     }
 
     @Test
-    void testGetSpecieByName_whenNameNotFound_shouldReturnSpecieNotFoundException() {
+    void testFindByName_whenNameNotFound_shouldThrowRuntimeException() {
         // Arrange
-        when(specieRepositoryAdapter.findByName(specie.getName())).thenReturn(Optional.empty());
+        when(specieRepositoryAdapter.findByName(SPECIE_NAME)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(RuntimeException.class, () -> specieServiceImpl.findByName(specie.getName()));
+        assertThrows(RuntimeException.class, () -> specieServiceImpl.findByName(SPECIE_NAME));
 
         // Verify
-        verify(specieRepositoryAdapter, times(1)).findByName(specie.getName());
+        verify(specieRepositoryAdapter, times(1)).findByName(SPECIE_NAME);
     }
 
     @Test
     void testExistsByName_whenNameExists_shouldReturnTrue() {
         // Arrange
-        when(specieRepositoryAdapter.existsByName(specie.getName())).thenReturn(true);
+        when(specieRepositoryAdapter.existsByName(SPECIE_NAME)).thenReturn(true);
 
         // Act
-        boolean exists = specieServiceImpl.existsByName(specie.getName());
+        boolean exists = specieServiceImpl.existsByName(SPECIE_NAME);
 
         // Assert
-        assertEquals(true, exists);
+        assertTrue(exists);
 
         // Verify
-        verify(specieRepositoryAdapter, times(1)).existsByName(specie.getName());
+        verify(specieRepositoryAdapter, times(1)).existsByName(SPECIE_NAME);
     }
 
     @Test
     void testExistsByName_whenNameDoesNotExist_shouldReturnFalse() {
         // Arrange
-        when(specieRepositoryAdapter.existsByName(specie.getName())).thenReturn(false);
+        when(specieRepositoryAdapter.existsByName(SPECIE_NAME)).thenReturn(false);
 
         // Act
-        boolean exists = specieServiceImpl.existsByName(specie.getName());
+        boolean exists = specieServiceImpl.existsByName(SPECIE_NAME);
 
         // Assert
-        assertEquals(false, exists);
+        assertFalse(exists);
 
         // Verify
-        verify(specieRepositoryAdapter, times(1)).existsByName(specie.getName());
+        verify(specieRepositoryAdapter, times(1)).existsByName(SPECIE_NAME);
     }
-
 }
