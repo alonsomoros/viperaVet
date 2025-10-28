@@ -3,6 +3,8 @@ package com.alonso.vipera.training.springboot_apirest.service;
 import java.sql.Date;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.alonso.vipera.training.springboot_apirest.exception.IdNotFoundException;
@@ -89,26 +91,20 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public List<PetOutDTO> getAll() {
+    public Page<PetOutDTO> getAll(Pageable pageable) {
         log.debug("Recuperando todas las mascotas de la base de datos...");
-        List<PetOutDTO> pets = petRepositoryAdapter.findAll()
-                .stream()
-                .map(petMapper::toOutDTO)
-                .toList();
-        log.debug("Se han recuperado {} mascotas en total.", pets.size());
-        return pets;
+        Page<Pet> pets = petRepositoryAdapter.findAll(pageable);
+        log.debug("Se han recuperado {} mascotas en total.", pets.getSize());
+        return pets.map(petMapper::toOutDTO);
     }
 
     @Override
-    public List<PetOutDTO> getPetByFilters(Long pet_id, String name, Long breed_id, Long specie_id) {
+    public Page<PetOutDTO> getPetByFilters(Long pet_id, String name, Long breed_id, Long specie_id, Pageable pageable) {
         log.debug("Buscando mascotas con filtros -Id_mascota {}, Nombre: {}, Id_raza: {}, Id_especie: {}", pet_id, name,
                 breed_id, specie_id);
-        List<PetOutDTO> pets = petRepositoryAdapter.findByFilters(pet_id, name, breed_id, specie_id)
-                .stream()
-                .map(petMapper::toOutDTO)
-                .toList();
-        log.debug("Se han encontrado {} mascotas con los filtros proporcionados.", pets.size());
-        return pets;
+        Page<Pet> pets = petRepositoryAdapter.findByFilters(pet_id, name, breed_id, specie_id, pageable);
+        log.debug("Se han encontrado {} mascotas con los filtros proporcionados.", pets.getSize());
+        return pets.map(petMapper::toOutDTO);
     }
 
     @Override

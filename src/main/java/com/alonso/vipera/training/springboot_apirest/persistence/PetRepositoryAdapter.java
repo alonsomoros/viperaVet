@@ -3,6 +3,8 @@ package com.alonso.vipera.training.springboot_apirest.persistence;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import com.alonso.vipera.training.springboot_apirest.model.pet.Pet;
@@ -59,12 +61,12 @@ public class PetRepositoryAdapter {
                 .toList();
     }
 
-    public List<Pet> findAll() {
-        return petRepository.findAll();
+    public Page<Pet> findAll(Pageable pageable) {
+        return petRepository.findAll(pageable);
     }
 
-    public List<Pet> findByFilters(Long pet_id, String name, Long breed_id, Long specie_id) {
-        return petRepository.findByFilters(pet_id, name, breed_id, specie_id);
+    public Page<Pet> findByFilters(Long pet_id, String name, Long breed_id, Long specie_id, Pageable pageable) {
+        return petRepository.findByFilters(pet_id, name, breed_id, specie_id, pageable);
     }
 
     public Pet save(Pet pet) {

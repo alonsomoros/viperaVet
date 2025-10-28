@@ -3,6 +3,8 @@ package com.alonso.vipera.training.springboot_apirest.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -60,16 +62,17 @@ public class PetController {
             @ApiResponse(responseCode = "401", description = "Token no válido o expirado", content = @Content)
     })
     @GetMapping
-    public ResponseEntity<List<PetOutDTO>> getPetsByFilters(
+    public ResponseEntity<Page<PetOutDTO>> getPetsByFilters(
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Long breed_id,
-            @RequestParam(required = false) Long specie_id) {
+            @RequestParam(required = false) Long specie_id,
+            Pageable pageable) {
 
         if (id != null || name != null || breed_id != null || specie_id != null) {
-            return ResponseEntity.ok(petService.getPetByFilters(id, name, breed_id, specie_id));
+            return ResponseEntity.ok(petService.getPetByFilters(id, name, breed_id, specie_id, pageable));
         }
-        return ResponseEntity.ok(petService.getAll());
+        return ResponseEntity.ok(petService.getAll(pageable));
     }
 
     // POST calls

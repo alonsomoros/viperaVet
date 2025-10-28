@@ -3,14 +3,17 @@ package com.alonso.vipera.training.springboot_apirest.service;
 import java.sql.Date;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.in.PetInDTO;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.PetOutDTO;
 
 public interface PetService {
 
-    List<PetOutDTO> getAll();
+    Page<PetOutDTO> getAll(Pageable pageable);
 
-    List<PetOutDTO> getPetByFilters(Long pet_id, String name, Long breed_id, Long specie_id);
+    Page<PetOutDTO> getPetByFilters(Long pet_id, String name, Long breed_id, Long specie_id, Pageable pageable);
 
     List<PetOutDTO> getPetsByOwnerUsername(String username);
 
