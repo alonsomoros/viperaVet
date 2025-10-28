@@ -29,10 +29,10 @@ El objetivo del proyecto es desarrollar una **API funcional con Spring Boot** qu
 
 1. Controlador con servicios tipo **POST**, **GET**, **PUT** o **PATCH** con acceso a una base de datos.  
 2. Mecanismos de **seguridad** implementados con Spring Security.  
-3. **Consumo de una API externa** usando `RestTemplate`, `FeignClient` o `WebClient`.  
+3. **Consumo de una API externa** usando`FeignClient`.  
 4. **Sistema de caché** para mejorar el rendimiento.  
 5. **Validaciones** y **registro de logs**.  
-6. **Manejo de errores y excepciones** personalizado.  
+6. **Manejo de errores y excepciones** personalizado y centrlizado.  
 7. **Documentación OpenAPI** (Swagger UI) con **springdoc-openapi**.  
 8. Implementación del patrón **Circuit Breaker** con **Resilience4j**.
 
@@ -40,16 +40,27 @@ El objetivo del proyecto es desarrollar una **API funcional con Spring Boot** qu
 
 ## ⚙️ Métodos soportados
 
-| Método HTTP | Endpoint | Descripción | Respuesta exitosa |
-|--------------|-----------|--------------|-------------------|
-| **POST** | `/auth/register` | Crea un nuevo usuario. Requiere los datos en el cuerpo de la solicitud. | **201 Created** / **400 Bad Request** / **409 Conflict**   |
-| **POST** | `/auth/login` | Hace Login con un usuario ya existente. Necesita el token para autenticarse | **200 Ok** / **401 Unauthorized**  |
-| **GET** | `/users/` | Obtiene todos los usuarios existentes. | **200 OK** / **404 Not Found** |
-| **GET** | `/users/{id}` | Obtiene un usuario por su DNI. | **200 OK** / **404 Not Found** |
-| **DELETE** | `/users/{id}` | Elimina un usuario por su ID. | **200 OK** / **404 Not Found** |
-| **GET** | `/users/x` | Obtiene una lista de países desde una **API externa**. | **200 OK** |
+| **Método HTTP** | **Endpoint**               | **Descripción**                                                                          | **Respuestas esperadas**                                                                                                                                                    |
+| --------------- | -------------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **POST**        | `/auth/register`           | Crea un nuevo usuario. Datos en el body.                                                 | **201 Created** – Usuario creado<br>**400 Bad Request** – Datos mal formados<br>**409 Conflict** – Usuario ya existe<br>**422 Unprocessable Entity** – Validación fallida   |
+| **POST**        | `/auth/login`              | Autentica y devuelve un token JWT.                                                       | **200 OK** – Login exitoso<br>**400 Bad Request** – Solicitud inválida<br>**401 Unauthorized** – Credenciales incorrectas<br>**403 Forbidden** – Cuenta bloqueada           |
+| **GET**         | `/users`                   | Lista usuarios; admite filtros (nombre, correo, etc.). Si no hay filtros devuelve todos. | **200 OK** – Lista (puede estar vacía)<br>**400 Bad Request** – Filtros inválidos<br>**401 Unauthorized** – No autenticado<br>**403 Forbidden** – Sin permisos              |
+| **DELETE**      | `/users/{id}`              | Elimina un usuario por ID.                                                               | **204 No Content** – Eliminado exitosamente<br>**401 Unauthorized** – No autenticado<br>**403 Forbidden** – Sin permisos<br>**404 Not Found** – No existe el usuario        |
+| **GET**         | `/pets/my-pets`            | Obtiene las mascotas del usuario autenticado.                                            | **200 OK** – Lista de mascotas<br>**401 Unauthorized** – No autenticado<br>**403 Forbidden** – Sin permisos                                                                 |
+| **GET**         | `/pets`                    | Busca mascotas con filtros (especie, raza, etc.). Si no hay filtros, devuelve todas.     | **200 OK** – Lista (puede estar vacía)<br>**400 Bad Request** – Filtros inválidos<br>**401 Unauthorized** – No autenticado<br>**403 Forbidden** – Sin permisos              |
+| **POST**        | `/pets`                    | Registra una nueva mascota asociada al usuario autenticado.                              | **201 Created** – Mascota creada<br>**400 Bad Request** – Datos mal formados<br>**401 Unauthorized** – No autenticado<br>**422 Unprocessable Entity** – Error de validación |
+| **DELETE**      | `/pets/{id}`               | Elimina una mascota por ID.                                                              | **204 No Content** – Eliminada<br>**401 Unauthorized** – No autenticado<br>**403 Forbidden** – Sin permisos<br>**404 Not Found** – Mascota no encontrada                    |
+| **GET**         | `/breeds`                  | Obtiene todas las razas disponibles (gatos y perros).                                    | **200 OK** – Lista de razas<br>**401 Unauthorized** – No autenticado<br>**403 Forbidden** – Sin permisos                                                                    |
+| **GET**         | `/species`                 | Obtiene todas las especies disponibles.                                                  | **200 OK** – Lista de especies<br>**401 Unauthorized** – No autenticado<br>**403 Forbidden** – Sin permisos                                                                 |
+| **GET**         | `/api/cat-breeds`          | Obtiene lista de razas de gatos desde una **API externa**.                               | **200 OK** – Datos obtenidos<br>**502 Bad Gateway** / **503 Service Unavailable** / **504 Gateway Timeout** – Error al consultar API externa                                |
+| **POST**        | `/api/cat-breeds/save-all` | Guarda todas las razas de gatos obtenidas de la API externa en la BD.                    | **201 Created** – Guardado exitoso<br>**409 Conflict** – Ya existen<br>**422 Unprocessable Entity** – Datos inválidos<br>**502/503/504** – Error externo                    |
+| **GET**         | `/api/dog-breeds`          | Obtiene lista de razas de perros desde una **API externa**.                              | **200 OK** – Datos obtenidos<br>**502/503/504** – Error externo                                                                                                             |
+| **POST**        | `/api/dog-breeds/save-all` | Guarda todas las razas de perros obtenidas de la API externa en la BD.                   | **201 Created** – Guardado exitoso<br>**409 Conflict** – Ya existen<br>**422 Unprocessable Entity** – Datos inválidos<br>**502/503/504** – Error externo                    |
+| **GET**         | `/v1/breeds`   | Obtiene razas de **perros** desde 'TheDogApi.                                            | **200 OK** – Lista de razas                                                                                                                                                 |
+| **GET**         | `/v1/breeds`   | Obtiene razas de **gatos** desde 'TheCatApi.                                             | **200 OK** – Lista de razas                                                                                                                                                 |
 
-> 🛰️ El último endpoint realiza una llamada a una API externa utilizando `RestTemplate`.
+
+> 🛰️ Los endpoints `/api/cat-breeds` y `/api/dog-breeds` realizan llamadas a **APIs externas** utilizando `FeignClient` a su cliente correspondiente `/v1/breeds`.
 
 ---
 
@@ -73,23 +84,28 @@ Contraseña: password
 ---
 
 ## 🌍 API externa
-La aplicación consume una API externa en la siguiente URL:
-(en proceso)
+La aplicación consume dos APIs externas en los siguientes URLs:
+https://api.thedogapi.com/v1/breeds
+https://api.thecatapi.com/v1/breeds
 
-Esta integración se realiza mediante **RestTemplate** (o alternativamente `FeignClient` o `WebClient`).
+Esta integración se realiza mediante **FeignClient**.
 
 ---
 
 ## ⚡ Caché
-(en proceso)
+
+Implementada caché en lógica de:
+- Buscar un usuario por su nombre (búsqueda/autenticación)
+- Buscar todas las razas
+- Buscar todas las especies
+- Buscar todas las razas de una especie
 
 ---
 
 ## ✅ Validaciones
 La API cuenta con validaciones estándar y personalizadas.
 
-- **Validaciones estándar:** `@NotNull`, etc. 
-- **Validaciones personalizadas:** Validación de Email internamente.  
+- **Validaciones estándar:** `@NotNull`, `@NotBlank`, `@Size` etc.  
 
 Las solicitudes con datos inválidos generan respuestas de error estructuradas, gestionadas por el manejador global de excepciones.
 
@@ -108,17 +124,15 @@ El manejo de errores se realiza de forma centralizada mediante un `@ControllerAd
 
 - ``EmailNotFoundException`` → se lanza cuando no se encuentra un correo electrónico en la base de datos.
 
-- ``InvalidEmailException`` → se lanza cuando el formato del correo electrónico es inválido.
-
 - ``UsernameTakenException`` → se lanza cuando el nombre de usuario ya está registrado.
 
 - ``UsernameNotFoundException`` → se lanza cuando no se encuentra un nombre de usuario en la base de datos.
 
-- ``InvalidUsernameException`` → se lanza cuando el formato del nombre de usuario no cumple las reglas definidas.
-
 - ``IdNotFoundException`` → se lanza cuando no se encuentra un recurso por su ID en la base de datos.
 
-- ``WeakPasswordException`` → se lanza cuando la contraseña no cumple los criterios mínimos de seguridad.
+- ``BreedNotFoundException`` → se lanza cuando no se encuentra una raza en la base de datos.
+
+- ``SpecieNotFoundException`` → se lanza cuando no se encuentra una especie en la base de datos.
 
 - ``UserCreationException`` → se lanza cuando ocurre un error inesperado durante la creación de un usuario.
 
@@ -139,7 +153,7 @@ Esta interfaz permite **probar los endpoints** de manera interactiva.
 ---
 
 ## 🔁 Circuit Breaker
-(en proceso)
+Implementado Circuit Breaker en las llamadas a las APIs de 'TheDogApi' y 'TheCatApi'
 
 ---
 
