@@ -1,9 +1,9 @@
 package com.alonso.vipera.training.springboot_apirest.service;
 
-import java.util.List;
-
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -29,14 +29,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserMapper userMapper;
 
     @Override
-    public List<UserOutDTO> getAll() {
+    public Page<UserOutDTO> getAll(Pageable pageable) {
         log.debug("Recuperando todos los usuarios de la base de datos...");
-        List<UserOutDTO> users = userRepositoryAdapter.findAll()
-                .stream()
-                .map(userMapper::toOutDTO)
-                .toList();
-        log.debug("Se han recuperado {} usuarios en total.", users.size());
-        return users;
+        Page<User> users = userRepositoryAdapter.findAll(pageable);
+        log.debug("Se han recuperado {} usuarios en total.", users.getSize());
+        return users.map(userMapper::toOutDTO);
     }
 
     @Override
@@ -66,15 +63,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public List<UserOutDTO> getUserByFilters(Long id, String username, String email, Role role) {
+    public Page<UserOutDTO> getUserByFilters(Long id, String username, String email, Role role, Pageable pageable) {
         log.debug("Buscando usuarios con filtros - ID: {}, Username: {}, Email: {}, Role: {}", id, username, email,
                 role);
-        List<UserOutDTO> users = userRepositoryAdapter.findByFilters(id, username, email, role)
-                .stream()
-                .map(userMapper::toOutDTO)
-                .toList();
-        log.debug("Se han encontrado {} usuarios con los filtros proporcionados.", users.size());
-        return users;
+        Page<User> users = userRepositoryAdapter.findByFilters(id, username, email, role, pageable);
+
+        log.debug("Se han encontrado {} usuarios con los filtros proporcionados.", users.getSize());
+        return users.map(userMapper::toOutDTO);
     }
 
     // Hacer un update en el futuro

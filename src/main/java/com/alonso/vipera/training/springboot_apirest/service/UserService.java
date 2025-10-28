@@ -1,13 +1,14 @@
 package com.alonso.vipera.training.springboot_apirest.service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.alonso.vipera.training.springboot_apirest.model.user.User.Role;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutDTO;
 
 public interface UserService {
 
-    List<UserOutDTO> getAll();
+    Page<UserOutDTO> getAll(Pageable pageable);
 
     UserOutDTO getById(Long id);
 
@@ -15,7 +16,7 @@ public interface UserService {
 
     UserOutDTO getByUsername(String username);
 
-    List<UserOutDTO> getUserByFilters(Long id, String username, String email, Role role);
+    Page<UserOutDTO> getUserByFilters(Long id, String username, String email, Role role, Pageable pageable);
 
     void delete(Long id);
     

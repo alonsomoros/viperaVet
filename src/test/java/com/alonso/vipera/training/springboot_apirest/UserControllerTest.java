@@ -13,6 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,6 +39,8 @@ public class UserControllerTest {
     @MockBean
     private UserMapper userMapper;
 
+    private Pageable testPageable;
+
     private User createdUser1;
     private User createdUser2;
     private UserOutDTO userOutDTO1;
@@ -42,6 +48,7 @@ public class UserControllerTest {
 
     @BeforeEach
     void setUp() {
+        testPageable = PageRequest.of(0, 10);
 
         createdUser1 = new User();
         createdUser1.setId(1L);
@@ -69,10 +76,11 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser
-    void testGetAllUsers_whenValidResponse_shouldReturnOkAndUserList() throws Exception {
+    void testGetAllUsers_whenValidResponse_shouldReturnOkAndUserPage() throws Exception {
         List<UserOutDTO> usersOutDtoList = List.of(userOutDTO1, userOutDTO2);
+        Page<UserOutDTO> userPage = new PageImpl<>(usersOutDtoList, testPageable, usersOutDtoList.size());
 
-        when(userService.getAll()).thenReturn(usersOutDtoList);
+        when(userService.getAll(testPageable)).thenReturn(userPage);
 
         mockMvc.perform(get("/users")
                 .contentType(MediaType.APPLICATION_JSON))

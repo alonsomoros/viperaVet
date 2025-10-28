@@ -1,8 +1,9 @@
 package com.alonso.vipera.training.springboot_apirest.persistence;
 
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
@@ -16,8 +17,8 @@ public class UserRepositoryAdapter {
 
     private UserRepository userRepository;
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public Page<User> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
     public Optional<User> findById(Long id) {
@@ -32,8 +33,8 @@ public class UserRepositoryAdapter {
         return userRepository.findByEmail(email);
     }
 
-    public List<User> findByFilters(Long id, String username, String email, Role role) {
-        return userRepository.findByFilters(id, username, email, role);
+    public Page<User> findByFilters(Long id, String username, String email, Role role, Pageable pageable) {
+        return userRepository.findByFilters(id, username, email, role, pageable);
     }
 
     public boolean existsById(Long id) {

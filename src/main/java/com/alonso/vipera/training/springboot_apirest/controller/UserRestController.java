@@ -1,8 +1,8 @@
 package com.alonso.vipera.training.springboot_apirest.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,14 +43,16 @@ public class UserRestController {
                         @ApiResponse(responseCode = "401", description = "Token no válido o expirado", content = @Content)
         })
         @GetMapping
-        public ResponseEntity<List<UserOutDTO>> getUsersWithFilters(
+        public ResponseEntity<Page<UserOutDTO>> getUsersWithFilters(
                         @Parameter(description = "ID único del usuario", example = "1") @RequestParam(required = false) Long id,
                         @Parameter(description = "Nombre de usuario único", example = "alonso") @RequestParam(required = false) String username,
                         @Parameter(description = "Dirección de email única", example = "alonso@gmail.com") @RequestParam(required = false) String email,
-                        @Parameter(description = "Rol de usuario", example = "OWNER/VET") @RequestParam(required = false) Role role) {
+                        @Parameter(description = "Rol de usuario", example = "OWNER/VET") @RequestParam(required = false) Role role,
+                        Pageable pageable) {
                 if (id != null || username != null || email != null || role != null) {
-                        return ResponseEntity.ok(userService.getUserByFilters(id, username, email, role));
-                } else return ResponseEntity.ok(userService.getAll());
+                        return ResponseEntity.ok(userService.getUserByFilters(id, username, email, role, pageable));
+                } else
+                        return ResponseEntity.ok(userService.getAll(pageable));
         }
 
         // DELETE calls

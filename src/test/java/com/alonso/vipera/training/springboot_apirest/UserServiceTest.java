@@ -18,6 +18,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.alonso.vipera.training.springboot_apirest.exception.EmailNotFoundException;
@@ -50,12 +54,16 @@ class UserServiceTest {
     @InjectMocks
     private UserServiceImpl userServiceImpl;
 
+    private Pageable testPageable;
+
     private RegisterRequestDTO registerRequestDTO;
     private User userEntity;
     private UserOutDTO userOutDTO;
 
     @BeforeEach
     void setUp() {
+        testPageable = PageRequest.of(0, 10);
+
         registerRequestDTO = new RegisterRequestDTO();
         registerRequestDTO.setUsername(USERNAME);
         registerRequestDTO.setEmail(EMAIL);
@@ -76,37 +84,40 @@ class UserServiceTest {
     }
 
     @Test
-    void testGetAllUsers_whenUsersFound_shouldReturnUserList() {
+    void testGetAllUsers_whenUsersFound_shouldReturnUserPage() {
+        List<User> userList = List.of(userEntity);
+        Page<User> userPage = new PageImpl<>(userList, testPageable, userList.size());
+
         // Arrange
-        when(userRepositoryAdapter.findAll()).thenReturn(List.of(userEntity));
+        when(userRepositoryAdapter.findAll(testPageable)).thenReturn(userPage);
         when(userMapper.toOutDTO(userEntity)).thenReturn(userOutDTO);
 
         // Act
-        List<UserOutDTO> users = userServiceImpl.getAll();
+        Page<UserOutDTO> users = userServiceImpl.getAll(testPageable);
 
         // Assert
         assertNotNull(users);
-        assertEquals(1, users.size());
+        assertEquals(1, users.getSize());
 
         // Verify
-        verify(userRepositoryAdapter, times(1)).findAll();
+        verify(userRepositoryAdapter, times(1)).findAll(testPageable);
         verify(userMapper, times(1)).toOutDTO(userEntity);
     }
 
     @Test
-    void testGetAllUsers_whenNoUsersFound_shouldReturnEmptyList() {
+    void testGetAllUsers_whenNoUsersFound_shouldReturnEmptyPage() {
         // Arrange
-        when(userRepositoryAdapter.findAll()).thenReturn(List.of());
+        when(userRepositoryAdapter.findAll(testPageable)).thenReturn(Page.empty());
 
         // Act
-        List<?> users = userServiceImpl.getAll();
+        Page<UserOutDTO> users = userServiceImpl.getAll(testPageable);
 
         // Assert
         assertNotNull(users);
-        assertEquals(0, users.size());
+        assertEquals(0, users.getSize());
 
         // Verify
-        verify(userRepositoryAdapter, times(1)).findAll();
+        verify(userRepositoryAdapter, times(1)).findAll(testPageable);
     }
 
     @Test
