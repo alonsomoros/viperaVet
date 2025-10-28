@@ -39,6 +39,6 @@ public class BreedController {
     })
     @GetMapping
     public ResponseEntity<List<BreedOutDTO>> getAllBreeds() {
-        return ResponseEntity.ok(breedService.getAll());
+        return ResponseEntity.ok(breedService.getAllBreeds());
     }
 }

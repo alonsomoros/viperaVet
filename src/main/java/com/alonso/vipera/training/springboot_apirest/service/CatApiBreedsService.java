@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.alonso.vipera.training.springboot_apirest.clients.CatApiClient;
@@ -32,7 +31,6 @@ public class CatApiBreedsService {
     private final SpecieRepositoryAdapter specieRepository;
     private final BreedMapper breedMapper;
 
-    @Cacheable("cat-api-breeds")
     @CircuitBreaker(name = "cat-api-breeds", fallbackMethod = "getBreedsFallback")
     public List<CatApiBreedInDTO> getAllCatBreeds() {
         log.debug("Contactando a Cat API para obtener razas...");
@@ -40,7 +38,7 @@ public class CatApiBreedsService {
     }
 
     @Transactional
-    @CacheEvict(value = "breeds", allEntries = true)
+    @CacheEvict(value = { "breeds", "breeds-by-specie" }, allEntries = true)
     public List<BreedOutDTO> saveAllCatsBreeds() {
         log.info("Iniciando sincronización de razas de gato desde Cat API");
 

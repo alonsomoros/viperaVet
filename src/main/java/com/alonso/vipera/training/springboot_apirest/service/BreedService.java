@@ -6,7 +6,7 @@ import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.BreedOutD
 
 public interface BreedService {
 
-    List<BreedOutDTO> getAll();
+    List<BreedOutDTO> getAllBreeds();
 
     BreedOutDTO findByName(String name);
 

@@ -24,7 +24,7 @@ public class BreedServiceImpl implements BreedService {
 
     @Override
     @Cacheable("breeds")
-    public List<BreedOutDTO> getAll() {
+    public List<BreedOutDTO> getAllBreeds() {
         log.debug("Recuperando todos las razas de la base de datos...");
         List<BreedOutDTO> breeds = breedRepositoryAdapter.findAll()
                 .stream()
@@ -53,6 +53,7 @@ public class BreedServiceImpl implements BreedService {
     }
 
     @Override
+    @Cacheable(value = "breeds-by-specie", key = "#id")
     public List<BreedOutDTO> findBySpecieId(Long id) {
         log.debug("Buscando razas por ID de especie: {}", id);
         List<BreedOutDTO> breeds = breedRepositoryAdapter.findBreedsBySpecieId(id)
