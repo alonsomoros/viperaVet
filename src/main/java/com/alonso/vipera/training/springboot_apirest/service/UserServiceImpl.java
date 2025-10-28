@@ -13,6 +13,7 @@ import com.alonso.vipera.training.springboot_apirest.exception.IdNotFoundExcepti
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
+import com.alonso.vipera.training.springboot_apirest.model.user.User.Role;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.UserRepositoryAdapter;
 
@@ -65,11 +66,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public List<UserOutDTO> getByAddressContaining(String address) {
-        log.debug("Buscando usuarios con dirección que contenga: {}", address);
-        List<User> usersSaved = userRepositoryAdapter.findByAddressContainig(address);
-        log.debug("Se han encontrado {} usuarios con dirección que contiene: {}", usersSaved.size(), address);
-        return usersSaved.stream().map(userMapper::toOutDTO).toList();
+    public List<UserOutDTO> getUserByFilters(Long id, String username, String email, Role role) {
+        log.debug("Buscando usuarios con filtros - ID: {}, Username: {}, Email: {}, Role: {}", id, username, email,
+                role);
+        List<UserOutDTO> users = userRepositoryAdapter.findByFilters(id, username, email, role)
+                .stream()
+                .map(userMapper::toOutDTO)
+                .toList();
+        log.debug("Se han encontrado {} usuarios con los filtros proporcionados.", users.size());
+        return users;
     }
 
     // Hacer un update en el futuro
@@ -80,7 +85,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     // }
 
     @Override
-    @CacheEvict(value = { "usersByUsername", "detailsByUsername" }, key = "#id", condition = "#result != null")
+    @CacheEvict(value = { "usersByUsername", "detailsByUsername" }, allEntries = true)
     public void delete(Long id) {
         log.debug("Eliminando usuario con ID: {}", id);
         if (!userRepositoryAdapter.existsById(id)) {

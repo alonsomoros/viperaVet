@@ -59,23 +59,16 @@ public class PetController {
             @ApiResponse(responseCode = "403", description = "Acceso denegado. Se necesita un token válido", content = @Content),
             @ApiResponse(responseCode = "401", description = "Token no válido o expirado", content = @Content)
     })
-    @GetMapping("/search")
-    public ResponseEntity<List<PetOutDTO>> searchPets(
+    @GetMapping
+    public ResponseEntity<List<PetOutDTO>> getPetsByFilters(
+            @RequestParam(required = false) Long id,
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) String breed,
-            @RequestParam(required = false) String specie) {
+            @RequestParam(required = false) Long breed_id,
+            @RequestParam(required = false) Long specie_id) {
 
-        if (name != null) {
-            return ResponseEntity.ok(petService.getByName(name));
+        if (id != null || name != null || breed_id != null || specie_id != null) {
+            return ResponseEntity.ok(petService.getPetByFilters(id, name, breed_id, specie_id));
         }
-        if (breed != null) {
-            return ResponseEntity.ok(petService.getByBreedName(breed));
-        }
-        if (specie != null) {
-            return ResponseEntity.ok(petService.getBySpecieName(specie));
-        }
-
-        // Si no hay parámetros, devolver todos
         return ResponseEntity.ok(petService.getAll());
     }
 
@@ -87,7 +80,7 @@ public class PetController {
             @ApiResponse(responseCode = "403", description = "Acceso denegado. Se necesita un token válido", content = @Content),
             @ApiResponse(responseCode = "401", description = "Token no válido o expirado", content = @Content)
     })
-    @PostMapping("/register")
+    @PostMapping
     public ResponseEntity<PetOutDTO> registerPet(@AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody PetInDTO petInDTO) {
         String username = userDetails.getUsername();

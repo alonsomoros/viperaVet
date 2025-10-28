@@ -14,6 +14,7 @@ import com.alonso.vipera.training.springboot_apirest.model.pet.Pet;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -57,7 +58,7 @@ public class User implements UserDetails {
 
     public enum Role { OWNER, VET }
     
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 

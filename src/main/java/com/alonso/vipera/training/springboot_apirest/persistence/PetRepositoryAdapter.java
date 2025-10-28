@@ -1,13 +1,13 @@
 package com.alonso.vipera.training.springboot_apirest.persistence;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
 import com.alonso.vipera.training.springboot_apirest.model.pet.Pet;
 
 import lombok.AllArgsConstructor;
-
-import java.util.List;
-import java.util.Optional;
 
 @Component
 @AllArgsConstructor
@@ -61,6 +61,10 @@ public class PetRepositoryAdapter {
 
     public List<Pet> findAll() {
         return petRepository.findAll();
+    }
+
+    public List<Pet> findByFilters(Long pet_id, String name, Long breed_id, Long specie_id) {
+        return petRepository.findByFilters(pet_id, name, breed_id, specie_id);
     }
 
     public Pet save(Pet pet) {

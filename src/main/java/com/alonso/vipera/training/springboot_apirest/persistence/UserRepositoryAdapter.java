@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
+import com.alonso.vipera.training.springboot_apirest.model.user.User.Role;
 
 import lombok.AllArgsConstructor;
 
@@ -15,20 +16,24 @@ public class UserRepositoryAdapter {
 
     private UserRepository userRepository;
 
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public List<User> findByFilters(Long id, String username, String email, Role role) {
+        return userRepository.findByFilters(id, username, email, role);
     }
 
     public boolean existsById(Long id) {
@@ -41,10 +46,6 @@ public class UserRepositoryAdapter {
 
     public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
-    }
-
-    public List<User> findByAddressContainig(String address) {
-        return userRepository.findByAddressContaining(address);
     }
 
     public User save(User user) {

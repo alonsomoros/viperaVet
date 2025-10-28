@@ -203,39 +203,6 @@ class UserServiceTest {
     }
 
     @Test
-    void testGetUserByAddress_whenUsersFound_shouldReturnUserList() {
-        // Arrange
-        when(userRepositoryAdapter.findByAddressContainig(ADDRESS)).thenReturn(List.of(userEntity));
-        when(userMapper.toOutDTO(userEntity)).thenReturn(userOutDTO);
-
-        // Act
-        List<UserOutDTO> users = userServiceImpl.getByAddressContaining(ADDRESS);
-
-        // Assert
-        assertNotNull(users);
-        assertEquals(1, users.size());
-
-        // Verify
-        verify(userRepositoryAdapter, times(1)).findByAddressContainig(ADDRESS);
-    }
-
-    @Test
-    void testGetUserByAddress_whenNoUsersFound_shouldReturnEmptyList() {
-        // Arrange
-        when(userRepositoryAdapter.findByAddressContainig(ADDRESS)).thenReturn(List.of());
-
-        // Act
-        List<UserOutDTO> users = userServiceImpl.getByAddressContaining(ADDRESS);
-
-        // Assert
-        assertNotNull(users);
-        assertEquals(0, users.size());
-
-        // Verify
-        verify(userRepositoryAdapter, times(1)).findByAddressContainig(ADDRESS);
-    }
-
-    @Test
     void testLoadUserDetails_whenUserFound_shouldReturnUserDetails() {
         // Arrange
         when(userRepositoryAdapter.findByUsername(USERNAME)).thenReturn(Optional.of(userEntity));

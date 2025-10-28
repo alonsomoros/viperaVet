@@ -100,6 +100,18 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
+    public List<PetOutDTO> getPetByFilters(Long pet_id, String name, Long breed_id, Long specie_id) {
+        log.debug("Buscando mascotas con filtros -Id_mascota {}, Nombre: {}, Id_raza: {}, Id_especie: {}", pet_id, name,
+                breed_id, specie_id);
+        List<PetOutDTO> pets = petRepositoryAdapter.findByFilters(pet_id, name, breed_id, specie_id)
+                .stream()
+                .map(petMapper::toOutDTO)
+                .toList();
+        log.debug("Se han encontrado {} mascotas con los filtros proporcionados.", pets.size());
+        return pets;
+    }
+
+    @Override
     public PetOutDTO save(PetInDTO petInDTO, String username) {
         log.info("Guardando nueva mascota para el usuario: {}", username);
 
