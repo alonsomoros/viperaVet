@@ -69,8 +69,8 @@ El objetivo del proyecto es desarrollar una **API funcional con Spring Boot** qu
 - Se utiliza **Spring Data JPA** y **Jakarta Persistence** para el mapeo objeto-relacional (ORM) y la gestión de entidades.
 - **Diagrama de Entidad-Relación:**
 ![Diagrama Entidad-Relación](./src/main/resources/static/Vet_ER_Diagram.png)
-- Y se ha añadido paginación en las llamadas de GET para Users(usuarios) y Pets(mascotas)
-
+- Se ha añadido paginación en las llamadas de GET para Users(usuarios) y Pets(mascotas)
+- Y se han añadidos índices (aparte de los que se crean automáticamente) en las claves foráneas de la entidad 'Pet' para poder buscar por dueño, raza o especie.
 
 ---
 
@@ -85,8 +85,8 @@ Contraseña: password
 ---
 
 ## 🌍 API externa
-La aplicación consume dos APIs externas en los siguientes URLs:
-https://api.thedogapi.com/v1/breeds
+La aplicación consume dos APIs externas en los siguientes URLs:<br>
+https://api.thedogapi.com/v1/breeds<br>
 https://api.thecatapi.com/v1/breeds
 
 Esta integración se realiza mediante **FeignClient**.
@@ -113,7 +113,11 @@ Las solicitudes con datos inválidos generan respuestas de error estructuradas, 
 ---
 
 ## 🧾 Registro de logs
-(En proceso)
+Se realizan logs con el detalle de las operaciones necesario para entender los procesos internamente.
+Se realizan con: 
+- Spring JPA y Hibernate: proporcionan logs automáticos relacionados con las operaciones de persistencia y consultas a la base de datos (SQL ejecutadas, tiempos de ejecución, transacciones, etc.).
+
+- SLF4J: se utiliza como capa de abstracción de logging para registrar mensajes de trazabilidad y eventos dentro de la aplicación.
 
 ---
 
