@@ -16,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Index;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +25,11 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @Entity
-@Table(name = "pets")
+@Table(name = "pets", indexes = {
+        @Index(name = "idx_pet_user_id", columnList = "user_id"),
+        @Index(name = "idx_pet_breed_id", columnList = "breed_id"),
+        @Index(name = "idx_pet_specie_id", columnList = "specie_id")
+})
 @NoArgsConstructor
 @AllArgsConstructor
 public class Pet {
