@@ -69,6 +69,7 @@ El objetivo del proyecto es desarrollar una **API funcional con Spring Boot** qu
 - Se utiliza **Spring Data JPA** y **Jakarta Persistence** para el mapeo objeto-relacional (ORM) y la gestión de entidades.
 - **Diagrama de Entidad-Relación:**
 ![Diagrama Entidad-Relación](./src/main/resources/static/Vet_ER_Diagram.png)
+- Y se ha añadido paginación en las llamadas de GET para Users(usuarios) y Pets(mascotas)
 
 
 ---
