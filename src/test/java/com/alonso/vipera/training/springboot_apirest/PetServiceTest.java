@@ -18,6 +18,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.alonso.vipera.training.springboot_apirest.exception.IdNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameNotFoundException;
@@ -64,6 +68,8 @@ public class PetServiceTest {
     @InjectMocks
     private PetServiceImpl petServiceImpl;
 
+    private Pageable testPageable;
+
     private PetInDTO petInDTO;
     private Pet pet;
     private PetOutDTO petOutDTO;
@@ -73,6 +79,8 @@ public class PetServiceTest {
 
     @BeforeEach
     public void setUp() {
+        testPageable = PageRequest.of(0, 10);
+
         user = new User();
         user.setId(1L);
         user.setUsername(USERNAME);
@@ -114,7 +122,7 @@ public class PetServiceTest {
     }
 
     @Test
-    public void testGetPetsByOwnerUsername_whenPetsFound_returnListOfPets() {
+    public void testGetPetsByOwnerUsername_whenPetsFound_returnPageOfPets() {
         // Arrange
         when(petRepositoryAdapter.findPetsByOwnerUsername(USERNAME)).thenReturn(List.of(pet));
         when(petMapper.toOutDTO(pet)).thenReturn(petOutDTO);
@@ -287,37 +295,40 @@ public class PetServiceTest {
     }
 
     @Test
-    public void testGetAll_whenPetsFound_returnListOfPets() {
+    public void testGetAll_whenPetsFound_returnPageOfPets() {
+        List<Pet> petList = List.of(pet);
+        Page<Pet> petPage = new PageImpl<>(petList, testPageable, petList.size());
+
         // Arrange
-        when(petRepositoryAdapter.findAll()).thenReturn(List.of(pet));
+        when(petRepositoryAdapter.findAll(testPageable)).thenReturn(petPage);
         when(petMapper.toOutDTO(pet)).thenReturn(petOutDTO);
 
         // Act
-        List<PetOutDTO> pets = petServiceImpl.getAll();
+        Page<PetOutDTO> pets = petServiceImpl.getAll(testPageable);
 
         // Assert
         assertNotNull(pets);
-        assertEquals(1, pets.size());
+        assertEquals(1, pets.getContent().size());
 
         // Verify
-        verify(petRepositoryAdapter, times(1)).findAll();
+        verify(petRepositoryAdapter, times(1)).findAll(testPageable);
         verify(petMapper, times(1)).toOutDTO(pet);
     }
 
     @Test
-    public void testGetAll_whenNoPetsFound_returnEmptyList() {
+    public void testGetAll_whenNoPetsFound_returnEmptyPage() {
         // Arrange
-        when(petRepositoryAdapter.findAll()).thenReturn(List.of());
+        when(petRepositoryAdapter.findAll(testPageable)).thenReturn(Page.empty());
 
         // Act
-        List<PetOutDTO> pets = petServiceImpl.getAll();
+        Page<PetOutDTO> pets = petServiceImpl.getAll(testPageable);
 
         // Assert
         assertNotNull(pets);
-        assertEquals(0, pets.size());
+        assertEquals(0, pets.getSize());
 
         // Verify
-        verify(petRepositoryAdapter, times(1)).findAll();
+        verify(petRepositoryAdapter, times(1)).findAll(testPageable);
     }
 
     @Test

@@ -97,7 +97,7 @@ class UserServiceTest {
 
         // Assert
         assertNotNull(users);
-        assertEquals(1, users.getSize());
+        assertEquals(1, users.getContent().size());
 
         // Verify
         verify(userRepositoryAdapter, times(1)).findAll(testPageable);
