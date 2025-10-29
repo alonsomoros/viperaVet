@@ -1,18 +1,22 @@
 package com.alonso.vipera.training.springboot_apirest.model.dogBreedAPI.dto.in;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Schema(description = "Datos de raza de perro obtenidos desde la Dog API externa.")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class DogApiBreedInDTO {
-    private Long id;
+
+    @Schema(description = "ID único de la raza en la Dog API.", example = "1")
+    private Integer id;
+
+    @Schema(description = "Nombre de la raza de perro.", example = "Golden Retriever")
     private String name;
-    private String bred_for;
-    private String breed_group;
-    private String life_span;
-    private String temperament;
-    private String origin;
+
+    @Schema(description = "Descripción detallada de la raza.", example = "Large-sized dog, friendly and active breed.")
+    private String description;
 }

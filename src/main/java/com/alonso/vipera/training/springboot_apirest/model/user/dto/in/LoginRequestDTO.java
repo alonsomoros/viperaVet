@@ -1,27 +1,22 @@
 package com.alonso.vipera.training.springboot_apirest.model.user.dto.in;
 
-import jakarta.validation.constraints.Email;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Schema(description = "Credenciales necesarias para autenticarse en el sistema.")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class LoginRequestDTO {
 
-    @NotBlank(message = "Nombre de usuario necesario")
-    @Size(min = 3, max = 50, message = "Nombre de usuario debe tener entre 3 y 50 caracteres")
+    @Schema(description = "Nombre de usuario o email del usuario.", example = "alonso.dev", required = true)
+    @NotBlank
     private String username;
 
-    @NotBlank(message = "Contraseña necesaria")
-    @Size(min = 6, max = 100, message = "Contraseña debe tener entre 6 y 100 caracteres")
+    @Schema(description = "Contraseña del usuario.", example = "P4ssw0rd!", required = true)
+    @NotBlank
     private String password;
-
-    @NotBlank(message = "Email necesario")
-    @Email(message = "Email no válido")
-    private String email;
-
 }
