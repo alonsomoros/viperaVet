@@ -6,5 +6,5 @@ resilience4j:
         slidingWindowType: COUNT_BASED
         slidingWindowSize: 10 # Se basa en las últimas 10 llamadas
         failureRateThreshold: 50 # Si el 50% de esas 10 llamadas fallan, el circuito se abre
-        waitDurationInOpenState: 10000 # Espera 10 segundos antes de intentar llamar de nuevo
+        waitDurationInOpenState: 10s # Espera 10 segundos antes de intentar llamar de nuevo
         permittedNumberOfCallsInHalfOpenState: 3 # Permite 3 llamadas de prueba antes de cerrarse de nuevo
