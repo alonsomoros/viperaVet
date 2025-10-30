@@ -7,7 +7,7 @@ import com.alonso.vipera.training.springboot_apirest.model.dogBreedAPI.dto.in.Do
 
 import java.util.List;
 
-@FeignClient(name = "dog-api", url = "https://api.thedogapi.com")
+@FeignClient(name = "dog-api", url = "${thedogapi.url}")
 public interface DogApiClient {
 
     @GetMapping("/v1/breeds")

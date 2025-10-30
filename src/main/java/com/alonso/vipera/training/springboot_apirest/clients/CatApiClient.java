@@ -7,7 +7,7 @@ import com.alonso.vipera.training.springboot_apirest.model.catBreedAPI.dto.in.Ca
 
 import java.util.List;
 
-@FeignClient(name = "cat-api", url = "https://api.thecatapi.com")
+@FeignClient(name = "cat-api", url = "${thecatapi.url}")
 public interface CatApiClient {
 
     @GetMapping("/v1/breeds")
