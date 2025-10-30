@@ -51,7 +51,7 @@ public class AuthController {
     })
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginRequestDTO loginRequestDto) {
-        log.info("Iniciando proceso de login para el usuario: {}", loginRequestDto.getEmail());
+        log.info("Iniciando proceso de login para el usuario: {}", loginRequestDto.getUsername());
         AuthResponseDTO authResponseDto = authService.login(loginRequestDto);
         return ResponseEntity.ok(authResponseDto);
     }

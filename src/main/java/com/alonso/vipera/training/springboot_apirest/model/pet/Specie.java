@@ -2,8 +2,6 @@ package com.alonso.vipera.training.springboot_apirest.model.pet;
 
 import java.util.Set;
 
-import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.SpecieOutDTO;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,9 +29,5 @@ public class Specie {
 
     @OneToMany(mappedBy = "specie")
     private Set<Breed> breeds;
-
-    public SpecieOutDTO toDto() {
-        return new SpecieOutDTO(this.id, this.name);
-    }
 
 }

@@ -17,10 +17,7 @@ public class BreedOutDTO {
     @Schema(description = "Nombre de la raza.", example = "Golden Retriever")
     private String name;
 
-    @Schema(description = "Descripción de la raza.", example = "Perro de tamaño grande, amigable y activo.")
-    private String description;
-
-    @Schema(description = "ID externo de la API de origen (para sincronización).", example = "1")
+    @Schema(description = "ID externo de la API de origen (para sincronización).", example = "1 / abys")
     private String externalApiId;
 
     @Schema(description = "Información de la especie a la que pertenece esta raza.")

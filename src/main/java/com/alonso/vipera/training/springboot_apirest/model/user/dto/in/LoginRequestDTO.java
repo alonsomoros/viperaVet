@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
 public class LoginRequestDTO {
 
     @Schema(description = "Nombre de usuario o email del usuario.", example = "alonso.dev", required = true)
-    @NotBlank
+    @NotBlank(message = "Username necesario")
     private String username;
 
     @Schema(description = "Contraseña del usuario.", example = "P4ssw0rd!", required = true)
-    @NotBlank
+    @NotBlank(message = "Password necesario")
     private String password;
 }

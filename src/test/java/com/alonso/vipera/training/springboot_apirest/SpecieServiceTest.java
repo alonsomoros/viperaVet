@@ -18,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.alonso.vipera.training.springboot_apirest.mapper.SpecieMapper;
 import com.alonso.vipera.training.springboot_apirest.model.pet.Specie;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.SpecieOutDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.SpecieRepositoryAdapter;
@@ -32,22 +33,29 @@ public class SpecieServiceTest {
     @Mock
     private SpecieRepositoryAdapter specieRepositoryAdapter;
 
+    @Mock
+    private SpecieMapper specieMapper;
+
     @InjectMocks
     private SpecieServiceImpl specieServiceImpl;
 
     private Specie specie;
+    private SpecieOutDTO specieOutDTO;
 
     @BeforeEach
     void setUp() {
         specie = new Specie();
         specie.setId(SPECIE_ID);
         specie.setName(SPECIE_NAME);
+
+        specieOutDTO = new SpecieOutDTO(SPECIE_ID, SPECIE_NAME);
     }
 
     @Test
     void testFindByName_whenNameFound_shouldReturnSpecie() {
         // Arrange
         when(specieRepositoryAdapter.findByName(SPECIE_NAME)).thenReturn(Optional.of(specie));
+        when(specieMapper.toDTO(specie)).thenReturn(specieOutDTO);
 
         // Act
         SpecieOutDTO result = specieServiceImpl.findByName(SPECIE_NAME);

@@ -9,19 +9,22 @@ import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutD
 @Component
 public class UserMapper {
     public User toEntity(RegisterRequestDTO dto) {
-        if (dto == null) return null;
+        if (dto == null)
+            return null;
         return User.builder()
-                   .username(dto.getUsername())
-                   .email(dto.getEmail())
-                   .password(dto.getPassword())
-                   .phone(dto.getPhone())
-                   .address(dto.getAddress())
-                   .role(dto.getRole())
-                   .build();
+                .username(dto.getUsername())
+                .email(dto.getEmail())
+                .password(dto.getPassword())
+                .phone(dto.getPhone())
+                .address(dto.getAddress())
+                .role(dto.getRole())
+                .build();
     }
 
     public UserOutDTO toOutDTO(User entity) {
-        if (entity == null) return null;
-        return new UserOutDTO(entity.getId(), entity.getUsername(), entity.getEmail(), entity.getCreatedAt());
+        if (entity == null)
+            return null;
+        return new UserOutDTO(entity.getId(), entity.getUsername(), entity.getEmail(), entity.getRole(),
+                entity.getCreatedAt());
     }
 }

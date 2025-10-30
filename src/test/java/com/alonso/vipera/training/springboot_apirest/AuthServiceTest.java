@@ -9,6 +9,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +28,7 @@ import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.RegisterRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.AuthResponseDTO;
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.UserRepositoryAdapter;
 import com.alonso.vipera.training.springboot_apirest.service.AuthServiceImpl;
 import com.alonso.vipera.training.springboot_apirest.service.JwtService;
@@ -61,6 +64,8 @@ class AuthServiceTest {
 
     private RegisterRequestDTO registerRequestDTO;
     private User userEntity;
+    private UserOutDTO userOutDTO;
+    private AuthResponseDTO authResponseDTO;
 
     @BeforeEach
     void setUp() {
@@ -74,6 +79,12 @@ class AuthServiceTest {
         userEntity.setUsername(USERNAME);
         userEntity.setEmail(EMAIL);
         userEntity.setPassword(ENCODED_PASSWORD);
+
+        userOutDTO = new UserOutDTO(USER_ID, USERNAME, EMAIL, User.Role.OWNER, LocalDateTime.now());
+
+        authResponseDTO = new AuthResponseDTO();
+        authResponseDTO.setToken(JWT_TOKEN);
+        authResponseDTO.setUser(userOutDTO);
     }
 
     @Test
@@ -95,6 +106,7 @@ class AuthServiceTest {
         when(userRepositoryAdapter.existsByEmail(EMAIL)).thenReturn(false);
         when(passwordEncoder.encode(PASSWORD)).thenReturn(ENCODED_PASSWORD);
         when(userMapper.toEntity(registerRequestDTO)).thenReturn(userEntity);
+        when(userMapper.toOutDTO(userEntity)).thenReturn(userOutDTO);
         when(userRepositoryAdapter.save(any(User.class))).thenReturn(userEntity);
         when(jwtService.generateToken(userEntity)).thenReturn(JWT_TOKEN);
 
@@ -104,7 +116,7 @@ class AuthServiceTest {
         // Assert
         assertNotNull(result);
         assertEquals(JWT_TOKEN, result.getToken());
-        assertEquals(USERNAME, result.getUsername());
+        assertEquals(USERNAME, result.getUser().getUsername());
 
         // Verify
         verify(userRepositoryAdapter, times(1)).existsByUsername(USERNAME);

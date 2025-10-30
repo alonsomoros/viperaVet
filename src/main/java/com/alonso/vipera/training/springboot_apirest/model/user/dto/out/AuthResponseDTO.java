@@ -14,9 +14,6 @@ public class AuthResponseDTO {
     @Schema(description = "Token JWT para autenticación de requests posteriores.", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
     private String token;
 
-    @Schema(description = "Tipo del token.", example = "Bearer")
-    private String tokenType = "Bearer";
-
     @Schema(description = "Información del usuario autenticado.")
     private UserOutDTO user;
 }

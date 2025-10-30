@@ -53,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtService.generateToken(user);
         log.debug("Token JWT generado.");
 
-        return new AuthResponseDTO(token, user.getUsername());
+        return new AuthResponseDTO(token, userMapper.toOutDTO(user));
     }
 
     private void verifyRegisterInputs(RegisterRequestDTO registerRequestDTO) {
@@ -94,7 +94,7 @@ public class AuthServiceImpl implements AuthService {
             String token = jwtService.generateToken(user);
             log.info("Token de autenticación generado con éxito para el usuario {}.", loginRequestDTO.getUsername());
 
-            return new AuthResponseDTO(token, user.getUsername());
+            return new AuthResponseDTO(token, userMapper.toOutDTO(user));
         } catch (BadCredentialsException e) {
             log.warn("Credenciales inválidas para el usuario {}.", loginRequestDTO.getUsername());
             throw new BadCredentialsInputException();

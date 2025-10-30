@@ -17,6 +17,4 @@ public class SpecieOutDTO {
     @Schema(description = "Nombre de la especie.", example = "Perro")
     private String name;
 
-    @Schema(description = "Descripción de la especie.", example = "Mamífero doméstico de la familia de los cánidos.")
-    private String description;
 }

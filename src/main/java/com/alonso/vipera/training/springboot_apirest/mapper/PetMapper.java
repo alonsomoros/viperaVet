@@ -6,9 +6,14 @@ import com.alonso.vipera.training.springboot_apirest.model.pet.Pet;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.in.PetInDTO;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.PetOutDTO;
 
+import lombok.AllArgsConstructor;
+
 @Component
+@AllArgsConstructor
 public class PetMapper {
 
+    private BreedMapper breedMapper;
+    private SpecieMapper specieMapper;
 
     public Pet toEntity(PetInDTO dto) {
         if (dto == null)
@@ -17,7 +22,7 @@ public class PetMapper {
                 .name(dto.getName())
                 .birthDate(dto.getBirthDate())
                 .weight(dto.getWeight())
-                .diet_info(dto.getDiet_info())
+                .dietInfo(dto.getDietInfo())
                 .build();
     }
 
@@ -29,7 +34,9 @@ public class PetMapper {
                 entity.getName(),
                 entity.getBirthDate(),
                 entity.getWeight(),
-                entity.getDiet_info(),
-                entity.getCreatedAt().toLocalDate());
+                entity.getDietInfo(),
+                specieMapper.toDTO(entity.getSpecie()),
+                breedMapper.toDTO(entity.getBreed()),
+                entity.getCreatedAt());
     }
 }

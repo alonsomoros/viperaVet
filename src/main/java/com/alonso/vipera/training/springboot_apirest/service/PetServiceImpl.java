@@ -115,15 +115,15 @@ public class PetServiceImpl implements PetService {
         User user = userRepositoryAdapter.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException());
         log.debug("Usuario {} encontrado. ID: {}", username, user.getId());
 
-        log.debug("Buscando especie: {}", petInDTO.getSpecie());
-        Specie specie = specieRepositoryAdapter.findByName(petInDTO.getSpecie())
+        log.debug("Buscando especie: {}", petInDTO.getSpecieId());
+        Specie specie = specieRepositoryAdapter.findById(petInDTO.getSpecieId())
                 .orElseThrow(() -> new IdNotFoundException());
-        log.debug("Especie {} encontrada. ID: {}", petInDTO.getSpecie(), specie.getId());
+        log.debug("Especie {} encontrada. ID: {}", petInDTO.getSpecieId(), specie.getId());
 
-        log.debug("Buscando raza: {}", petInDTO.getBreed());
-        Breed breed = breedRepositoryAdapter.findByName(petInDTO.getBreed())
+        log.debug("Buscando raza: {}", petInDTO.getBreedId());
+        Breed breed = breedRepositoryAdapter.findById(petInDTO.getBreedId())
                 .orElseThrow(() -> new IdNotFoundException());
-        log.debug("Raza {} encontrada. ID: {}", petInDTO.getBreed(), breed.getId());
+        log.debug("Raza {} encontrada. ID: {}", petInDTO.getBreedId(), breed.getId());
 
         Pet pet = petMapper.toEntity(petInDTO);
 

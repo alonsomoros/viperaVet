@@ -24,6 +24,7 @@ import com.alonso.vipera.training.springboot_apirest.mapper.BreedMapper;
 import com.alonso.vipera.training.springboot_apirest.model.pet.Breed;
 import com.alonso.vipera.training.springboot_apirest.model.pet.Specie;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.BreedOutDTO;
+import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.SpecieOutDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.BreedRepositoryAdapter;
 import com.alonso.vipera.training.springboot_apirest.service.BreedServiceImpl;
 
@@ -35,6 +36,8 @@ public class BreedServiceTest {
     private static final Long SPECIE_ID = 1L;
     private static final String SPECIE_NAME = "Perro";
     private static final String EXTERNAL_API_ID = "50";
+
+    private static final SpecieOutDTO SPECIE_OUT_DTO = new SpecieOutDTO(SPECIE_ID, SPECIE_NAME);
 
     @Mock
     private BreedRepositoryAdapter breedRepositoryAdapter;
@@ -56,7 +59,7 @@ public class BreedServiceTest {
         specie.setName(SPECIE_NAME);
 
         breed = new Breed(BREED_ID, BREED_NAME, specie, EXTERNAL_API_ID);
-        breedOutDTO = new BreedOutDTO(BREED_ID, BREED_NAME, SPECIE_ID, EXTERNAL_API_ID);
+        breedOutDTO = new BreedOutDTO(BREED_ID, BREED_NAME, EXTERNAL_API_ID, SPECIE_OUT_DTO);
     }
 
     @Test

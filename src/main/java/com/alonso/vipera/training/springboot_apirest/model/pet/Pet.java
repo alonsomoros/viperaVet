@@ -48,7 +48,7 @@ public class Pet {
     private Double weight;
 
     @Column(nullable = true, unique = false)
-    private String diet_info;
+    private String dietInfo;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

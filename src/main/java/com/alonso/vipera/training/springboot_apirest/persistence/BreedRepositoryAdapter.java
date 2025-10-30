@@ -19,6 +19,10 @@ public class BreedRepositoryAdapter {
         return breedRepository.findAll();
     }
 
+    public Optional<Breed> findById(Long id) {
+        return breedRepository.findById(id);
+    }
+
     public Optional<Breed> findByName(String name) {
         return breedRepository.findByName(name);
     }

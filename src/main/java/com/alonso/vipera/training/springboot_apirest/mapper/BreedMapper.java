@@ -10,8 +10,14 @@ import com.alonso.vipera.training.springboot_apirest.model.pet.Breed;
 import com.alonso.vipera.training.springboot_apirest.model.pet.Specie;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.BreedOutDTO;
 
+import lombok.AllArgsConstructor;
+
 @Component
+@AllArgsConstructor
 public class BreedMapper {
+
+    private final SpecieMapper specieMapper;
+
     public List<Breed> fromDogApiToEntity(List<DogApiBreedInDTO> external_dto, Specie specie) {
         if (external_dto == null || external_dto.isEmpty())
             return null;
@@ -41,7 +47,7 @@ public class BreedMapper {
     }
 
     public BreedOutDTO toDTO(Breed breedEntity) {
-        return new BreedOutDTO(breedEntity.getId(), breedEntity.getName(), breedEntity.getSpecie().getId(),
-                breedEntity.getExternalApiId());
+        return new BreedOutDTO(breedEntity.getId(), breedEntity.getName(),
+                breedEntity.getExternalApiId(), specieMapper.toDTO(breedEntity.getSpecie()));
     }
 }

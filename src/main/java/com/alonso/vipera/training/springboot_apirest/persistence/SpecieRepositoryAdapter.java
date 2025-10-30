@@ -19,6 +19,10 @@ public class SpecieRepositoryAdapter {
         return specieRepository.findAll();
     }
 
+    public Optional<Specie> findById(Long id) {
+        return specieRepository.findById(id);
+    }
+
     public Optional<Specie> findByName(String name) {
         return specieRepository.findByName(name);
     }

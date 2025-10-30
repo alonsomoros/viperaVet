@@ -43,7 +43,9 @@ public class PetServiceTest {
 
     private static final String USERNAME = "Alonso";
     private static final String PET_NAME = "Obi";
+    private static final Long BREED_ID = 50L;
     private static final String BREED_NAME = "Border Collie";
+    private static final Long SPECIE_ID = 1L;
     private static final String SPECIE_NAME = "Perro";
     private static final Date BIRTH_DATE = Date.valueOf("2020-01-01");
     private static final Double WEIGHT = 23.0;
@@ -87,21 +89,15 @@ public class PetServiceTest {
 
         specie = new Specie();
         specie.setId(1L);
-        specie.setName(SPECIE_NAME);
+        specie.setName("Perro");
 
         breed = new Breed();
         breed.setId(108L);
-        breed.setName(BREED_NAME);
+        breed.setName("Border Collie");
         breed.setSpecie(specie);
         breed.setExternalApiId("50");
 
-        petInDTO = new PetInDTO();
-        petInDTO.setName(PET_NAME);
-        petInDTO.setBirthDate(BIRTH_DATE);
-        petInDTO.setSpecie(SPECIE_NAME);
-        petInDTO.setBreed(BREED_NAME);
-        petInDTO.setWeight(WEIGHT);
-        petInDTO.setDiet_info(DIET_INFO);
+        petInDTO = new PetInDTO(PET_NAME, BIRTH_DATE, SPECIE_ID, BREED_ID, WEIGHT, DIET_INFO);
 
         pet = new Pet();
         pet.setId(PET_ID);
@@ -110,15 +106,10 @@ public class PetServiceTest {
         pet.setSpecie(specie);
         pet.setBreed(breed);
         pet.setWeight(WEIGHT);
-        pet.setDiet_info(DIET_INFO);
+        pet.setDietInfo(DIET_INFO);
         pet.setUser(user);
 
-        petOutDTO = new PetOutDTO();
-        petOutDTO.setId(PET_ID);
-        petOutDTO.setName(PET_NAME);
-        petOutDTO.setBirthDate(BIRTH_DATE);
-        petOutDTO.setWeight(WEIGHT);
-        petOutDTO.setDiet_info(DIET_INFO);
+        petOutDTO = new PetOutDTO(PET_ID, PET_NAME, BIRTH_DATE, WEIGHT, DIET_INFO, null, null, null);
     }
 
     @Test
@@ -335,8 +326,8 @@ public class PetServiceTest {
     public void testSave_whenValidData_returnSavedPet() {
         // Arrange
         when(userRepositoryAdapter.findByUsername(USERNAME)).thenReturn(Optional.of(user));
-        when(specieRepositoryAdapter.findByName(SPECIE_NAME)).thenReturn(Optional.of(specie));
-        when(breedRepositoryAdapter.findByName(BREED_NAME)).thenReturn(Optional.of(breed));
+        when(specieRepositoryAdapter.findById(SPECIE_ID)).thenReturn(Optional.of(specie));
+        when(breedRepositoryAdapter.findById(BREED_ID)).thenReturn(Optional.of(breed));
         when(petMapper.toEntity(petInDTO)).thenReturn(pet);
         when(petRepositoryAdapter.save(any(Pet.class))).thenReturn(pet);
         when(petMapper.toOutDTO(pet)).thenReturn(petOutDTO);
@@ -350,8 +341,8 @@ public class PetServiceTest {
 
         // Verify
         verify(userRepositoryAdapter, times(1)).findByUsername(USERNAME);
-        verify(specieRepositoryAdapter, times(1)).findByName(SPECIE_NAME);
-        verify(breedRepositoryAdapter, times(1)).findByName(BREED_NAME);
+        verify(specieRepositoryAdapter, times(1)).findById(SPECIE_ID);
+        verify(breedRepositoryAdapter, times(1)).findById(BREED_ID);
         verify(petRepositoryAdapter, times(1)).save(any(Pet.class));
     }
 
@@ -374,14 +365,14 @@ public class PetServiceTest {
     public void testSave_whenSpecieNotFound_throwsIdNotFoundException() {
         // Arrange
         when(userRepositoryAdapter.findByUsername(USERNAME)).thenReturn(Optional.of(user));
-        when(specieRepositoryAdapter.findByName(SPECIE_NAME)).thenReturn(Optional.empty());
+        when(specieRepositoryAdapter.findById(SPECIE_ID)).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThrows(IdNotFoundException.class, () -> petServiceImpl.save(petInDTO, USERNAME));
 
         // Verify
         verify(userRepositoryAdapter, times(1)).findByUsername(USERNAME);
-        verify(specieRepositoryAdapter, times(1)).findByName(SPECIE_NAME);
+        verify(specieRepositoryAdapter, times(1)).findById(SPECIE_ID);
         verify(breedRepositoryAdapter, times(0)).findByName(any());
         verify(petRepositoryAdapter, times(0)).save(any());
     }
@@ -390,16 +381,16 @@ public class PetServiceTest {
     public void testSave_whenBreedNotFound_throwsIdNotFoundException() {
         // Arrange
         when(userRepositoryAdapter.findByUsername(USERNAME)).thenReturn(Optional.of(user));
-        when(specieRepositoryAdapter.findByName(SPECIE_NAME)).thenReturn(Optional.of(specie));
-        when(breedRepositoryAdapter.findByName(BREED_NAME)).thenReturn(Optional.empty());
+        when(specieRepositoryAdapter.findById(SPECIE_ID)).thenReturn(Optional.of(specie));
+        when(breedRepositoryAdapter.findById(BREED_ID)).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThrows(IdNotFoundException.class, () -> petServiceImpl.save(petInDTO, USERNAME));
 
         // Verify
         verify(userRepositoryAdapter, times(1)).findByUsername(USERNAME);
-        verify(specieRepositoryAdapter, times(1)).findByName(SPECIE_NAME);
-        verify(breedRepositoryAdapter, times(1)).findByName(BREED_NAME);
+        verify(specieRepositoryAdapter, times(1)).findById(SPECIE_ID);
+        verify(breedRepositoryAdapter, times(1)).findById(BREED_ID);
         verify(petRepositoryAdapter, times(0)).save(any());
     }
 
