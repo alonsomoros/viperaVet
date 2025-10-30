@@ -1,4 +1,4 @@
-package com.alonso.vipera.training.springboot_apirest.model.catBreedAPI.dto.in;
+package com.alonso.vipera.training.springboot_apirest.model.cat_breed_api.dto.in;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

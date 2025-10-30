@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.alonso.vipera.training.springboot_apirest.clients.CatApiClient;
 import com.alonso.vipera.training.springboot_apirest.mapper.BreedMapper;
-import com.alonso.vipera.training.springboot_apirest.model.catBreedAPI.dto.in.CatApiBreedInDTO;
+import com.alonso.vipera.training.springboot_apirest.model.cat_breed_api.dto.in.CatApiBreedInDTO;
 import com.alonso.vipera.training.springboot_apirest.model.pet.Breed;
 import com.alonso.vipera.training.springboot_apirest.model.pet.Specie;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.BreedOutDTO;

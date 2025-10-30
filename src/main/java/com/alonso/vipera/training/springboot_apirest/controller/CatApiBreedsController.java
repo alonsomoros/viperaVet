@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alonso.vipera.training.springboot_apirest.model.catBreedAPI.dto.in.CatApiBreedInDTO;
+import com.alonso.vipera.training.springboot_apirest.model.cat_breed_api.dto.in.CatApiBreedInDTO;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.BreedOutDTO;
 import com.alonso.vipera.training.springboot_apirest.service.CatApiBreedsService;
 
