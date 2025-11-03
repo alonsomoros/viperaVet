@@ -10,42 +10,56 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Configuración de seguridad para la aplicación Spring Boot.
+ * Define las reglas de seguridad, los endpoints públicos y la integración
+ * del filtro JWT.
+ */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtFilter jwtFilter;
-    private final AuthenticationProvider authenticationProvider;
+        private final JwtFilter jwtFilter;
+        private final AuthenticationProvider authenticationProvider;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**",
-                                "/swagger-ui.html",
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/v3/api-docs.yaml",
-                                "/swagger-resources/**",
-                                "/webjars/**",
-                                "/configuration/ui",
-                                "/configuration/security",
-                                "/api/dog-breeds",
-                                "/api/dog-breeds/save-all",
-                                "/api/cat-breeds",
-                                "/api/cat-breeds/save-all",
-                                "/breeds/**",
-                                "/species/**",
-                                "/prueba/**")
-                        .permitAll() // Endpoints de autenticación son públicos
-                        .anyRequest().authenticated() // Todos los demás requieren autenticación
-                )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        /**
+         * Configura la cadena de filtros de seguridad HTTP.
+         * Define los endpoints públicos, las políticas de sesión y añade el filtro JWT.
+         * 
+         * @param http HttpSecurity
+         * @return SecurityFilterChain
+         * @throws Exception
+         */
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http
+                                .csrf(csrf -> csrf.disable())
+                                .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers("/auth/**",
+                                                                "/swagger-ui.html",
+                                                                "/swagger-ui/**",
+                                                                "/v3/api-docs/**",
+                                                                "/v3/api-docs.yaml",
+                                                                "/swagger-resources/**",
+                                                                "/webjars/**",
+                                                                "/configuration/ui",
+                                                                "/configuration/security",
+                                                                "/api/dog-breeds",
+                                                                "/api/dog-breeds/save-all",
+                                                                "/api/cat-breeds",
+                                                                "/api/cat-breeds/save-all",
+                                                                "/breeds/**",
+                                                                "/species/**",
+                                                                "/prueba/**")
+                                                .permitAll() // Endpoints de autenticación son públicos
+                                                .anyRequest().authenticated() // Todos los demás requieren autenticación
+                                )
+                                .sessionManagement(session -> session
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .authenticationProvider(authenticationProvider)
+                                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
-    }
+                return http.build();
+        }
 }

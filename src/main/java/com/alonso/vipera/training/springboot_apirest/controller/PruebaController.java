@@ -15,24 +15,39 @@ import com.alonso.vipera.training.springboot_apirest.service.SpecieService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+/**
+ * Controlador REST de prueba para obtener razas y especies.
+ */
 @Tag(name = "Prueba", description = "API endpoints de prueba para obtener razas y especies")
 @RestController
 @RequestMapping("/prueba")
 public class PruebaController {
-    
+
     @Autowired
     private BreedService breedService;
 
     @Autowired
     private SpecieService specieService;
 
+    /**
+     * Endpoint para obtener una raza por su nombre.
+     *
+     * @param breedName Nombre de la raza.
+     * @return ResponseEntity con los detalles de la raza.
+     */
     @GetMapping("/getBreed")
-    public ResponseEntity<BreedOutDTO> getBreed(@RequestParam String breedName){
+    public ResponseEntity<BreedOutDTO> getBreed(@RequestParam String breedName) {
         return ResponseEntity.status(HttpStatus.OK).body(breedService.findByName(breedName));
     }
 
+    /**
+     * Endpoint para obtener una especie por su nombre.
+     *
+     * @param specieName Nombre de la especie.
+     * @return ResponseEntity con los detalles de la especie.
+     */
     @GetMapping("/getSpecie")
-    public ResponseEntity<SpecieOutDTO> getSpecie(@RequestParam String specieName){
+    public ResponseEntity<SpecieOutDTO> getSpecie(@RequestParam String specieName) {
         return ResponseEntity.status(HttpStatus.OK).body(specieService.findByName(specieName));
     }
 }

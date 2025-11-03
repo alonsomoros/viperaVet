@@ -20,6 +20,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Controlador REST para gestionar las razas de mascotas.
+ * Proporciona endpoints para obtener información sobre las razas.
+ */
 @RestController
 @RequestMapping("/breeds")
 @Tag(name = "Breeds", description = "API endpoints para gestionar razas de mascotas")
@@ -31,6 +35,11 @@ public class BreedController {
 
     // GET calls - Obtener todas las razas
 
+    /**
+     * Endpoint para obtener todas las razas de mascotas.
+     *
+     * @return ResponseEntity con la lista de todas las razas.
+     */
     @Operation(summary = "Obtener todas las razas", description = "Devuelve una lista completa de todas las razas registradas en el sistema.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de razas obtenida con éxito", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = BreedOutDTO.class)))),

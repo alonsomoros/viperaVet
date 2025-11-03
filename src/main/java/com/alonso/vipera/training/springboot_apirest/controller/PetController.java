@@ -32,6 +32,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Controlador REST para gestionar las mascotas.
+ * Proporciona endpoints para obtener, registrar y borrar mascotas.
+ */
 @RestController
 @RequestMapping("/pets")
 @Tag(name = "Pets", description = "API endpoints para gestionar las mascotas")
@@ -43,6 +47,12 @@ public class PetController {
 
     // GET calls
 
+    /**
+     * Endpoint para obtener las mascotas del usuario autenticado
+     *
+     * @param userDetails Detalles del usuario autenticado.
+     * @return ResponseEntity con la lista de mascotas del usuario.
+     */
     @Operation(summary = "Obtener mis mascotas", description = "Devuelve una lista de todas las mascotas que pertenecen al usuario autenticado a través de su token JWT.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de mascotas encontradas con éxito", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PetOutDTO.class)))),
@@ -55,6 +65,17 @@ public class PetController {
         return ResponseEntity.status(HttpStatus.OK).body(petService.getPetsByOwnerUsername(username));
     }
 
+    /**
+     * Endpoint para obtener mascotas según filtros de búsqueda.
+     *
+     * @param id        ID de la mascota (opcional).
+     * @param name      Nombre de la mascota (opcional).
+     * @param breed_id  ID de la raza de la mascota (opcional).
+     * @param specie_id ID de la especie de la mascota (opcional).
+     * @param pageable  Parámetros de paginación.
+     * @return ResponseEntity con la lista de mascotas que coinciden con los
+     *         filtros.
+     */
     @Operation(summary = "Buscar mascotas con filtros", description = "Devuelve una lista de mascotas que coinciden con los parámetros de búsqueda proporcionados. Si no se proporcionan parámetros, devuelve todas las mascotas.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Mascotas encontradas con éxito", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(type = "array", implementation = PetOutDTO.class)))),
@@ -77,6 +98,13 @@ public class PetController {
 
     // POST calls
 
+    /**
+     * Endpoint para registrar una nueva mascota.
+     *
+     * @param userDetails Detalles del usuario autenticado.
+     * @param petInDTO    DTO que contiene la información de la mascota a registrar.
+     * @return ResponseEntity con los detalles de la mascota registrada.
+     */
     @Operation(summary = "Registrar una mascota", description = "Permite registrar una mascota asociada al usuario autenticado a través de su token JWT.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Mascota registrada con éxito", content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = PetOutDTO.class))),
@@ -92,6 +120,12 @@ public class PetController {
 
     // DELETE calls
 
+    /**
+     * Endpoint para borrar una mascota.
+     *
+     * @param id ID de la mascota a borrar.
+     * @return ResponseEntity sin contenido.
+     */
     @Operation(summary = "Borrar una mascota", description = "Permite borrar una mascota asociada al usuario autenticado a través de su token JWT.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Mascota borrada con éxito", content = @Content()),

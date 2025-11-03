@@ -21,6 +21,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Controlador REST para gestionar la autenticación de usuarios.
+ * Proporciona endpoints para el registro y login de usuarios.
+ */
 @Slf4j
 @RestController
 @RequestMapping("/auth")
@@ -30,6 +34,12 @@ public class AuthController {
 
     private final AuthService authService;
 
+    /**
+     * Endpoint para registrar un nuevo usuario.
+     *
+     * @param registerRequestDto DTO que contiene la información del usuario a registrar.
+     * @return ResponseEntity con el token de autenticación y detalles del usuario registrado.
+     */
     @Operation(summary = "Registro de Usuario", description = "Permite un usuario registrarse en el sistema y obtener un token de autenticación.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuario registrado con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponseDTO.class))),
@@ -44,6 +54,12 @@ public class AuthController {
         return ResponseEntity.ok(authResponseDto);
     }
 
+    /**
+     * Endpoint para loggear un usuario existente.
+     *
+     * @param loginRequestDto DTO que contiene las credenciales del usuario.
+     * @return ResponseEntity con el token de autenticación y detalles del usuario loggeado.
+     */
     @Operation(summary = "Login de Usuario", description = "Permite un usuario loggearse en el sistema y obtener un token de autenticación.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuario loggeado con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponseDTO.class))),

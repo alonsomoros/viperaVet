@@ -7,9 +7,17 @@ import com.alonso.vipera.training.springboot_apirest.model.dog_breed_api.dto.in.
 
 import java.util.List;
 
+/**
+ * Cliente Feign para consumir The Dog API.
+ */
 @FeignClient(name = "dog-api", url = "${thedogapi.url}")
 public interface DogApiClient {
 
+    /**
+     * Obtiene la lista completa de razas de perros desde The Dog API.
+     * 
+     * @return Lista de razas de perros.
+     */
     @GetMapping("/v1/breeds")
     List<DogApiBreedInDTO> getAllBreeds();
 }

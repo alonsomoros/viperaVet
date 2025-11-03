@@ -20,6 +20,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Controlador REST para gestionar la información de razas de perros obtenidas de una API externa.
+ * Proporciona endpoints para consultar y almacenar las razas de perros.
+ */
 @RestController
 @Tag(name = "Dog Breeds", description = "API endpoints para gestionar la información de razas de perros de una API externa")
 @RequestMapping("/api/dog-breeds")
@@ -28,6 +32,11 @@ public class DogApiBreedsController {
 
     private final DogApiBreedsService dogApiBreedsService;
 
+    /**
+     * Endpoint para obtener todas las razas de perros desde la API externa.
+     *
+     * @return ResponseEntity con la lista de todas las razas de perros.
+     */
     @Operation(summary = "Obtener todas las razas de perros", description = "Consulta la API externa para obtener la lista completa de razas de perros disponibles con su información detallada")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de razas de perros obtenida exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = DogApiBreedInDTO.class))),
@@ -40,6 +49,11 @@ public class DogApiBreedsController {
         return ResponseEntity.ok(breeds);
     }
 
+    /**
+     * Endpoint para guardar todas las razas de perros desde la API externa en la base de datos local.
+     *
+     * @return ResponseEntity con la lista de razas de perros guardadas.
+     */
     @Operation(summary = "Guardar todas las razas de perros", description = "Obtiene todas las razas de perros de la API externa y las guarda en la base de datos local para uso posterior")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Razas de perros guardadas exitosamente en la base de datos", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BreedOutDTO.class))),

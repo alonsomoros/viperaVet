@@ -7,9 +7,17 @@ import com.alonso.vipera.training.springboot_apirest.model.cat_breed_api.dto.in.
 
 import java.util.List;
 
+/**
+ * Cliente Feign para consumir The Cat API.
+ */
 @FeignClient(name = "cat-api", url = "${thecatapi.url}")
 public interface CatApiClient {
 
+    /**
+     * Obtiene la lista completa de razas de gatos desde The Cat API.
+     * 
+     * @return Lista de razas de gatos.
+     */
     @GetMapping("/v1/breeds")
     List<CatApiBreedInDTO> getAllBreeds();
 }

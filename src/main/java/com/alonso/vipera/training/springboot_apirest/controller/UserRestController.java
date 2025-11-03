@@ -25,6 +25,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Controlador REST para gestionar usuarios.
+ * Proporciona endpoints para obtener y eliminar usuarios.
+ */
 @RestController
 @RequestMapping("/users")
 @Tag(name = "Users", description = "API endpoints para gestionar usuarios")
@@ -36,6 +40,16 @@ public class UserRestController {
 
         // GET calls - Obtener todos los usuarios
 
+        /**
+         * Endpoint para obtener usuarios según filtros de búsqueda.
+         *
+         * @param id       ID del usuario (opcional).
+         * @param username Nombre de usuario (opcional).
+         * @param email    Dirección de email (opcional).
+         * @param role     Rol del usuario (opcional).
+         * @param pageable Parámetros de paginación.
+         * @return ResponseEntity con la lista de usuarios que coinciden con los filtros.
+         */
         @Operation(summary = "Búsqueda con filtros de los usuarios", description = "Devuelve una lista filtrada por los atributos usados, si no hay atributos devuelve una lista de todos los usuarios registrados en el sistema.")
         @ApiResponses(value = {
                         @ApiResponse(responseCode = "200", description = "Lista de usuarios obtenida con éxito", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserOutDTO.class)))),
@@ -57,6 +71,12 @@ public class UserRestController {
 
         // DELETE calls
 
+        /**
+         * Endpoint para eliminar un usuario por su ID.
+         *
+         * @param id ID único del usuario a eliminar.
+         * @return ResponseEntity sin contenido si la eliminación es exitosa.
+         */
         @Operation(summary = "Eliminar usuario", description = "Elimina permanentemente un usuario del sistema usando su ID único.")
         @ApiResponses(value = {
                         @ApiResponse(responseCode = "204", description = "Usuario eliminado con éxito", content = @Content),
