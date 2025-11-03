@@ -18,6 +18,6 @@ public interface CatApiClient {
      * 
      * @return Lista de razas de gatos.
      */
-    @GetMapping("/v1/breeds")
+    @GetMapping
     List<CatApiBreedInDTO> getAllBreeds();
 }

@@ -18,6 +18,6 @@ public interface DogApiClient {
      * 
      * @return Lista de razas de perros.
      */
-    @GetMapping("/v1/breeds")
+    @GetMapping
     List<DogApiBreedInDTO> getAllBreeds();
 }
