@@ -1,27 +1,29 @@
 package com.alonso.vipera.training.springboot_apirest.model.pet;
 
 import java.sql.Date;
-import java.time.LocalDateTime;
 
-import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
+import com.alonso.vipera.training.springboot_apirest.model.BaseEntity;
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Index;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * Entidad que representa una mascota.
+ */
 @Data
 @Builder
 @Entity
@@ -30,13 +32,12 @@ import lombok.NoArgsConstructor;
         @Index(name = "idx_pet_breed_id", columnList = "breed_id"),
         @Index(name = "idx_pet_specie_id", columnList = "specie_id")
 })
+@SQLDelete(sql = "UPDATE pets SET deleted_at = NOW(), modified_at = NOW() WHERE id = ?") // Borrado lógico
+@SQLRestriction("deleted_at IS NULL") // Para entidades que no han sido borradas
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pet {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Pet extends BaseEntity {
 
     @Column(nullable = false, unique = false)
     private String name;
@@ -49,9 +50,6 @@ public class Pet {
 
     @Column(nullable = true, unique = false)
     private String dietInfo;
-
-    @CreationTimestamp
-    private LocalDateTime createdAt;
 
     @Column(nullable = true, unique = false)
     private String photo_url;
