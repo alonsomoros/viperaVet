@@ -1,4 +1,4 @@
-package com.alonso.vipera.training.springboot_apirest.persistence;
+package com.alonso.vipera.training.springboot_apirest.persistence.jpa;
 
 import java.util.Optional;
 
@@ -13,7 +13,7 @@ import com.alonso.vipera.training.springboot_apirest.model.user.User;
 import com.alonso.vipera.training.springboot_apirest.model.user.User.Role;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserJpaRepository extends JpaRepository<User, Long> {
 
         Optional<User> findByEmail(String email);
 

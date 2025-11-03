@@ -1,4 +1,4 @@
-package com.alonso.vipera.training.springboot_apirest.persistence;
+package com.alonso.vipera.training.springboot_apirest.persistence.jpa;
 
 import java.sql.Date;
 import java.util.List;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.alonso.vipera.training.springboot_apirest.model.pet.Pet;
 
 @Repository
-public interface PetRepository extends JpaRepository<Pet, Long> {
+public interface PetJpaRepository extends JpaRepository<Pet, Long> {
 
         @Query("SELECT p FROM Pet p WHERE " +
                         "(:pet_id IS NULL OR p.id = :pet_id) AND " +
