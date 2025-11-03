@@ -48,15 +48,15 @@ public class UserRepositoryAdapter implements UserRepository {
     public boolean existsById(Long id) {
         return userRepository.existsById(id);
     }
-    
+
     @Override
     public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
+        return userRepository.checkIfEmailExistsNative(email).isPresent();
     }
 
     @Override
     public boolean existsByUsername(String username) {
-        return userRepository.existsByUsername(username);
+        return userRepository.checkIfUsernameExistsNative(username).isPresent();
     }
 
     @Override

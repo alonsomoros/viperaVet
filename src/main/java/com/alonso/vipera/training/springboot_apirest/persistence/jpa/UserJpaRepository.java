@@ -34,4 +34,25 @@ public interface UserJpaRepository extends JpaRepository<User, Long> {
         boolean existsByEmail(String email);
 
         boolean existsByUsername(String username);
+
+        /**
+         * Comprueba si un nombre de usuario existe FÍSICAMENTE en la BBDD,
+         * ignorando el filtro de soft-delete.
+         * Se usa para validar el registro y evitar violaciones de UNIQUE constraint.
+         *
+         * @param username El nombre de usuario a comprobar.
+         * @return Un Optional no vacío si el usuario existe (borrado o no).
+         */
+        @Query(value = "SELECT 1 FROM users WHERE username = :username LIMIT 1", nativeQuery = true)
+        Optional<Object> checkIfUsernameExistsNative(@Param("username") String username);
+
+        /**
+         * Comprueba si un email existe FÍSICAMENTE en la BBDD,
+         * ignorando el filtro de soft-delete.
+         *
+         * @param email El email a comprobar.
+         * @return Un Optional no vacío si el email existe (borrado o no).
+         */
+        @Query(value = "SELECT 1 FROM users WHERE email = :email LIMIT 1", nativeQuery = true)
+        Optional<Object> checkIfEmailExistsNative(@Param("email") String email);
 }
