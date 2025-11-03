@@ -9,7 +9,7 @@ import com.alonso.vipera.training.springboot_apirest.exception.SpecieNotFoundExc
 import com.alonso.vipera.training.springboot_apirest.mapper.SpecieMapper;
 import com.alonso.vipera.training.springboot_apirest.model.pet.Specie;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.SpecieOutDTO;
-import com.alonso.vipera.training.springboot_apirest.persistence.SpecieRepositoryAdapter;
+import com.alonso.vipera.training.springboot_apirest.persistence.adapter.SpecieRepositoryAdapter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

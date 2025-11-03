@@ -25,7 +25,7 @@ import com.alonso.vipera.training.springboot_apirest.model.pet.Breed;
 import com.alonso.vipera.training.springboot_apirest.model.pet.Specie;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.BreedOutDTO;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.SpecieOutDTO;
-import com.alonso.vipera.training.springboot_apirest.persistence.BreedRepositoryAdapter;
+import com.alonso.vipera.training.springboot_apirest.persistence.adapter.BreedRepositoryAdapter;
 import com.alonso.vipera.training.springboot_apirest.service.BreedServiceImpl;
 
 @ExtendWith(MockitoExtension.class)

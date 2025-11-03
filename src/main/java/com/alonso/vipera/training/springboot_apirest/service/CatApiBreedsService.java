@@ -13,8 +13,8 @@ import com.alonso.vipera.training.springboot_apirest.model.cat_breed_api.dto.in.
 import com.alonso.vipera.training.springboot_apirest.model.pet.Breed;
 import com.alonso.vipera.training.springboot_apirest.model.pet.Specie;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.BreedOutDTO;
-import com.alonso.vipera.training.springboot_apirest.persistence.BreedRepositoryAdapter;
-import com.alonso.vipera.training.springboot_apirest.persistence.SpecieRepositoryAdapter;
+import com.alonso.vipera.training.springboot_apirest.persistence.adapter.BreedRepositoryAdapter;
+import com.alonso.vipera.training.springboot_apirest.persistence.adapter.SpecieRepositoryAdapter;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.transaction.Transactional;

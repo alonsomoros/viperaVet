@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.alonso.vipera.training.springboot_apirest.exception.BreedNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.mapper.BreedMapper;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.BreedOutDTO;
-import com.alonso.vipera.training.springboot_apirest.persistence.BreedRepositoryAdapter;
+import com.alonso.vipera.training.springboot_apirest.persistence.adapter.BreedRepositoryAdapter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

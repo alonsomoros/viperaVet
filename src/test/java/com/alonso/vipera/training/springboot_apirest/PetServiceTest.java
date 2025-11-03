@@ -32,10 +32,10 @@ import com.alonso.vipera.training.springboot_apirest.model.pet.Specie;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.in.PetInDTO;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.PetOutDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
-import com.alonso.vipera.training.springboot_apirest.persistence.BreedRepositoryAdapter;
-import com.alonso.vipera.training.springboot_apirest.persistence.PetRepositoryAdapter;
-import com.alonso.vipera.training.springboot_apirest.persistence.SpecieRepositoryAdapter;
-import com.alonso.vipera.training.springboot_apirest.persistence.UserRepositoryAdapter;
+import com.alonso.vipera.training.springboot_apirest.persistence.adapter.BreedRepositoryAdapter;
+import com.alonso.vipera.training.springboot_apirest.persistence.adapter.PetRepositoryAdapter;
+import com.alonso.vipera.training.springboot_apirest.persistence.adapter.SpecieRepositoryAdapter;
+import com.alonso.vipera.training.springboot_apirest.persistence.adapter.UserRepositoryAdapter;
 import com.alonso.vipera.training.springboot_apirest.service.PetServiceImpl;
 
 @ExtendWith(MockitoExtension.class)

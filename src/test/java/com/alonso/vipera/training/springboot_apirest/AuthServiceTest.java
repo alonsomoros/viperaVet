@@ -29,7 +29,7 @@ import com.alonso.vipera.training.springboot_apirest.model.user.User;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.RegisterRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.AuthResponseDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutDTO;
-import com.alonso.vipera.training.springboot_apirest.persistence.UserRepositoryAdapter;
+import com.alonso.vipera.training.springboot_apirest.persistence.adapter.UserRepositoryAdapter;
 import com.alonso.vipera.training.springboot_apirest.service.AuthServiceImpl;
 import com.alonso.vipera.training.springboot_apirest.service.JwtService;
 
