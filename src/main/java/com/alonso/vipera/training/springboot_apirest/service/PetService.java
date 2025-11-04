@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.alonso.vipera.training.springboot_apirest.exception.IdNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.in.PetInDTO;
+import com.alonso.vipera.training.springboot_apirest.model.pet.dto.in.PetUpdateDTO;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.PetOutDTO;
 
 /**
@@ -15,6 +16,16 @@ import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.PetOutDTO
  * Proporciona operaciones CRUD y consultas específicas para entidades Pet.
  */
 public interface PetService {
+
+    /**
+     * Actualiza la información de una mascota existente.
+     *
+     * @param petId        ID de la mascota a actualizar.
+     * @param petUpdateDTO DTO con los datos a actualizar.
+     * @param username     Nombre de usuario del propietario de la mascota.
+     * @return DTO con la información actualizada de la mascota.
+     */
+    PetOutDTO updatePet(Long petId, PetUpdateDTO petUpdateDTO, String username);
 
     /**
      * Obtiene todas las mascotas de forma paginada.
@@ -80,9 +91,12 @@ public interface PetService {
      * Registra una nueva mascota y la asocia a un usuario existente (el que la
      * creó).
      *
-     * @param petInDTO El DTO de entrada con los datos de la nueva mascota (nombre, fecha_nacimiento, especie, raza, peso, info_dieta).
+     * @param petInDTO El DTO de entrada con los datos de la nueva mascota (nombre,
+     *                 fecha_nacimiento, especie, raza, peso, info_dieta).
      * @param username El nombre de usuario del dueño al que se asociará la mascota.
-     * @return El DTO de salida de la mascota con los datos que se quieran mostrar al cliente. (id, nombre, fecha_nacimiento, peso, info_dieta, createdAt)
+     * @return El DTO de salida de la mascota con los datos que se quieran mostrar
+     *         al cliente. (id, nombre, fecha_nacimiento, peso, info_dieta,
+     *         createdAt)
      * @throws UsernameNotFoundException Si el 'username' del dueño no existe.
      * @throws IdNotFoundException       Si el ID de la raza o especie proporcionada
      *                                   no se encuentra.
@@ -93,7 +107,8 @@ public interface PetService {
      * Elimina una mascota por su ID.
      *
      * @param id ID de la mascota a eliminar
-     * @throws IdNotFoundException Si no se encuentra una mascota con el ID especificado
+     * @throws IdNotFoundException Si no se encuentra una mascota con el ID
+     *                             especificado
      */
     void delete(Long id);
 

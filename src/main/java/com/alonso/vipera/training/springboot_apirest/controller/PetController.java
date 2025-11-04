@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.in.PetInDTO;
+import com.alonso.vipera.training.springboot_apirest.model.pet.dto.in.PetUpdateDTO;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.PetOutDTO;
 import com.alonso.vipera.training.springboot_apirest.service.PetService;
 
@@ -136,6 +138,30 @@ public class PetController {
     public ResponseEntity<?> deletePet(@PathVariable Long id) {
         petService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    // PATCH calls
+
+    /**
+     * Endpoint para actualizar una mascota.
+     *
+     * @param id           ID de la mascota a actualizar.
+     * @param petUpdateDTO DTO que contiene la información actualizada de la
+     *                     mascota.
+     * @param userDetails  Detalles del usuario autenticado.
+     * @return ResponseEntity con los detalles de la mascota actualizada.
+     */
+    @Operation(summary = "Actualizar una mascota", description = "Permite actualizar la información de una mascota asociada al usuario autenticado a través de su token JWT.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Mascota actualizada con éxito", content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = PetOutDTO.class))),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado. Se necesita un token válido", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Token no válido o expirado", content = @Content)
+    })
+    @PatchMapping("/{id}")
+    public ResponseEntity<PetOutDTO> updatePet(@PathVariable Long id, @Valid @RequestBody PetUpdateDTO petUpdateDTO,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(petService.updatePet(id, petUpdateDTO, userDetails.getUsername()));
     }
 
 }

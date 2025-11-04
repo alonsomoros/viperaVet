@@ -14,6 +14,7 @@ import com.alonso.vipera.training.springboot_apirest.model.pet.Breed;
 import com.alonso.vipera.training.springboot_apirest.model.pet.Pet;
 import com.alonso.vipera.training.springboot_apirest.model.pet.Specie;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.in.PetInDTO;
+import com.alonso.vipera.training.springboot_apirest.model.pet.dto.in.PetUpdateDTO;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.PetOutDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
 import com.alonso.vipera.training.springboot_apirest.persistence.adapter.BreedRepositoryAdapter;
@@ -145,6 +146,40 @@ public class PetServiceImpl implements PetService {
         log.debug("Mascota con ID: {} encontrada. Procediendo a eliminar...", id);
         petRepositoryAdapter.delete(pet);
         log.info("Mascota con ID: {} eliminada con éxito.", id);
+    }
+
+    @Override
+    public PetOutDTO updatePet(Long petId, PetUpdateDTO petUpdateDTO, String username) {
+
+        log.debug("Buscando mascota con ID: {} para actualizar...", petId);
+        Pet pet = petRepositoryAdapter.findById(petId).orElseThrow(() -> new IdNotFoundException());
+        log.debug("Mascota con ID: {} encontrada. Verificando permisos del usuario: {}", petId, username);
+
+        if (!username.equals(pet.getUser().getUsername())) {
+            throw new SecurityException("No tienes permiso para actualizar esta mascota.");
+        }
+        log.debug("Permisos verificados. Actualizando información de la mascota...");
+
+        if (petUpdateDTO.getName() != null) {
+            pet.setName(petUpdateDTO.getName());
+            log.debug("Nombre actualizado a: {}", petUpdateDTO.getName());
+        }
+
+        if (petUpdateDTO.getWeight() != null) {
+            pet.setWeight(petUpdateDTO.getWeight());
+            log.debug("Peso actualizado a: {}", petUpdateDTO.getWeight());
+        }
+
+        if (petUpdateDTO.getDietInfo() != null) {
+            pet.setDietInfo(petUpdateDTO.getDietInfo());
+            log.debug("Información de dieta actualizada a: {}", petUpdateDTO.getDietInfo());
+        }
+
+        log.debug("Guardando cambios en la base de datos...");
+        Pet updatedPet = petRepositoryAdapter.save(pet);
+        log.info("Mascota con ID: {} actualizada con éxito.", petId);
+
+        return petMapper.toOutDTO(updatedPet);
     }
 
 }
