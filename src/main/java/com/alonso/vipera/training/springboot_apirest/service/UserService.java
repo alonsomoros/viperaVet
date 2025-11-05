@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.alonso.vipera.training.springboot_apirest.model.user.User.Role;
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.UserUpdateDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutDTO;
 
 /**
@@ -66,5 +67,7 @@ public interface UserService {
      * @throws IdNotFoundException Si no se encuentra un usuario con el ID especificado
      */
     void delete(Long id);
+
+    UserOutDTO updateUser(Long userId, UserUpdateDTO updateDTO, String username);
     
 }

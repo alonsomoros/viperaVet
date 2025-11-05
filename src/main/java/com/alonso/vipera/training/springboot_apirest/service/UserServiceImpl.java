@@ -14,6 +14,7 @@ import com.alonso.vipera.training.springboot_apirest.exception.UsernameNotFoundE
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
 import com.alonso.vipera.training.springboot_apirest.model.user.User.Role;
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.UserUpdateDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.adapter.UserRepositoryAdapter;
 
@@ -72,12 +73,37 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return users.map(userMapper::toOutDTO);
     }
 
-    // Hacer un update en el futuro
-    // public User update(Long id, UpdateUserDTO updateDTO) {
-    // User existingUser = getById(id);
-    // // Lógica de actualización sin cambiar password
-    // return userRepositoryAdapter.save(updatedUser);
-    // }
+    @Override
+    public UserOutDTO updateUser(Long userId, UserUpdateDTO userUpdateDTO, String username) {
+        log.debug("Actualizando usuario con ID: {}", userId);
+        User userSaved = userRepositoryAdapter.findById(userId).orElseThrow(() -> new IdNotFoundException());
+        log.debug("Usuario con ID: {} encontrado. Verificando permisos del usuario: {}", userId, username);
+
+        if (!username.equals(userSaved.getUsername())) {
+            throw new SecurityException("No tienes permiso para actualizar este usuario.");
+        }
+        log.debug("Permisos verificados. Actualizando información del usuario...");
+
+        if (userUpdateDTO.getPhone() != null) {
+            userSaved.setPhone(userUpdateDTO.getPhone());
+            log.debug("Actualizado teléfono a: {}", userUpdateDTO.getPhone());
+        }
+
+        if (userUpdateDTO.getEmail() != null) {
+            userSaved.setEmail(userUpdateDTO.getEmail());
+            log.debug("Actualizado email a: {}", userUpdateDTO.getEmail());
+        }
+
+        if (userUpdateDTO.getAddress() != null) {
+            userSaved.setAddress(userUpdateDTO.getAddress());
+            log.debug("Actualizada dirección a: {}", userUpdateDTO.getAddress());
+        }
+
+        log.debug("Guardando cambios en la base de datos...");
+        User updatedUser = userRepositoryAdapter.save(userSaved);
+        log.info("Usuario con ID: {} actualizado con éxito.", userId);
+        return userMapper.toOutDTO(updatedUser);
+    }
 
     @Override
     @CacheEvict(value = { "usersByUsername", "detailsByUsername" }, allEntries = true)
