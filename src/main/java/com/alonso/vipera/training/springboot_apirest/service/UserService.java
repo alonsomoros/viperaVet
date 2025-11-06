@@ -3,6 +3,7 @@ package com.alonso.vipera.training.springboot_apirest.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.alonso.vipera.training.springboot_apirest.exception.IdNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.model.user.User.Role;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.UserUpdateDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutDTO;
@@ -26,7 +27,8 @@ public interface UserService {
      *
      * @param id ID del usuario a buscar
      * @return DTO del usuario encontrado
-     * @throws IdNotFoundException Si no se encuentra un usuario con el ID especificado
+     * @throws IdNotFoundException Si no se encuentra un usuario con el ID
+     *                             especificado
      */
     UserOutDTO getById(Long id);
 
@@ -35,7 +37,8 @@ public interface UserService {
      *
      * @param email Dirección de email del usuario a buscar
      * @return DTO del usuario encontrado
-     * @throws IdNotFoundException Si no se encuentra un usuario con el email especificado
+     * @throws IdNotFoundException Si no se encuentra un usuario con el email
+     *                             especificado
      */
     UserOutDTO getByEmail(String email);
 
@@ -44,7 +47,8 @@ public interface UserService {
      *
      * @param username Nombre de usuario a buscar
      * @return DTO del usuario encontrado
-     * @throws IdNotFoundException Si no se encuentra un usuario con el username especificado
+     * @throws IdNotFoundException Si no se encuentra un usuario con el username
+     *                             especificado
      */
     UserOutDTO getByUsername(String username);
 
@@ -64,10 +68,22 @@ public interface UserService {
      * Elimina un usuario por su ID.
      *
      * @param id ID del usuario a eliminar
-     * @throws IdNotFoundException Si no se encuentra un usuario con el ID especificado
+     * @throws IdNotFoundException Si no se encuentra un usuario con el ID
+     *                             especificado
      */
     void delete(Long id);
 
+    /**
+     * Actualiza la información de un usuario existente.
+     *
+     * @param userId    ID del usuario a actualizar
+     * @param updateDTO DTO con los datos a actualizar
+     * @param username  Nombre de usuario del solicitante que realiza la
+     *                  actualización
+     * @return DTO del usuario actualizado
+     * @throws IdNotFoundException Si no se encuentra un usuario con el ID
+     *                             especificado
+     */
     UserOutDTO updateUser(Long userId, UserUpdateDTO updateDTO, String username);
-    
+
 }

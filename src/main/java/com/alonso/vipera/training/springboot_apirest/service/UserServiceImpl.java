@@ -21,6 +21,11 @@ import com.alonso.vipera.training.springboot_apirest.persistence.adapter.UserRep
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Implementación del servicio de usuarios.
+ * Proporciona métodos para gestionar usuarios, incluyendo operaciones CRUD y
+ * consultas con filtros.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

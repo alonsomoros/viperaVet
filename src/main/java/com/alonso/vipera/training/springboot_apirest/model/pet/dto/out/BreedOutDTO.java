@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO de salida que representa la información de una raza de mascota.
+ */
 @Schema(description = "Información de una raza de mascota.")
 @Data
 @NoArgsConstructor

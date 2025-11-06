@@ -6,6 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO para la solicitud de inicio de sesión.
+ * Contiene las credenciales necesarias para que un usuario se autentique en el sistema.
+ */
 @Schema(description = "Credenciales necesarias para autenticarse en el sistema.")
 @Data
 @NoArgsConstructor

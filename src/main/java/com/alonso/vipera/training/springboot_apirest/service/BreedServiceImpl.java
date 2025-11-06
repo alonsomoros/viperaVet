@@ -14,6 +14,10 @@ import com.alonso.vipera.training.springboot_apirest.persistence.adapter.BreedRe
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Implementación del servicio para la gestión de razas de mascotas.
+ * Proporciona operaciones de consulta para entidades Breed.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

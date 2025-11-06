@@ -14,6 +14,10 @@ import com.alonso.vipera.training.springboot_apirest.persistence.adapter.SpecieR
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Implementación del servicio para la gestión de especies de mascotas.
+ * Proporciona operaciones de consulta para entidades Specie.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

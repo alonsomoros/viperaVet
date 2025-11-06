@@ -5,6 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO de entrada que representa los datos de una raza de perro obtenidos desde
+ * la Dog API externa.
+ */
 @Schema(description = "Datos de raza de perro obtenidos desde la Dog API externa.")
 @Data
 @NoArgsConstructor

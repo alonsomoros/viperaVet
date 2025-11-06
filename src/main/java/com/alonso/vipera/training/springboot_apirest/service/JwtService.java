@@ -16,7 +16,8 @@ import io.jsonwebtoken.security.Keys;
 
 /**
  * Servicio para la gestión de tokens JWT (JSON Web Tokens).
- * Proporciona funcionalidades para generar, validar y extraer información de tokens JWT
+ * Proporciona funcionalidades para generar, validar y extraer información de
+ * tokens JWT
  * utilizados en la autenticación y autorización del sistema.
  */
 @Service
@@ -32,7 +33,8 @@ public class JwtService {
      * Genera un token JWT para un usuario autenticado.
      *
      * @param userDetails Detalles del usuario para el cual generar el token
-     * @return Token JWT firmado con el username como subject y tiempo de expiración configurado
+     * @return Token JWT firmado con el username como subject y tiempo de expiración
+     *         configurado
      */
     public String generateToken(UserDetails userDetails) {
         return Jwts.builder()
@@ -48,7 +50,6 @@ public class JwtService {
      *
      * @param token Token JWT del cual extraer el username
      * @return Nombre de usuario contenido en el token
-     * @throws JwtException Si el token es inválido o no se puede parsear
      */
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

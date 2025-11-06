@@ -2,6 +2,7 @@ package com.alonso.vipera.training.springboot_apirest.service;
 
 import java.util.List;
 
+import com.alonso.vipera.training.springboot_apirest.exception.SpecieNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.SpecieOutDTO;
 
 /**
@@ -22,7 +23,7 @@ public interface SpecieService {
      *
      * @param name Nombre de la especie a buscar
      * @return DTO de la especie encontrada
-     * @throws IdNotFoundException Si no se encuentra una especie con el nombre especificado
+     * @throws SpecieNotFoundException Si no se encuentra una especie con el nombre especificado
      */
     SpecieOutDTO findByName(String name);
 

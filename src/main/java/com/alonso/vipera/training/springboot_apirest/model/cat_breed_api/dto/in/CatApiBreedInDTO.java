@@ -5,21 +5,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO de entrada que representa los datos de una raza de gato obtenidos desde
+ * la Cat API externa.
+ */
 @Schema(description = "Datos de raza de gato obtenidos desde la Cat API externa.")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CatApiBreedInDTO {
 
-    @Schema(description = "ID único de la raza en la Cat API.",
-            example = "abys")
-    private String id;
+        @Schema(description = "ID único de la raza en la Cat API.", example = "abys")
+        private String id;
 
-    @Schema(description = "Nombre de la raza de gato.",
-            example = "Abyssinian")
-    private String name;
+        @Schema(description = "Nombre de la raza de gato.", example = "Abyssinian")
+        private String name;
 
-    @Schema(description = "Descripción detallada de la raza.",
-            example = "Active, energetic and playful cat breed.")
-    private String description;
+        @Schema(description = "Descripción detallada de la raza.", example = "Active, energetic and playful cat breed.")
+        private String description;
 }

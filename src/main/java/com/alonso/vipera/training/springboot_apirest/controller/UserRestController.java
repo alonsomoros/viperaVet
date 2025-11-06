@@ -101,6 +101,15 @@ public class UserRestController {
 
         // PATCH calls
 
+        /**
+         * Endpoint para actualizar un usuario existente.
+         *
+         * @param id            ID único del usuario a actualizar.
+         * @param userUpdateDTO Datos para actualizar el usuario.
+         * @param userDetails   Detalles del usuario autenticado que realiza la
+         *                      solicitud.
+         * @return ResponseEntity con el DTO del usuario actualizado.
+         */
         @PatchMapping("/{id}")
         public ResponseEntity<UserOutDTO> updateUser(
                         @PathVariable Long id, @Valid @RequestBody UserUpdateDTO userUpdateDTO,
@@ -109,11 +118,4 @@ public class UserRestController {
                                 .body(userService.updateUser(id, userUpdateDTO, userDetails.getUsername()));
         }
 
-        @PatchMapping("/{id}/test")
-        public ResponseEntity<String> testUpdateUser(
-                        @PathVariable Long id,
-                        @RequestBody String rawJson) {
-                System.out.println("JSON crudo recibido: " + rawJson);
-                return ResponseEntity.ok("Recibido: " + rawJson);
-        }
 }

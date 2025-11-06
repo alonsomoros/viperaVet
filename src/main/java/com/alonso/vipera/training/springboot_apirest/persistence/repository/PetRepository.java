@@ -14,7 +14,7 @@ import com.alonso.vipera.training.springboot_apirest.model.pet.Pet;
  */
 public interface PetRepository {
 
-    /** 
+    /**
      * Busca una mascota por su ID.
      * 
      * @param id ID de la mascota.
@@ -22,7 +22,7 @@ public interface PetRepository {
      */
     Optional<Pet> findById(Long id);
 
-    /** 
+    /**
      * Busca mascotas por el nombre de su dueño.
      * 
      * @param username Nombre de usuario del dueño.
@@ -30,7 +30,7 @@ public interface PetRepository {
      */
     List<Pet> findPetsByOwnerUsername(String username);
 
-    /** 
+    /**
      * Busca mascotas por su nombre.
      * 
      * @param name Nombre de la mascota.
@@ -38,7 +38,7 @@ public interface PetRepository {
      */
     List<Pet> findByName(String name);
 
-    /** 
+    /**
      * Busca mascotas por su fecha de nacimiento.
      * 
      * @param birthDate Fecha de nacimiento de la mascota.
@@ -46,7 +46,7 @@ public interface PetRepository {
      */
     List<Pet> findByBirthDate(Date birthDate);
 
-    /** 
+    /**
      * Busca mascotas por el nombre de su raza.
      * 
      * @param breed Nombre de la raza.
@@ -54,7 +54,7 @@ public interface PetRepository {
      */
     List<Pet> findByBreedName(String breed);
 
-    /** 
+    /**
      * Busca mascotas por el nombre de su especie.
      * 
      * @param specie Nombre de la especie.
@@ -62,27 +62,27 @@ public interface PetRepository {
      */
     List<Pet> findBySpecieName(String specie);
 
-    /** 
-     * Verifica si existe una mascota con el nombre especificado.
+    /**
+     * Recupera todas las mascotas con paginación.
      * 
-     * @param name Nombre de la mascota.
-     * @return true si existe una mascota con ese nombre, false en caso contrario.
+     * @param pageable Parámetros de paginación.
+     * @return Página de mascotas.
      */
     Page<Pet> findAll(Pageable pageable);
 
-    /** 
+    /**
      * Busca mascotas según varios filtros.
      * 
-     * @param pet_id   ID de la mascota (opcional).
-     * @param name     Nombre de la mascota (opcional).
-     * @param breed_id ID de la raza (opcional).
+     * @param pet_id    ID de la mascota (opcional).
+     * @param name      Nombre de la mascota (opcional).
+     * @param breed_id  ID de la raza (opcional).
      * @param specie_id ID de la especie (opcional).
-     * @param pageable Parámetros de paginación.
+     * @param pageable  Parámetros de paginación.
      * @return Página de mascotas que coinciden con los filtros.
      */
     Page<Pet> findByFilters(Long pet_id, String name, Long breed_id, Long specie_id, Pageable pageable);
 
-    /** 
+    /**
      * Guarda una mascota en el repositorio.
      * 
      * @param pet Mascota a guardar.
@@ -90,7 +90,7 @@ public interface PetRepository {
      */
     Pet save(Pet pet);
 
-    /** 
+    /**
      * Elimina una mascota del repositorio.
      * 
      * @param pet Mascota a eliminar.

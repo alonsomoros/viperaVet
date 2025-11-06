@@ -21,6 +21,11 @@ import com.alonso.vipera.training.springboot_apirest.persistence.adapter.UserRep
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Implementación del servicio de autenticación y autorización.
+ * Maneja el registro de nuevos usuarios, inicio de sesión y validaciones de
+ * credenciales.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

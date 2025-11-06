@@ -11,6 +11,10 @@ package com.alonso.vipera.training.springboot_apirest.exception;
  * Extiende RuntimeException para ser una excepción no verificada.
  */
 public class UserCreationException extends RuntimeException {
+
+    /**
+     * Constructor por defecto que inicializa la excepción con un mensaje
+     */
     public UserCreationException() {
         super("Error creando el usuario en la BBDD");
     }

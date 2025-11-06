@@ -13,6 +13,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO para la entrada de datos de una mascota.
+ * Utilizado para registrar o actualizar la información de una mascota en el
+ * sistema.
+ */
 @Schema(description = "Datos necesarios para registrar una nueva mascota en el sistema.")
 @Data
 @NoArgsConstructor

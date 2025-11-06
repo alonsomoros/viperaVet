@@ -2,6 +2,7 @@ package com.alonso.vipera.training.springboot_apirest.service;
 
 import java.util.List;
 
+import com.alonso.vipera.training.springboot_apirest.exception.BreedNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.BreedOutDTO;
 
 /**
@@ -22,7 +23,7 @@ public interface BreedService {
      *
      * @param name Nombre de la raza a buscar
      * @return DTO de la raza encontrada
-     * @throws IdNotFoundException Si no se encuentra una raza con el nombre especificado
+     * @throws BreedNotFoundException Si no se encuentra una raza con el nombre especificado
      */
     BreedOutDTO findByName(String name);
 
@@ -39,7 +40,7 @@ public interface BreedService {
      *
      * @param id ID de la especie para filtrar las razas
      * @return Lista de razas pertenecientes a la especie especificada
-     * @throws IdNotFoundException Si no se encuentra una especie con el ID especificado
+     * @throws BreedNotFoundException Si no se encuentra una especie con el ID especificado
      */
     List<BreedOutDTO> findBySpecieId(Long id);
 

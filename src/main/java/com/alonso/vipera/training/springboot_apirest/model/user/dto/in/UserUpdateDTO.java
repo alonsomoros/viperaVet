@@ -8,6 +8,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO para la actualización de un usuario.
+ * Contiene los campos que pueden ser modificados para un usuario existente en
+ * el sistema.
+ */
 @Schema(description = "Datos necesarios para actualizar un usuario en el sistema.")
 @Data
 @NoArgsConstructor

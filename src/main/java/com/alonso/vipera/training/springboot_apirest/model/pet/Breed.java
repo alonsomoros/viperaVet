@@ -14,6 +14,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Entidad que representa una raza de mascota.
+ * Cada raza está asociada a una especie específica.
+ */
 @Entity
 @Data
 @Builder

@@ -5,6 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO de respuesta de autenticación que contiene el token JWT y la información
+ * del usuario.
+ */
 @Schema(description = "Respuesta de autenticación exitosa.")
 @Data
 @NoArgsConstructor

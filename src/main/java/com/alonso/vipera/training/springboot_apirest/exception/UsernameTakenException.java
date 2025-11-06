@@ -11,6 +11,10 @@ package com.alonso.vipera.training.springboot_apirest.exception;
  * Extiende RuntimeException para ser una excepción no verificada.
  */
 public class UsernameTakenException extends RuntimeException {
+    
+    /**
+     * Constructor por defecto que inicializa la excepción con un mensaje
+     */
     public UsernameTakenException() {
         super("Nombre de usuario ya está en uso");
     }

@@ -48,8 +48,6 @@ public class CatApiDataScheduler implements ApplicationRunner {
      * - Ejecuciones concurrentes en múltiples instancias
      * - Conflictos de sincronización de datos
      * - Sobrecarga innecesaria de la API externa
-     * 
-     * @throws Exception Si ocurre un error durante la sincronización (capturado y registrado)
      */
     @Scheduled(cron = "${scheduler.cron}", zone = "${scheduler.zone}")
     @SchedulerLock(name = "ApiDataScheduler_syncBreeds", 

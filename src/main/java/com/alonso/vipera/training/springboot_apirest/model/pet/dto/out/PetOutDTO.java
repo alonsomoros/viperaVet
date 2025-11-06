@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO para la salida de información completa de una mascota.
+ */
 @Schema(description = "Información completa de una mascota.")
 @Data
 @NoArgsConstructor

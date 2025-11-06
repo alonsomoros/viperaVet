@@ -12,6 +12,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO para la solicitud de registro de un nuevo usuario.
+ */
 @Schema(description = "Datos necesarios para registrar un nuevo usuario en el sistema.")
 @Data
 @NoArgsConstructor

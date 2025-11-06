@@ -13,6 +13,11 @@ import com.alonso.vipera.training.springboot_apirest.persistence.repository.User
 
 import lombok.AllArgsConstructor;
 
+/**
+ * Adaptador del repositorio de usuarios.
+ * Implementa la interfaz UserRepository utilizando UserJpaRepository para
+ * interactuar con la base de datos.
+ */
 @Component
 @AllArgsConstructor
 public class UserRepositoryAdapter implements UserRepository {

@@ -11,6 +11,11 @@ import com.alonso.vipera.training.springboot_apirest.persistence.repository.Spec
 
 import lombok.AllArgsConstructor;
 
+/**
+ * Adaptador del repositorio de especies.
+ * Implementa la interfaz SpecieRepository utilizando SpecieJpaRepository para
+ * interactuar con la base de datos.
+ */
 @Component
 @AllArgsConstructor
 public class SpecieRepositoryAdapter implements SpecieRepository {

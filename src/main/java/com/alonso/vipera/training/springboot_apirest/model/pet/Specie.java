@@ -13,6 +13,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Entidad que representa una especie de mascota.
+ */
 @Entity
 @Data
 @Table(name = "species")

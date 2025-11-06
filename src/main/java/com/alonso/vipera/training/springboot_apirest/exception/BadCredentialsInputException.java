@@ -12,6 +12,10 @@ package com.alonso.vipera.training.springboot_apirest.exception;
  * Extiende RuntimeException para ser una excepción no verificada.
  */
 public class BadCredentialsInputException extends RuntimeException {
+
+    /**
+     * Constructor por defecto que inicializa la excepción con un mensaje
+     */
     public BadCredentialsInputException() {
         super("Credenciales de entrada inválidas");
     }

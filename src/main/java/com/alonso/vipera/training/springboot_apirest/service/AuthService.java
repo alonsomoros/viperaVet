@@ -1,5 +1,6 @@
 package com.alonso.vipera.training.springboot_apirest.service;
 
+import com.alonso.vipera.training.springboot_apirest.exception.BadCredentialsInputException;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.LoginRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.RegisterRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.AuthResponseDTO;
@@ -25,7 +26,7 @@ public interface AuthService {
      *
      * @param loginRequestDTO DTO con las credenciales de acceso (username/email y password)
      * @return Respuesta de autenticación con token JWT y datos del usuario
-     * @throws BadCredentialsException Si las credenciales proporcionadas son incorrectas
+     * @throws BadCredentialsInputException Si las credenciales proporcionadas son incorrectas
      */
     AuthResponseDTO login(LoginRequestDTO loginRequestDTO);
 

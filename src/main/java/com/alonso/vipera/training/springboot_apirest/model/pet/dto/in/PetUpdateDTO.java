@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO para la actualización de una mascota existente.
+ */
 @Schema(description = "Datos necesarios para actualizar una mascota en el sistema.")
 @Data
 @NoArgsConstructor

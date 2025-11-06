@@ -50,7 +50,7 @@ public class ApplicationConfig {
      * 
      * @param config AuthenticationConfiguration
      * @return AuthenticationManager
-     * @throws Exception
+     * @throws Exception lanza una excepción si ocurre un error
      */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {

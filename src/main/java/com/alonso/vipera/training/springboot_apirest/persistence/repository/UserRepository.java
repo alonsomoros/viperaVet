@@ -16,8 +16,8 @@ public interface UserRepository {
     /**
      * Busca todos los usuarios con paginación.
      * 
-     * @param pageable
-     * @return
+     * @param pageable Información de paginación
+     * @return Página de usuarios
      */
     Page<User> findAll(Pageable pageable);
 

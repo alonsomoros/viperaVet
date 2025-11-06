@@ -10,6 +10,10 @@ package com.alonso.vipera.training.springboot_apirest.exception;
  * Extiende RuntimeException para ser una excepción no verificada.
  */
 public class IdNotFoundException extends RuntimeException {
+
+    /**
+     * Constructor por defecto que inicializa la excepción con un mensaje
+     */
     public IdNotFoundException() {
         super("Id no encontrado");
     }

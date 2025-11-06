@@ -14,6 +14,10 @@ import com.alonso.vipera.training.springboot_apirest.persistence.repository.PetR
 
 import lombok.AllArgsConstructor;
 
+/**
+ * Adaptador del repositorio de mascotas que implementa la interfaz
+ * PetRepository utilizando JPA.
+ */
 @Component
 @AllArgsConstructor
 public class PetRepositoryAdapter implements PetRepository {
