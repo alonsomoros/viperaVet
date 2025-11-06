@@ -46,10 +46,12 @@ El objetivo del proyecto es desarrollar una **API funcional con Spring Boot** qu
 | **POST**        | `/auth/login`              | Autentica y devuelve un token JWT.                                                       | **200 OK** – Login exitoso<br>**400 Bad Request** – Solicitud inválida<br>**401 Unauthorized** – Credenciales incorrectas<br>**403 Forbidden** – Cuenta bloqueada           |
 | **GET**         | `/users`                   | Lista usuarios; admite filtros (nombre, correo, etc.). Si no hay filtros devuelve todos. | **200 OK** – Lista (puede estar vacía)<br>**400 Bad Request** – Filtros inválidos<br>**401 Unauthorized** – No autenticado<br>**403 Forbidden** – Sin permisos              |
 | **DELETE**      | `/users/{id}`              | Elimina un usuario por ID.                                                               | **204 No Content** – Eliminado exitosamente<br>**401 Unauthorized** – No autenticado<br>**403 Forbidden** – Sin permisos<br>**404 Not Found** – No existe el usuario        |
+| **PATCH**       | `/users/{id}`              | Actualiza un usuario por ID. Datos en el body.                                           | **200 OK** – Actualizado exitosamente<br>**401 Unauthorized** – No autenticado<br>**403 Forbidden** – Sin permisos<br>**404 Not Found** – No existe el usuario              |
 | **GET**         | `/pets/my-pets`            | Obtiene las mascotas del usuario autenticado.                                            | **200 OK** – Lista de mascotas<br>**401 Unauthorized** – No autenticado<br>**403 Forbidden** – Sin permisos                                                                 |
 | **GET**         | `/pets`                    | Busca mascotas con filtros (especie, raza, etc.). Si no hay filtros, devuelve todas.     | **200 OK** – Lista (puede estar vacía)<br>**400 Bad Request** – Filtros inválidos<br>**401 Unauthorized** – No autenticado<br>**403 Forbidden** – Sin permisos              |
 | **POST**        | `/pets`                    | Registra una nueva mascota asociada al usuario autenticado.                              | **201 Created** – Mascota creada<br>**400 Bad Request** – Datos mal formados<br>**401 Unauthorized** – No autenticado<br>**422 Unprocessable Entity** – Error de validación |
 | **DELETE**      | `/pets/{id}`               | Elimina una mascota por ID.                                                              | **204 No Content** – Eliminada<br>**401 Unauthorized** – No autenticado<br>**403 Forbidden** – Sin permisos<br>**404 Not Found** – Mascota no encontrada                    |
+| **PATCH**       | `/pets/{id}`               | Actualiza una mascota por ID. Datos en el body.                                          | **200 OK** – Actualizado exitosamente<br>**401 Unauthorized** – No autenticado<br>**403 Forbidden** – Sin permisos<br>**404 Not Found** – No existe la mascota              |
 | **GET**         | `/breeds`                  | Obtiene todas las razas disponibles (gatos y perros).                                    | **200 OK** – Lista de razas<br>**401 Unauthorized** – No autenticado<br>**403 Forbidden** – Sin permisos                                                                    |
 | **GET**         | `/species`                 | Obtiene todas las especies disponibles.                                                  | **200 OK** – Lista de especies<br>**401 Unauthorized** – No autenticado<br>**403 Forbidden** – Sin permisos                                                                 |
 | **GET**         | `/api/cat-breeds`          | Obtiene lista de razas de gatos desde una **API externa**.                               | **200 OK** – Datos obtenidos<br>**502 Bad Gateway** / **503 Service Unavailable** / **504 Gateway Timeout** – Error al consultar API externa                                |
@@ -75,12 +77,10 @@ El objetivo del proyecto es desarrollar una **API funcional con Spring Boot** qu
 ---
 
 ## 🔐 Seguridad
-La seguridad está implementada con **Spring Security**.  
-Todos los endpoints requieren autenticación previa.
+La seguridad está implementada con **Spring Security - JWT**.  
+Todos los endpoints requieren autenticación previa.<br>
+Salvo los públicos: **/auth/register** y **/auth/login**
 
-**Credenciales de prueba:**
-Usuario: user / 
-Contraseña: password
 
 ---
 
@@ -108,7 +108,7 @@ La API cuenta con validaciones estándar y personalizadas.
 
 - **Validaciones estándar:** `@NotNull`, `@NotBlank`, `@Size` etc.  
 
-Las solicitudes con datos inválidos generan respuestas de error estructuradas, gestionadas por el manejador global de excepciones.
+Las solicitudes con datos inválidos generan respuestas de error estructuradas, gestionadas por el **manejador global de excepciones**.
 
 ---
 
@@ -155,10 +155,12 @@ La documentación de la API se genera automáticamente con **Springdoc OpenAPI**
 
 Esta interfaz permite **probar los endpoints** de manera interactiva.
 
+También está documentada con JavaDoc todas las clases.
+
 ---
 
 ## 🔁 Circuit Breaker
-Implementado Circuit Breaker en las llamadas a las APIs de 'TheDogApi' y 'TheCatApi'
+Implementado Circuit Breaker en las llamadas a las APIs de **'TheDogApi'** y **'TheCatApi'**
 
 ---
 
