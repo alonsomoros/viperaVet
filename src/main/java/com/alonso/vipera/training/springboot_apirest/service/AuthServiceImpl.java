@@ -62,11 +62,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void verifyRegisterInputs(RegisterRequestDTO registerRequestDTO) {
-        boolean usernameExists = existsByUsername(registerRequestDTO.getUsername());
-        boolean emailExists = existsByEmail(registerRequestDTO.getEmail());
-
-        log.info(">>>>> DEBUG - Username '{}' exists: {}", registerRequestDTO.getUsername(), usernameExists);
-        log.info(">>>>> DEBUG - Email '{}' exists: {}", registerRequestDTO.getEmail(), emailExists);
 
         if (existsByUsername(registerRequestDTO.getUsername())) {
             log.warn("El nombre de usuario {} ya está en uso.", registerRequestDTO.getUsername());
