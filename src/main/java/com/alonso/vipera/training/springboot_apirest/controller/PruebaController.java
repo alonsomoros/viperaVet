@@ -1,6 +1,5 @@
 package com.alonso.vipera.training.springboot_apirest.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +13,7 @@ import com.alonso.vipera.training.springboot_apirest.service.BreedService;
 import com.alonso.vipera.training.springboot_apirest.service.SpecieService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Controlador REST de prueba para obtener razas y especies.
@@ -21,13 +21,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Prueba", description = "API endpoints de prueba para obtener razas y especies")
 @RestController
 @RequestMapping("/prueba")
+@RequiredArgsConstructor
 public class PruebaController {
 
-    @Autowired
-    private BreedService breedService;
+    private final BreedService breedService;
 
-    @Autowired
-    private SpecieService specieService;
+    private final SpecieService specieService;
 
     /**
      * Endpoint para obtener una raza por su nombre.

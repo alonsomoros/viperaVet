@@ -2,7 +2,6 @@ package com.alonso.vipera.training.springboot_apirest.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -44,8 +43,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PetController {
 
-    @Autowired
-    private PetService petService;
+    private final PetService petService;
 
     // GET calls
 
