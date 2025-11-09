@@ -43,123 +43,122 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PetController {
 
-    private final PetService petService;
+        private final PetService petService;
 
-    // GET calls
+        // GET calls
 
-    /**
-     * Endpoint para obtener las mascotas del usuario autenticado
-     *
-     * @param userDetails Detalles del usuario autenticado.
-     * @return ResponseEntity con la lista de mascotas del usuario.
-     */
-    @Operation(summary = "Obtener mis mascotas", description = "Devuelve una lista de todas las mascotas que pertenecen al usuario autenticado a través de su token JWT.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de mascotas encontradas con éxito", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PetOutDTO.class)))),
-            @ApiResponse(responseCode = "403", description = "Acceso denegado. Se necesita un token válido", content = @Content),
-            @ApiResponse(responseCode = "401", description = "Token no válido o expirado", content = @Content)
-    })
-    @GetMapping("/my-pets")
-    public ResponseEntity<List<PetOutDTO>> getMyPets(@AuthenticationPrincipal UserDetails userDetails) {
-        String username = userDetails.getUsername();
-        return ResponseEntity.status(HttpStatus.OK).body(petService.getPetsByOwnerUsername(username));
-    }
-
-    /**
-     * Endpoint para obtener mascotas según filtros de búsqueda.
-     *
-     * @param id        ID de la mascota (opcional).
-     * @param name      Nombre de la mascota (opcional).
-     * @param breed_id  ID de la raza de la mascota (opcional).
-     * @param specie_id ID de la especie de la mascota (opcional).
-     * @param pageable  Parámetros de paginación.
-     * @return ResponseEntity con la lista de mascotas que coinciden con los
-     *         filtros.
-     */
-    @Operation(summary = "Buscar mascotas con filtros", description = "Devuelve una lista de mascotas que coinciden con los parámetros de búsqueda proporcionados. Si no se proporcionan parámetros, devuelve todas las mascotas.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Mascotas encontradas con éxito", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(type = "array", implementation = PetOutDTO.class)))),
-            @ApiResponse(responseCode = "403", description = "Acceso denegado. Se necesita un token válido", content = @Content),
-            @ApiResponse(responseCode = "401", description = "Token no válido o expirado", content = @Content)
-    })
-    @GetMapping
-    public ResponseEntity<Page<PetOutDTO>> getPetsByFilters(
-            @RequestParam(required = false) Long id,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) Long breed_id,
-            @RequestParam(required = false) Long specie_id,
-            Pageable pageable) {
-
-        if (id != null || name != null || breed_id != null || specie_id != null) {
-            return ResponseEntity.ok(petService.getPetByFilters(id, name, breed_id, specie_id, pageable));
+        /**
+         * Endpoint para obtener las mascotas del usuario autenticado
+         *
+         * @param userDetails Detalles del usuario autenticado.
+         * @return ResponseEntity con la lista de mascotas del usuario.
+         */
+        @Operation(summary = "Obtener mis mascotas", description = "Devuelve una lista de todas las mascotas que pertenecen al usuario autenticado a través de su token JWT.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Lista de mascotas encontradas con éxito", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PetOutDTO.class)))),
+                        @ApiResponse(responseCode = "403", description = "Acceso denegado. Se necesita un token válido", content = @Content),
+                        @ApiResponse(responseCode = "401", description = "Token no válido o expirado", content = @Content)
+        })
+        @GetMapping("/my-pets")
+        public ResponseEntity<List<PetOutDTO>> getMyPets(@AuthenticationPrincipal UserDetails userDetails) {
+                String username = userDetails.getUsername();
+                return ResponseEntity.status(HttpStatus.OK).body(petService.getPetsByOwnerUsername(username));
         }
-        return ResponseEntity.ok(petService.getAll(pageable));
-    }
 
-    // POST calls
+        /**
+         * Endpoint para obtener mascotas según filtros de búsqueda.
+         *
+         * @param id        ID de la mascota (opcional).
+         * @param name      Nombre de la mascota (opcional).
+         * @param breed_id  ID de la raza de la mascota (opcional).
+         * @param specie_id ID de la especie de la mascota (opcional).
+         * @param pageable  Parámetros de paginación.
+         * @return ResponseEntity con la lista de mascotas que coinciden con los
+         *         filtros.
+         */
+        @Operation(summary = "Buscar mascotas con filtros", description = "Devuelve una lista de mascotas que coinciden con los parámetros de búsqueda proporcionados. Si no se proporcionan parámetros, devuelve todas las mascotas.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Mascotas encontradas con éxito", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(type = "array", implementation = PetOutDTO.class)))),
+                        @ApiResponse(responseCode = "403", description = "Acceso denegado. Se necesita un token válido", content = @Content),
+                        @ApiResponse(responseCode = "401", description = "Token no válido o expirado", content = @Content)
+        })
+        @GetMapping
+        public ResponseEntity<Page<PetOutDTO>> getPetsByFilters(
+                        @RequestParam(required = false) Long id,
+                        @RequestParam(required = false) String name,
+                        @RequestParam(required = false) Long breed_id,
+                        @RequestParam(required = false) Long specie_id,
+                        Pageable pageable) {
 
-    /**
-     * Endpoint para registrar una nueva mascota.
-     *
-     * @param userDetails Detalles del usuario autenticado.
-     * @param petInDTO    DTO que contiene la información de la mascota a registrar.
-     * @return ResponseEntity con los detalles de la mascota registrada.
-     */
-    @Operation(summary = "Registrar una mascota", description = "Permite registrar una mascota asociada al usuario autenticado a través de su token JWT.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Mascota registrada con éxito", content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = PetOutDTO.class))),
-            @ApiResponse(responseCode = "403", description = "Acceso denegado. Se necesita un token válido", content = @Content),
-            @ApiResponse(responseCode = "401", description = "Token no válido o expirado", content = @Content)
-    })
-    @PostMapping
-    public ResponseEntity<PetOutDTO> registerPet(@AuthenticationPrincipal UserDetails userDetails,
-            @Valid @RequestBody PetInDTO petInDTO) {
-        String username = userDetails.getUsername();
-        return ResponseEntity.status(HttpStatus.OK).body(petService.save(petInDTO, username));
-    }
+                if (id != null || name != null || breed_id != null || specie_id != null) {
+                        return ResponseEntity.ok(petService.getPetByFilters(id, name, breed_id, specie_id, pageable));
+                }
+                return ResponseEntity.ok(petService.getAll(pageable));
+        }
 
-    // DELETE calls
+        // POST calls
 
-    /**
-     * Endpoint para borrar una mascota.
-     *
-     * @param id ID de la mascota a borrar.
-     * @return ResponseEntity sin contenido.
-     */
-    @Operation(summary = "Borrar una mascota", description = "Permite borrar una mascota asociada al usuario autenticado a través de su token JWT.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Mascota borrada con éxito", content = @Content()),
-            @ApiResponse(responseCode = "403", description = "Acceso denegado. Se necesita un token válido", content = @Content),
-            @ApiResponse(responseCode = "401", description = "Token no válido o expirado", content = @Content)
-    })
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePet(@PathVariable Long id) {
-        petService.delete(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
+        /**
+         * Endpoint para registrar una nueva mascota.
+         *
+         * @param userDetails Detalles del usuario autenticado.
+         * @param petInDTO    DTO que contiene la información de la mascota a registrar.
+         * @return ResponseEntity con los detalles de la mascota registrada.
+         */
+        @Operation(summary = "Registrar una mascota", description = "Permite registrar una mascota asociada al usuario autenticado a través de su token JWT.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Mascota registrada con éxito", content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = PetOutDTO.class))),
+                        @ApiResponse(responseCode = "403", description = "Acceso denegado. Se necesita un token válido", content = @Content),
+                        @ApiResponse(responseCode = "401", description = "Token no válido o expirado", content = @Content)
+        })
+        @PostMapping
+        public ResponseEntity<PetOutDTO> registerPet(@AuthenticationPrincipal UserDetails userDetails,
+                        @Valid @RequestBody PetInDTO petInDTO) {
+                return ResponseEntity.status(HttpStatus.OK).body(petService.save(petInDTO, userDetails.getUsername()));
+        }
 
-    // PATCH calls
+        // DELETE calls
 
-    /**
-     * Endpoint para actualizar una mascota.
-     *
-     * @param id           ID de la mascota a actualizar.
-     * @param petUpdateDTO DTO que contiene la información actualizada de la
-     *                     mascota.
-     * @param userDetails  Detalles del usuario autenticado.
-     * @return ResponseEntity con los detalles de la mascota actualizada.
-     */
-    @Operation(summary = "Actualizar una mascota", description = "Permite actualizar la información de una mascota asociada al usuario autenticado a través de su token JWT.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Mascota actualizada con éxito", content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = PetOutDTO.class))),
-            @ApiResponse(responseCode = "403", description = "Acceso denegado. Se necesita un token válido", content = @Content),
-            @ApiResponse(responseCode = "401", description = "Token no válido o expirado", content = @Content)
-    })
-    @PatchMapping("/{id}")
-    public ResponseEntity<PetOutDTO> updatePet(@PathVariable Long id, @Valid @RequestBody PetUpdateDTO petUpdateDTO,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(petService.updatePet(id, petUpdateDTO, userDetails.getUsername()));
-    }
+        /**
+         * Endpoint para borrar una mascota.
+         *
+         * @param id ID de la mascota a borrar.
+         * @return ResponseEntity sin contenido.
+         */
+        @Operation(summary = "Borrar una mascota", description = "Permite borrar una mascota asociada al usuario autenticado a través de su token JWT.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Mascota borrada con éxito", content = @Content()),
+                        @ApiResponse(responseCode = "403", description = "Acceso denegado. Se necesita un token válido", content = @Content),
+                        @ApiResponse(responseCode = "401", description = "Token no válido o expirado", content = @Content)
+        })
+        @DeleteMapping("/{id}")
+        public ResponseEntity<?> deletePet(@PathVariable Long id) {
+                petService.delete(id);
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+
+        // PATCH calls
+
+        /**
+         * Endpoint para actualizar una mascota.
+         *
+         * @param id           ID de la mascota a actualizar.
+         * @param petUpdateDTO DTO que contiene la información actualizada de la
+         *                     mascota.
+         * @param userDetails  Detalles del usuario autenticado.
+         * @return ResponseEntity con los detalles de la mascota actualizada.
+         */
+        @Operation(summary = "Actualizar una mascota", description = "Permite actualizar la información de una mascota asociada al usuario autenticado a través de su token JWT.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Mascota actualizada con éxito", content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = PetOutDTO.class))),
+                        @ApiResponse(responseCode = "403", description = "Acceso denegado. Se necesita un token válido", content = @Content),
+                        @ApiResponse(responseCode = "401", description = "Token no válido o expirado", content = @Content)
+        })
+        @PatchMapping("/{id}")
+        public ResponseEntity<PetOutDTO> updatePet(@PathVariable Long id, @Valid @RequestBody PetUpdateDTO petUpdateDTO,
+                        @AuthenticationPrincipal UserDetails userDetails) {
+                return ResponseEntity.status(HttpStatus.OK)
+                                .body(petService.updatePet(id, petUpdateDTO, userDetails.getUsername()));
+        }
 
 }
