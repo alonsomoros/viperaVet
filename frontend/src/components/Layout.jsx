@@ -14,7 +14,7 @@ const Layout = () => {
                     <span className="brand-name">ViperaVet</span>
                 </div>
                 <nav className="nav-menu">
-                    <a href="#" className="nav-link">Mascotas</a>
+                    <span className="nav-link" onClick={() => navigate('/search')} style={{cursor: 'pointer'}}>Mascotas</span>
                     <a href="#" className="nav-link">Sobre nosotros</a>
                 </nav>
             </header>

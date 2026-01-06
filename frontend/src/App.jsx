@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
 import Layout from './components/Layout';
+import SearchPets from './pages/SearchPets';
 import './App.css'; // Default styles or empty
 
 const ProtectedRoute = ({ children }) => {
@@ -37,6 +38,7 @@ function App() {
                     </ProtectedRoute>
                 }>
                     <Route path="/home" element={<Home />} />
+                    <Route path="/search" element={<SearchPets />} />
                 </Route>
 
                 <Route path="/" element={<RootRedirect />} />

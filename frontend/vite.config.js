@@ -15,7 +15,22 @@ export default defineConfig({
         target: 'http://localhost:8080',
         changeOrigin: true,
         secure: false,
-      }
+      },
+      '/pets': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/species': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/breeds': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
+      },
     }
   }
 })
