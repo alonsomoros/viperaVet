@@ -1,4 +1,9 @@
-const API_URL = '/pets'; // Assuming base for pets, or just use relative paths for specific endpoints
+const extractData = (data) => {
+    if (!data) return [];
+    if (Array.isArray(data)) return data;
+    if (data.content && Array.isArray(data.content)) return data.content;
+    return [];
+};
 
 export const getSpecies = async () => {
     const response = await fetch('/species');
@@ -7,16 +12,13 @@ export const getSpecies = async () => {
 };
 
 export const getBreedsBySpecies = async (species) => {
-    // Handling generic or specific endpoint based on user prompt instructions "endpoint /breeds o el filtrado por especie que tiene el backend"
-    // I'll assume /breeds?species=... or just /breeds and filter, but usually backend filters.
-    // Let's try /breeds?species=${species} first as it's cleaner.
+    // Backend expects specie_id parameter for filtering
     const response = await fetch(`/breeds?specie_id=${encodeURIComponent(species)}`);
     if (!response.ok) throw new Error('Error fetching breeds');
     return await response.json();
 };
 
 export const searchPets = async (filters = {}) => {
-    // constructing query string
     const params = new URLSearchParams();
     if (filters.name) params.append('name', filters.name);
     if (filters.species) params.append('specie_id', filters.species);
@@ -24,5 +26,7 @@ export const searchPets = async (filters = {}) => {
 
     const response = await fetch(`/pets?${params.toString()}`);
     if (!response.ok) throw new Error('Error searching pets');
-    return await response.json();
+    
+    const data = await response.json();
+    return extractData(data);
 };

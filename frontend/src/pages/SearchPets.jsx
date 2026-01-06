@@ -145,11 +145,10 @@ const SearchPets = () => {
                 <div className="pets-grid">
                     {pets.length > 0 ? pets.map(pet => (
                         <div key={pet.id} className="pet-card">
-                            {/* Placeholder image or real one if available */}
-                            <div className="pet-image-placeholder">🐶</div> 
+                            <div className="pet-image-placeholder">🐶</div>
                             <h3>{pet.name}</h3>
-                            <p><strong>Especie:</strong> {pet.species}</p>
-                            <p><strong>Raza:</strong> {pet.breed}</p>
+                            <p><strong>Especie:</strong> {pet.specie?.name || 'N/A'}</p>
+                            <p><strong>Raza:</strong> {pet.breed?.name || 'N/A'}</p>
                         </div>
                     )) : (
                         <p>No se encontraron mascotas.</p>
