@@ -27,19 +27,20 @@ const Layout = () => {
                 <div className="footer-content">
                     <div className="footer-column">
                         <h3>Legal</h3>
-                        <p>&copy; 2026 ViperaVet Clinic.</p>
+                        <p>&copy; 2026 ViperaVet.</p>
                         <p>Todos los derechos reservados.</p>
                     </div>
                     <div className="footer-column">
                         <h3>Contacto</h3>
-                        <p>Email: contacto@viperavet.com</p>
-                        <p>Teléfono: +34 900 123 456</p>
-                        <p>Dirección: Calle Falsa 123, Madrid</p>
+                        <p>Email: alonsomorosvillalba@gmail.com</p>
+                        <p>Teléfono: +34 625 375 615</p>
+                        <p>Dirección: Alcobendas, Madrid</p>
                     </div>
                     <div className="footer-column">
                         <h3>Redes Sociales</h3>
-                        <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
-                        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                        <a href="https://github.com/alonsomorosvillalba" target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <a href="https://www.linkedin.com/in/alonso-moros-villalba-301904275/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                        <a href="https://www.instagram.com/aalonn_11_mv/" target="_blank" rel="noopener noreferrer">Instagram</a>
                     </div>
                 </div>
                 <div className="copyright">
