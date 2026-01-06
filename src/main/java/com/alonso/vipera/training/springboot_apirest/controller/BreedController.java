@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.BreedOutDTO;
@@ -38,14 +39,25 @@ public class BreedController {
      *
      * @return ResponseEntity con la lista de todas las razas.
      */
-    @Operation(summary = "Obtener todas las razas", description = "Devuelve una lista completa de todas las razas registradas en el sistema.")
+    @Operation(
+        summary = "Obtener razas",
+        description = "Devuelve todas las razas o las filtra por especie si se proporciona specie_id"
+    )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de razas obtenida con éxito", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = BreedOutDTO.class)))),
-            @ApiResponse(responseCode = "403", description = "Acceso denegado. Se necesita un token válido", content = @Content),
-            @ApiResponse(responseCode = "401", description = "Token no válido o expirado", content = @Content)
+        @ApiResponse(responseCode = "200", description = "Lista de razas obtenida con éxito",
+            content = @Content(mediaType = "application/json",
+            array = @ArraySchema(schema = @Schema(implementation = BreedOutDTO.class)))),
+        @ApiResponse(responseCode = "401", description = "Token no válido o expirado"),
+        @ApiResponse(responseCode = "403", description = "Acceso denegado")
     })
     @GetMapping
-    public ResponseEntity<List<BreedOutDTO>> getAllBreeds() {
+    public ResponseEntity<List<BreedOutDTO>> getBreeds(
+            @RequestParam(name = "specie_id", required = false) Long specieId
+    ) {
+        if (specieId != null) {
+            return ResponseEntity.ok(breedService.findBySpecieId(specieId));
+        }
         return ResponseEntity.ok(breedService.getAllBreeds());
     }
+
 }

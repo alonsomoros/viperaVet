@@ -46,4 +46,12 @@ public interface AuthService {
      */
     boolean existsByEmail(String email);
 
+    /**
+     * Verifica si existe un usuario con el teléfono especificado.
+     *
+     * @param phone Teléfono del usuario a verificar
+     * @return true si existe un usuario con ese teléfono, false en caso contrario
+     */
+    boolean existsByPhone(String phone);
+
 }

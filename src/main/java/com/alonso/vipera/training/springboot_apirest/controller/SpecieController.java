@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.SpecieOutDTO;
-import com.alonso.vipera.training.springboot_apirest.service.SpecieService;
+import com.alonso.vipera.training.springboot_apirest.service.SpecieServiceImpl;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SpecieController {
 
-    private final SpecieService specieService;
+    private final SpecieServiceImpl specieServiceImpl;
 
     // GET calls - Obtener todas las especies
 
@@ -46,6 +46,6 @@ public class SpecieController {
     })
     @GetMapping
     public ResponseEntity<List<SpecieOutDTO>> getAllSpecies() {
-        return ResponseEntity.ok(specieService.getAll());
+        return ResponseEntity.ok(specieServiceImpl.getAll());
     }
 }

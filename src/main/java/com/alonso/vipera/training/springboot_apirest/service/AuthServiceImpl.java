@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.alonso.vipera.training.springboot_apirest.exception.BadCredentialsInputException;
 import com.alonso.vipera.training.springboot_apirest.exception.EmailTakenException;
+import com.alonso.vipera.training.springboot_apirest.exception.PhoneTakenException;
 import com.alonso.vipera.training.springboot_apirest.exception.UserCreationException;
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameTakenException;
@@ -72,6 +73,11 @@ public class AuthServiceImpl implements AuthService {
             throw new EmailTakenException();
         }
 
+        if (existsByPhone(registerRequestDTO.getPhone())) {
+            log.warn("El teléfono {} ya está en uso.", registerRequestDTO.getPhone());
+            throw new PhoneTakenException();
+        }
+
     }
 
     private void verifyRegisterOutputs(User userSaved) {
@@ -115,5 +121,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public boolean existsByEmail(String email) {
         return userRepositoryAdapter.existsByEmail(email);
+    }
+
+    @Override
+    public boolean existsByPhone(String phone) {
+        return userRepositoryAdapter.existsByPhone(phone);
     }
 }

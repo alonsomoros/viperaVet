@@ -96,6 +96,38 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Maneja excepciones cuando se intenta registrar un username que ya existe.
+     * 
+     * @param exception La excepción de username duplicado
+     * @return ResponseEntity con error HTTP 409 (Conflict) y detalles del error
+     */
+    @ExceptionHandler({ PhoneTakenException.class })
+    public ResponseEntity<ErrorResponse> handlePhoneTakenException(PhoneTakenException exception) {
+        log.warn("Conflicto al registrar telefono: {}", exception.getMessage());
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                exception.getMessage(),
+                System.currentTimeMillis());
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    /**
+     * Maneja excepciones cuando no se encuentra un usuario específico por username.
+     * 
+     * @param exception La excepción de username no encontrado
+     * @return ResponseEntity con error HTTP 404 (Not Found) y detalles del error
+     */
+    @ExceptionHandler({ PhoneNotFoundException.class })
+    public ResponseEntity<ErrorResponse> handlePhoneNotFoundException(PhoneNotFoundException exception) {
+        log.warn("Telefono no encontrado: {}", exception.getMessage());
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                exception.getMessage(),
+                System.currentTimeMillis());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    /**
      * Maneja excepciones cuando no se encuentra una entidad por su ID.
      * 
      * @param exception La excepción de ID no encontrado

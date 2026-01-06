@@ -82,6 +82,14 @@ public interface UserRepository {
     boolean existsByUsername(String username);
 
     /**
+     * Verifica si existe un usuario con el teléfono especificado.
+     * 
+     * @param phone Teléfono del usuario a verificar
+     * @return true si existe un usuario con ese teléfono, false en caso contrario
+     */
+    boolean existsByPhone(String phone);
+
+    /**
      * Guarda un usuario en el repositorio.
      * 
      * @param user Usuario a guardar

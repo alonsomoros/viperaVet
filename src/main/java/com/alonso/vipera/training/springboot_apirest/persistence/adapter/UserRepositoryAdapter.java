@@ -65,6 +65,11 @@ public class UserRepositoryAdapter implements UserRepository {
     }
 
     @Override
+    public boolean existsByPhone(String phone) {
+        return userRepository.checkIfPhoneExistsNative(phone).isPresent();
+    }
+
+    @Override
     public User save(User user) {
         return userRepository.save(user);
     }

@@ -41,8 +41,8 @@ public class RegisterRequestDTO {
     @Pattern(regexp = "^\\+?[0-9 .()\\-]{7,25}$", message = "Invalid phone number")
     private String phone;
 
-    @Schema(description = "Dirección del usuario. Debe tener entre 3 y 100 caracteres.", example = "Calle Falsa 123, Ciudad, País", required = true)
-    @Size(min = 3, max = 100, message = "La dirección debe tener entre 3 y 100 caracteres")
+    @Schema(description = "Dirección del usuario. Debe tener entre 3 y 100 caracteres.", example = "Calle Falsa 123, Ciudad, País", required = false)
+    @Size(max = 100, message = "La dirección debe tener entre 3 y 100 caracteres")
     private String address;
 
     @Schema(description = "Rol del usuario en el sistema.", example = "OWNER", required = true)

@@ -100,4 +100,14 @@ public interface UserJpaRepository extends JpaRepository<User, Long> {
          */
         @Query(value = "SELECT 1 FROM users WHERE email = :email LIMIT 1", nativeQuery = true)
         Optional<Object> checkIfEmailExistsNative(@Param("email") String email);
+
+        /**
+         * Comprueba si un teléfono existe FÍSICAMENTE en la BBDD,
+         * ignorando el filtro de soft-delete.
+         *
+         * @param phone El teléfono a comprobar.
+         * @return Un Optional no vacío si el teléfono existe (borrado o no).
+         */
+        @Query(value = "SELECT 1 FROM users WHERE phone = :phone LIMIT 1", nativeQuery = true)
+        Optional<Object> checkIfPhoneExistsNative(@Param("phone") String phone);
 }
