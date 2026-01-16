@@ -2,6 +2,7 @@ package com.alonso.vipera.training.springboot_apirest.clients;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.alonso.vipera.training.springboot_apirest.model.dog_breed_api.dto.in.DogApiBreedInDTO;
 
@@ -19,5 +20,5 @@ public interface DogApiClient {
      * @return Lista de razas de perros.
      */
     @GetMapping
-    List<DogApiBreedInDTO> getAllBreeds();
+    List<DogApiBreedInDTO> getAllBreeds(@RequestHeader("x-api-key") String apiKey);
 }
