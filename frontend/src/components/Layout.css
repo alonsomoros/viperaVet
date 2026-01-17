@@ -7,6 +7,10 @@
   --vet-text-dark: #333333;
   --vet-footer-bg: #2F4F4F; /* DarkSlateGray */
   --vet-footer-text: #FFFFFF;
+
+  --vet-active-button: #2E8B57;
+  --vet-inactive-button: #F3F4F6;
+  --vet-hover-button: #dbdde2;
 }
 
 /* Global Reset for Layout handled in index.css */

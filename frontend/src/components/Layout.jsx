@@ -38,7 +38,7 @@ const Layout = () => {
                     </div>
                     <div className="footer-column">
                         <h3>Redes Sociales</h3>
-                        <a href="https://github.com/alonsomorosvillalba" target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <a href="https://github.com/alonsomoros" target="_blank" rel="noopener noreferrer">GitHub</a>
                         <a href="https://www.linkedin.com/in/alonso-moros-villalba-301904275/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                         <a href="https://www.instagram.com/aalonn_11_mv/" target="_blank" rel="noopener noreferrer">Instagram</a>
                     </div>
