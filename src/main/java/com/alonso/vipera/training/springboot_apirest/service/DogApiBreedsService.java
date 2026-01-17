@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,9 @@ public class DogApiBreedsService {
     private final SpecieRepositoryAdapter specieRepository;
     private final BreedMapper breedMapper;
 
+    @Value("${thedogapi.apikey}")
+    private String apikey;
+
     /**
      * Obtiene todas las razas de perro desde la Dog API externa.
      * 
@@ -52,7 +56,7 @@ public class DogApiBreedsService {
     @CircuitBreaker(name = "dog-api-breeds", fallbackMethod = "getBreedsFallback")
     public List<DogApiBreedInDTO> getAllDogBreeds() {
         log.debug("Contactando a Dog API para obtener razas...");
-        return dogApiClient.getAllBreeds();
+        return dogApiClient.getAllBreeds(apikey);
     }
 
     /**
