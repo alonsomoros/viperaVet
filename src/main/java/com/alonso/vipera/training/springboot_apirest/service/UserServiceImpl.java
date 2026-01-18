@@ -12,8 +12,9 @@ import com.alonso.vipera.training.springboot_apirest.exception.EmailNotFoundExce
 import com.alonso.vipera.training.springboot_apirest.exception.IdNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
+import com.alonso.vipera.training.springboot_apirest.model.user.Role;
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
-import com.alonso.vipera.training.springboot_apirest.model.user.User.Role;
+import com.alonso.vipera.training.springboot_apirest.model.user.UserRole;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.UserUpdateDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.adapter.UserRepositoryAdapter;

@@ -1,5 +1,7 @@
 package com.alonso.vipera.training.springboot_apirest.mapper;
 
+import com.alonso.vipera.training.springboot_apirest.model.user.UserRole;
+
 import org.springframework.stereotype.Component;
 
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
@@ -27,7 +29,7 @@ public class UserMapper {
                 .password(dto.getPassword())
                 .phone(dto.getPhone())
                 .address(dto.getAddress())
-                .role(dto.getRole())
+                .userRole(new UserRole(null, dto.getRole()))
                 .build();
     }
 
@@ -40,7 +42,7 @@ public class UserMapper {
     public UserOutDTO toOutDTO(User entity) {
         if (entity == null)
             return null;
-        return new UserOutDTO(entity.getId(), entity.getUsername(), entity.getEmail(), entity.getRole(),
+        return new UserOutDTO(entity.getId(), entity.getUsername(), entity.getEmail(), entity.getUserRole().getRole(),
                 entity.getCreatedAt());
     }
 

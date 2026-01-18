@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.alonso.vipera.training.springboot_apirest.exception.IdNotFoundException;
-import com.alonso.vipera.training.springboot_apirest.model.user.User.Role;
+import com.alonso.vipera.training.springboot_apirest.model.user.Role;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.UserUpdateDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutDTO;
 

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alonso.vipera.training.springboot_apirest.model.user.User.Role;
+import com.alonso.vipera.training.springboot_apirest.model.user.Role;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.UserUpdateDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutDTO;
 import com.alonso.vipera.training.springboot_apirest.service.UserService;

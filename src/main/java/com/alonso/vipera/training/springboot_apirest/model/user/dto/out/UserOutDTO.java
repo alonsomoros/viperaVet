@@ -2,7 +2,7 @@ package com.alonso.vipera.training.springboot_apirest.model.user.dto.out;
 
 import java.time.LocalDateTime;
 
-import com.alonso.vipera.training.springboot_apirest.model.user.User.Role;
+import com.alonso.vipera.training.springboot_apirest.model.user.Role;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

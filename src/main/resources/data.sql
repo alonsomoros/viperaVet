@@ -43,3 +43,8 @@ VALUES ('Perro'),
     ('Pingüino'),
     ('Ser humano (medicina comparativa)'),
     ('Otros');
+
+INSERT IGNORE INTO roles (role_name)
+VALUES ('USER'),
+    ('VET'),
+    ('ADMIN');

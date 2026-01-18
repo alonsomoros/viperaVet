@@ -16,8 +16,9 @@ import com.alonso.vipera.training.springboot_apirest.model.pet.Pet;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -71,25 +72,11 @@ public class User extends BaseEntity implements UserDetails {
     private String address;
 
     /**
-     * Roles disponibles para un usuario en el sistema.
-     */
-    public enum Role {
-        /**
-         * Propietario de mascotas.
-         */
-        USER,
-        /**
-         * Veterinario.
-         */
-        VET
-    }
-
-    /**
      * Rol del usuario en el sistema (USER o VET).
      */
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", nullable = false)
+    private UserRole userRole;
 
     // OneToMany (User 1 -> N Pets)
 
@@ -107,7 +94,7 @@ public class User extends BaseEntity implements UserDetails {
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + this.userRole.getRole()));
     }
 
 }

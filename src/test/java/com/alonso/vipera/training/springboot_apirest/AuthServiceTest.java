@@ -25,6 +25,7 @@ import com.alonso.vipera.training.springboot_apirest.exception.EmailTakenExcepti
 import com.alonso.vipera.training.springboot_apirest.exception.UserCreationException;
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameTakenException;
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
+import com.alonso.vipera.training.springboot_apirest.model.user.Role;
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.RegisterRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.AuthResponseDTO;
@@ -80,7 +81,7 @@ class AuthServiceTest {
         userEntity.setEmail(EMAIL);
         userEntity.setPassword(ENCODED_PASSWORD);
 
-        userOutDTO = new UserOutDTO(USER_ID, USERNAME, EMAIL, User.Role.USER, LocalDateTime.now());
+        userOutDTO = new UserOutDTO(USER_ID, USERNAME, EMAIL, Role.USER, LocalDateTime.now());
 
         authResponseDTO = new AuthResponseDTO();
         authResponseDTO.setToken(JWT_TOKEN);

@@ -13,11 +13,14 @@ import com.alonso.vipera.training.springboot_apirest.exception.PhoneTakenExcepti
 import com.alonso.vipera.training.springboot_apirest.exception.UserCreationException;
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameTakenException;
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
+import com.alonso.vipera.training.springboot_apirest.model.user.Role;
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.LoginRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.RegisterRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.AuthResponseDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.adapter.UserRepositoryAdapter;
+import com.alonso.vipera.training.springboot_apirest.persistence.jpa.UserRoleJpaRepository;
+import com.alonso.vipera.training.springboot_apirest.model.user.UserRole;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +40,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserRoleJpaRepository userRoleJpaRepository;
 
     @Override
     public AuthResponseDTO register(RegisterRequestDTO registerRequestDTO) {
@@ -50,7 +54,14 @@ public class AuthServiceImpl implements AuthService {
         registerRequestDTO.setPassword(passwordEncoder.encode(registerRequestDTO.getPassword()));
 
         log.debug("Guardando el usuario en la base de datos...");
-        User user = userRepositoryAdapter.save(userMapper.toEntity(registerRequestDTO));
+        User user = userMapper.toEntity(registerRequestDTO);
+        
+        // Fetch persistent role
+        UserRole userRole = userRoleJpaRepository.findByRole(registerRequestDTO.getRole())
+            .orElseThrow(() -> new RuntimeException("Role not found: " + registerRequestDTO.getRole()));
+        user.setUserRole(userRole);
+
+        user = userRepositoryAdapter.save(user);
         verifyRegisterOutputs(user);
 
         log.info("Usuario {} registrado con éxito. ID: {}", user.getUsername(), user.getId());
@@ -102,9 +113,9 @@ public class AuthServiceImpl implements AuthService {
                             loginRequestDTO.getPassword()));
             log.info("Usuario {} con email: {} autenticado con éxito.", user.getUsername(), user.getEmail());
 
-            if (user.getRole() != User.Role.USER) {
+            if (user.getUserRole().getRole() != Role.USER) {
                 log.warn("El usuario {} con email: {} intentó loguearse como USER pero es {}.", user.getUsername(),
-                        user.getEmail(), user.getRole());
+                        user.getEmail(), user.getUserRole());
                 throw new BadCredentialsInputException();
             }
             log.info("Detalles del usuario {} con email: {} recuperados con éxito.", user.getUsername(),
@@ -138,9 +149,9 @@ public class AuthServiceImpl implements AuthService {
                             loginRequestDTO.getPassword()));
             log.info("Veterinario {} con email: {} autenticado con éxito.", user.getUsername(), user.getEmail());
 
-            if (user.getRole() != User.Role.VET) {
+            if (user.getUserRole().getRole() != Role.VET) {
                 log.warn("El usuario {} con email: {} intentó loguearse como VET pero es {}.", user.getUsername(),
-                        user.getEmail(), user.getRole());
+                        user.getEmail(), user.getUserRole());
                 throw new BadCredentialsInputException();
             }
             log.info("Detalles del veterinario {} con email: {} recuperados con éxito.", user.getUsername(),

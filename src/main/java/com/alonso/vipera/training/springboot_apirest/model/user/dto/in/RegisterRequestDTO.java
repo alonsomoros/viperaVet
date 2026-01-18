@@ -1,6 +1,6 @@
 package com.alonso.vipera.training.springboot_apirest.model.user.dto.in;
 
-import com.alonso.vipera.training.springboot_apirest.model.user.User;
+import com.alonso.vipera.training.springboot_apirest.model.user.Role;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
@@ -47,5 +47,5 @@ public class RegisterRequestDTO {
 
     @Schema(description = "Rol del usuario en el sistema.", example = "USER", required = true)
     @NotNull(message = "Rol necesario")
-    private User.Role role;
+    private Role role;
 }

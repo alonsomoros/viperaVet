@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
-import com.alonso.vipera.training.springboot_apirest.model.user.User.Role;
+import com.alonso.vipera.training.springboot_apirest.model.user.Role;
 
 /**
  * Repositorio JPA para la entidad User.
@@ -52,7 +52,7 @@ public interface UserJpaRepository extends JpaRepository<User, Long> {
                         "(:id IS NULL OR u.id = :id) AND " +
                         "(:username IS NULL OR u.username LIKE %:username%) AND " +
                         "(:email IS NULL OR u.email LIKE %:email%) AND " +
-                        "(:role IS NULL OR u.role = :role)")
+                        "(:role IS NULL OR u.userRole.role = :role)")
         Page<User> findByFilters(
                         @Param("id") Long id,
                         @Param("username") String username,

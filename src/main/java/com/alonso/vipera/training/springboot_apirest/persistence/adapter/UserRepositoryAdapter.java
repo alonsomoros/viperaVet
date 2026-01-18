@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
-import com.alonso.vipera.training.springboot_apirest.model.user.User.Role;
+import com.alonso.vipera.training.springboot_apirest.model.user.Role;
 import com.alonso.vipera.training.springboot_apirest.persistence.jpa.UserJpaRepository;
 import com.alonso.vipera.training.springboot_apirest.persistence.repository.UserRepository;
 
