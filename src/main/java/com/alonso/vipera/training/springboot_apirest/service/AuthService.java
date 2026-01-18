@@ -22,32 +22,41 @@ public interface AuthService {
     AuthResponseDTO register(RegisterRequestDTO registerRequestDTO);
 
     /**
-     * Autentica un usuario existente en el sistema.
+     * Autentica un propietario de mascotas existente en el sistema.
      *
      * @param loginRequestDTO DTO con las credenciales de acceso (username/email y password)
      * @return Respuesta de autenticación con token JWT y datos del usuario
      * @throws BadCredentialsInputException Si las credenciales proporcionadas son incorrectas
      */
-    AuthResponseDTO login(LoginRequestDTO loginRequestDTO);
+    AuthResponseDTO loginWithOwner(LoginRequestDTO loginRequestDTO);
 
     /**
-     * Verifica si existe un usuario con el nombre de usuario especificado.
+     * Autentica un veterinario existente en el sistema.
+     *
+     * @param loginRequestDTO DTO con las credenciales de acceso (username/email y password)
+     * @return Respuesta de autenticación con token JWT y datos del usuario
+     * @throws BadCredentialsInputException Si las credenciales proporcionadas son incorrectas
+     */
+    AuthResponseDTO loginWithVet(LoginRequestDTO loginRequestDTO);
+
+    /**
+     * Verifica si existe un propietario de mascotas con el nombre de usuario especificado.
      *
      * @param username Nombre de usuario a verificar
-     * @return true si existe un usuario con ese username, false en caso contrario
+     * @return true si existe un propietario de mascotas con ese username, false en caso contrario
      */
     boolean existsByUsername(String username);
 
     /**
-     * Verifica si existe un usuario con el email especificado.
+     * Verifica si existe un veterinario o propietario de mascotas con el email especificado.
      *
      * @param email Dirección de correo electrónico a verificar
-     * @return true si existe un usuario con ese email, false en caso contrario
+     * @return true si existe un veterinario o propietario de mascotas con ese email, false en caso contrario
      */
     boolean existsByEmail(String email);
 
     /**
-     * Verifica si existe un usuario con el teléfono especificado.
+     * Verifica si existe un veterinario o propietario de mascotas con el teléfono especificado.
      *
      * @param phone Teléfono del usuario a verificar
      * @return true si existe un usuario con ese teléfono, false en caso contrario

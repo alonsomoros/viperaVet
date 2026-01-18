@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -111,6 +112,7 @@ public class PetController {
             @ApiResponse(responseCode = "403", description = "Acceso denegado. Se necesita un token válido", content = @Content),
             @ApiResponse(responseCode = "401", description = "Token no válido o expirado", content = @Content)
     })
+    @PreAuthorize("hasRole('VET')")
     @PostMapping
     public ResponseEntity<PetOutDTO> registerPet(@AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody PetInDTO petInDTO) {
@@ -132,6 +134,7 @@ public class PetController {
             @ApiResponse(responseCode = "403", description = "Acceso denegado. Se necesita un token válido", content = @Content),
             @ApiResponse(responseCode = "401", description = "Token no válido o expirado", content = @Content)
     })
+    @PreAuthorize("hasRole('VET')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePet(@PathVariable Long id) {
         petService.delete(id);

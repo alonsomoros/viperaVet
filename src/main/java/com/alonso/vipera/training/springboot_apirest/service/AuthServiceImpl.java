@@ -88,7 +88,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponseDTO login(LoginRequestDTO loginRequestDTO) {
+    public AuthResponseDTO loginWithOwner(LoginRequestDTO loginRequestDTO) {
         try {
             log.info("Autenticando al usuario {}...", loginRequestDTO.getUsername());
             authenticationManager.authenticate(
@@ -100,6 +100,11 @@ public class AuthServiceImpl implements AuthService {
             log.info("Recuperando los detalles del usuario {}...", loginRequestDTO.getUsername());
             User user = userRepositoryAdapter.findByUsername(loginRequestDTO.getUsername())
                     .orElseThrow(() -> new UsernameNotFoundException());
+
+            if (user.getRole() != User.Role.OWNER) {
+                log.warn("El usuario {} intentó loguearse como OWNER pero es {}.", loginRequestDTO.getUsername(), user.getRole());
+                throw new BadCredentialsInputException();
+            }
             log.info("Detalles del usuario {} recuperados con éxito.", loginRequestDTO.getUsername());
 
             log.info("Generando token de autenticación para el usuario {}...", loginRequestDTO.getUsername());
@@ -109,6 +114,37 @@ public class AuthServiceImpl implements AuthService {
             return new AuthResponseDTO(token, userMapper.toOutDTO(user));
         } catch (BadCredentialsException e) {
             log.warn("Credenciales inválidas para el usuario {}.", loginRequestDTO.getUsername());
+            throw new BadCredentialsInputException();
+        }
+    }
+
+    @Override
+    public AuthResponseDTO loginWithVet(LoginRequestDTO loginRequestDTO) {
+        try {
+            log.info("Autenticando al veterinario {}...", loginRequestDTO.getUsername());
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequestDTO.getUsername(),
+                            loginRequestDTO.getPassword()));
+            log.info("Veterinario {} autenticado con éxito.", loginRequestDTO.getUsername());
+
+            log.info("Recuperando los detalles del veterinario {}...", loginRequestDTO.getUsername());
+            User user = userRepositoryAdapter.findByUsername(loginRequestDTO.getUsername())
+                    .orElseThrow(() -> new UsernameNotFoundException());
+            
+            if (user.getRole() != User.Role.VET) {
+                log.warn("El usuario {} intentó loguearse como VET pero es {}.", loginRequestDTO.getUsername(), user.getRole());
+                throw new BadCredentialsInputException();
+            }
+            log.info("Detalles del veterinario {} recuperados con éxito.", loginRequestDTO.getUsername());
+
+            log.info("Generando token de autenticación para el veterinario {}...", loginRequestDTO.getUsername());
+            String token = jwtService.generateToken(user);
+            log.info("Token de autenticación generado con éxito para el veterinario {}.", loginRequestDTO.getUsername());
+
+            return new AuthResponseDTO(token, userMapper.toOutDTO(user));
+        } catch (BadCredentialsException e) {
+            log.warn("Credenciales inválidas para el veterinario {}.", loginRequestDTO.getUsername());
             throw new BadCredentialsInputException();
         }
     }

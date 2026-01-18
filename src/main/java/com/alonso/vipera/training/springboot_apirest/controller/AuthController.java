@@ -68,7 +68,7 @@ public class AuthController {
     @PostMapping("/login/vet")
     public ResponseEntity<AuthResponseDTO> loginVet(@Valid @RequestBody LoginRequestDTO loginRequestDto) {
         log.info("Iniciando proceso de login para el usuario: {}", loginRequestDto.getUsername());
-        AuthResponseDTO authResponseDto = authService.login(loginRequestDto);
+        AuthResponseDTO authResponseDto = authService.loginWithVet(loginRequestDto);
         return ResponseEntity.ok(authResponseDto);
     }
 
@@ -86,7 +86,7 @@ public class AuthController {
     @PostMapping("/login/owner")
     public ResponseEntity<AuthResponseDTO> loginOwner(@Valid @RequestBody LoginRequestDTO loginRequestDto) {
         log.info("Iniciando proceso de login para el usuario: {}", loginRequestDto.getUsername());
-        AuthResponseDTO authResponseDto = authService.login(loginRequestDto);
+        AuthResponseDTO authResponseDto = authService.loginWithOwner(loginRequestDto);
         return ResponseEntity.ok(authResponseDto);
     }
 }
