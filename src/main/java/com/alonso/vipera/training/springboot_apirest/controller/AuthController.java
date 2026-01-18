@@ -83,10 +83,10 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "Dueño loggeado con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponseDTO.class))),
             @ApiResponse(responseCode = "401", description = "Credenciales de entrada inválidas", content = @Content)
     })
-    @PostMapping("/login/owner")
-    public ResponseEntity<AuthResponseDTO> loginOwner(@Valid @RequestBody LoginRequestDTO loginRequestDto) {
+    @PostMapping("/login/user")
+    public ResponseEntity<AuthResponseDTO> loginUser(@Valid @RequestBody LoginRequestDTO loginRequestDto) {
         log.info("Iniciando proceso de login para el dueño con email: {}", loginRequestDto.getEmail());
-        AuthResponseDTO authResponseDto = authService.loginWithOwner(loginRequestDto);
+        AuthResponseDTO authResponseDto = authService.loginWithUser(loginRequestDto);
         return ResponseEntity.ok(authResponseDto);
     }
 }

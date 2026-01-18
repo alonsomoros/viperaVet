@@ -11,7 +11,7 @@ const Register = () => {
         email: '',
         phone: '',
         address: '',
-        role: 'OWNER'
+        role: 'USER'
     });
     const [errors, setErrors] = useState({}); // Changed to object for field errors
     const navigate = useNavigate();
@@ -126,7 +126,7 @@ const Register = () => {
                         value={formData.role} 
                         onChange={handleChange}
                     >
-                        <option value="OWNER">Dueño de Mascota (Owner)</option>
+                        <option value="USER">Dueño de Mascota (User)</option>
                         <option value="VET">Veterinario (Vet)</option>
                     </select>
                 </div>

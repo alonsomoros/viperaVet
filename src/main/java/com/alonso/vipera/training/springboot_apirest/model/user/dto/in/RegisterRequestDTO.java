@@ -45,7 +45,7 @@ public class RegisterRequestDTO {
     @Size(max = 100, message = "La dirección debe tener entre 3 y 100 caracteres")
     private String address;
 
-    @Schema(description = "Rol del usuario en el sistema.", example = "OWNER", required = true)
+    @Schema(description = "Rol del usuario en el sistema.", example = "USER", required = true)
     @NotNull(message = "Rol necesario")
     private User.Role role;
 }

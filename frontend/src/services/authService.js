@@ -2,7 +2,7 @@ const API_URL = '/auth';
 
 export const loginUser = async (email, password, role) => {
     try {
-        const endpoint = role === 'user' ? `${API_URL}/login/owner` : `${API_URL}/login/vet`;
+        const endpoint = role === 'user' ? `${API_URL}/login/user` : `${API_URL}/login/vet`;
         
         if (role !== 'user' && role !== 'vet') {
             throw new Error('Role no válido');

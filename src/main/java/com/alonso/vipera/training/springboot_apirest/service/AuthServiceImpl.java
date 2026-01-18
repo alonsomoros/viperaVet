@@ -88,7 +88,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponseDTO loginWithOwner(LoginRequestDTO loginRequestDTO) {
+    public AuthResponseDTO loginWithUser(LoginRequestDTO loginRequestDTO) {
         try {
             log.info("Autenticando al usuario con email: {}...", loginRequestDTO.getEmail());
 
@@ -102,8 +102,8 @@ public class AuthServiceImpl implements AuthService {
                             loginRequestDTO.getPassword()));
             log.info("Usuario {} con email: {} autenticado con éxito.", user.getUsername(), user.getEmail());
 
-            if (user.getRole() != User.Role.OWNER) {
-                log.warn("El usuario {} con email: {} intentó loguearse como OWNER pero es {}.", user.getUsername(),
+            if (user.getRole() != User.Role.USER) {
+                log.warn("El usuario {} con email: {} intentó loguearse como USER pero es {}.", user.getUsername(),
                         user.getEmail(), user.getRole());
                 throw new BadCredentialsInputException();
             }

@@ -28,7 +28,7 @@ public interface AuthService {
      * @return Respuesta de autenticación con token JWT y datos del usuario
      * @throws BadCredentialsInputException Si las credenciales proporcionadas son incorrectas
      */
-    AuthResponseDTO loginWithOwner(LoginRequestDTO loginRequestDTO);
+    AuthResponseDTO loginWithUser(LoginRequestDTO loginRequestDTO);
 
     /**
      * Autentica un veterinario existente en el sistema.

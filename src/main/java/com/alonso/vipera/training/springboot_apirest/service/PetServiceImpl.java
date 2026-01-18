@@ -40,9 +40,9 @@ public class PetServiceImpl implements PetService {
     private final PetMapper petMapper;
 
     @Override
-    public List<PetOutDTO> getPetsByOwnerUsername(String username) {
+    public List<PetOutDTO> getPetsByUserUsername(String username) {
         log.debug("Buscando mascotas del usuario dueño: {}", username);
-        List<PetOutDTO> pets = petRepositoryAdapter.findPetsByOwnerUsername(username)
+        List<PetOutDTO> pets = petRepositoryAdapter.findPetsByUserUsername(username)
                 .stream()
                 .map(petMapper::toOutDTO)
                 .toList();

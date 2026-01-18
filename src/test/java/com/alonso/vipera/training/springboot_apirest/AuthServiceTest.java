@@ -80,7 +80,7 @@ class AuthServiceTest {
         userEntity.setEmail(EMAIL);
         userEntity.setPassword(ENCODED_PASSWORD);
 
-        userOutDTO = new UserOutDTO(USER_ID, USERNAME, EMAIL, User.Role.OWNER, LocalDateTime.now());
+        userOutDTO = new UserOutDTO(USER_ID, USERNAME, EMAIL, User.Role.USER, LocalDateTime.now());
 
         authResponseDTO = new AuthResponseDTO();
         authResponseDTO.setToken(JWT_TOKEN);

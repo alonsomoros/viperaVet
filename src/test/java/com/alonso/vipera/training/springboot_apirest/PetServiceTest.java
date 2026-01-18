@@ -113,13 +113,13 @@ public class PetServiceTest {
     }
 
     @Test
-    public void testGetPetsByOwnerUsername_whenPetsFound_returnPageOfPets() {
+    public void testGetPetsByUserUsername_whenPetsFound_returnPageOfPets() {
         // Arrange
-        when(petRepositoryAdapter.findPetsByOwnerUsername(USERNAME)).thenReturn(List.of(pet));
+        when(petRepositoryAdapter.findPetsByUserUsername(USERNAME)).thenReturn(List.of(pet));
         when(petMapper.toOutDTO(pet)).thenReturn(petOutDTO);
 
         // Act
-        List<PetOutDTO> pets = petServiceImpl.getPetsByOwnerUsername(USERNAME);
+        List<PetOutDTO> pets = petServiceImpl.getPetsByUserUsername(USERNAME);
 
         // Assert
         assertNotNull(pets);
@@ -127,24 +127,24 @@ public class PetServiceTest {
         assertEquals(PET_NAME, pets.get(0).getName());
 
         // Verify
-        verify(petRepositoryAdapter, times(1)).findPetsByOwnerUsername(USERNAME);
+        verify(petRepositoryAdapter, times(1)).findPetsByUserUsername(USERNAME);
         verify(petMapper, times(1)).toOutDTO(pet);
     }
 
     @Test
-    public void testGetPetsByOwnerUsername_whenPetsNotFound_returnEmptyList() {
+    public void testGetPetsByUserUsername_whenPetsNotFound_returnEmptyList() {
         // Arrange
-        when(petRepositoryAdapter.findPetsByOwnerUsername(USERNAME)).thenReturn(List.of());
+        when(petRepositoryAdapter.findPetsByUserUsername(USERNAME)).thenReturn(List.of());
 
         // Act
-        List<PetOutDTO> pets = petServiceImpl.getPetsByOwnerUsername(USERNAME);
+        List<PetOutDTO> pets = petServiceImpl.getPetsByUserUsername(USERNAME);
 
         // Assert
         assertNotNull(pets);
         assertEquals(0, pets.size());
 
         // Verify
-        verify(petRepositoryAdapter, times(1)).findPetsByOwnerUsername(USERNAME);
+        verify(petRepositoryAdapter, times(1)).findPetsByUserUsername(USERNAME);
     }
 
     @Test

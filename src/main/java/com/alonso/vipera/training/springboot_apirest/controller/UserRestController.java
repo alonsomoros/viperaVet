@@ -67,7 +67,7 @@ public class UserRestController {
                         @Parameter(description = "ID único del usuario", example = "1") @RequestParam(required = false) Long id,
                         @Parameter(description = "Nombre de usuario único", example = "alonso") @RequestParam(required = false) String username,
                         @Parameter(description = "Dirección de email única", example = "alonso@gmail.com") @RequestParam(required = false) String email,
-                        @Parameter(description = "Rol de usuario", example = "OWNER/VET") @RequestParam(required = false) Role role,
+                        @Parameter(description = "Rol de usuario", example = "USER/VET") @RequestParam(required = false) Role role,
                         Pageable pageable) {
                 if (id != null || username != null || email != null || role != null) {
                         return ResponseEntity.ok(userService.getUserByFilters(id, username, email, role, pageable));

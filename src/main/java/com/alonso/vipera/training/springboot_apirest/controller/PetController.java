@@ -63,7 +63,7 @@ public class PetController {
     @GetMapping("/my-pets")
     public ResponseEntity<List<PetOutDTO>> getMyPets(@AuthenticationPrincipal UserDetails userDetails) {
         String username = userDetails.getUsername();
-        return ResponseEntity.status(HttpStatus.OK).body(petService.getPetsByOwnerUsername(username));
+        return ResponseEntity.status(HttpStatus.OK).body(petService.getPetsByUserUsername(username));
     }
 
     /**

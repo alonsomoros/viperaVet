@@ -30,7 +30,7 @@ public class PetRepositoryAdapter implements PetRepository {
     }
 
     @Override
-    public List<Pet> findPetsByOwnerUsername(String username) {
+    public List<Pet> findPetsByUserUsername(String username) {
         return petRepository.findByUserUsername(username)
                 .stream()
                 .filter(Optional::isPresent)

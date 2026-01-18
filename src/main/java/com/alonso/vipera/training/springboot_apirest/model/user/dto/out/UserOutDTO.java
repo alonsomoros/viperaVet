@@ -41,7 +41,7 @@ public class UserOutDTO {
     /**
      * Rol del usuario en el sistema.
      */
-    @Schema(description = "Rol del usuario en el sistema.", example = "OWNER")
+    @Schema(description = "Rol del usuario en el sistema.", example = "USER")
     private Role role;
 
     /**

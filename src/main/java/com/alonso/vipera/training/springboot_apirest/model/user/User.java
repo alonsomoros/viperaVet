@@ -77,7 +77,7 @@ public class User extends BaseEntity implements UserDetails {
         /**
          * Propietario de mascotas.
          */
-        OWNER,
+        USER,
         /**
          * Veterinario.
          */
@@ -85,7 +85,7 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     /**
-     * Rol del usuario en el sistema (OWNER o VET).
+     * Rol del usuario en el sistema (USER o VET).
      */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

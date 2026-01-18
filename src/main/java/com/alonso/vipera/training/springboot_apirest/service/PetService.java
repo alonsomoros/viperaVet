@@ -54,7 +54,7 @@ public interface PetService {
      * @param username Nombre de usuario del propietario
      * @return Lista de mascotas pertenecientes al usuario especificado
      */
-    List<PetOutDTO> getPetsByOwnerUsername(String username);
+    List<PetOutDTO> getPetsByUserUsername(String username);
 
     /**
      * Busca mascotas por nombre exacto.

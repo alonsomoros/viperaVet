@@ -28,7 +28,7 @@ public interface PetRepository {
      * @param username Nombre de usuario del dueño.
      * @return Lista de mascotas pertenecientes al dueño especificado.
      */
-    List<Pet> findPetsByOwnerUsername(String username);
+    List<Pet> findPetsByUserUsername(String username);
 
     /**
      * Busca mascotas por su nombre.
