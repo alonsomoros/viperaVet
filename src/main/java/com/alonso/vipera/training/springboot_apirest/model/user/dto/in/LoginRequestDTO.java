@@ -1,6 +1,7 @@
 package com.alonso.vipera.training.springboot_apirest.model.user.dto.in;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,9 +17,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LoginRequestDTO {
 
-    @Schema(description = "Nombre de usuario o email del usuario.", example = "alonso.dev", required = true)
-    @NotBlank(message = "Username necesario")
-    private String username;
+    @Schema(description = "Email único del usuario. Debe ser un formato de email válido.", example = "alonso@gmail.com", required = true)
+    @NotBlank(message = "Email necesario")
+    @Email(message = "Email inválido")
+    private String email;
 
     @Schema(description = "Contraseña del usuario.", example = "P4ssw0rd!", required = true)
     @NotBlank(message = "Password necesario")

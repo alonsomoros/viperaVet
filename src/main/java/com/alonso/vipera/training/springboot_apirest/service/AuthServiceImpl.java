@@ -7,10 +7,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.alonso.vipera.training.springboot_apirest.exception.BadCredentialsInputException;
+import com.alonso.vipera.training.springboot_apirest.exception.EmailNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.exception.EmailTakenException;
 import com.alonso.vipera.training.springboot_apirest.exception.PhoneTakenException;
 import com.alonso.vipera.training.springboot_apirest.exception.UserCreationException;
-import com.alonso.vipera.training.springboot_apirest.exception.UsernameNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameTakenException;
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
@@ -90,30 +90,35 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponseDTO loginWithOwner(LoginRequestDTO loginRequestDTO) {
         try {
-            log.info("Autenticando al usuario {}...", loginRequestDTO.getUsername());
+            log.info("Autenticando al usuario con email: {}...", loginRequestDTO.getEmail());
+
+            log.info("Recuperando los detalles del usuario con email: {}...", loginRequestDTO.getEmail());
+            User user = userRepositoryAdapter.findByEmail(loginRequestDTO.getEmail())
+                    .orElseThrow(() -> new EmailNotFoundException());
+
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            loginRequestDTO.getUsername(),
+                            user.getUsername(),
                             loginRequestDTO.getPassword()));
-            log.info("Usuario {} autenticado con éxito.", loginRequestDTO.getUsername());
-
-            log.info("Recuperando los detalles del usuario {}...", loginRequestDTO.getUsername());
-            User user = userRepositoryAdapter.findByUsername(loginRequestDTO.getUsername())
-                    .orElseThrow(() -> new UsernameNotFoundException());
+            log.info("Usuario {} con email: {} autenticado con éxito.", user.getUsername(), user.getEmail());
 
             if (user.getRole() != User.Role.OWNER) {
-                log.warn("El usuario {} intentó loguearse como OWNER pero es {}.", loginRequestDTO.getUsername(), user.getRole());
+                log.warn("El usuario {} con email: {} intentó loguearse como OWNER pero es {}.", user.getUsername(),
+                        user.getEmail(), user.getRole());
                 throw new BadCredentialsInputException();
             }
-            log.info("Detalles del usuario {} recuperados con éxito.", loginRequestDTO.getUsername());
+            log.info("Detalles del usuario {} con email: {} recuperados con éxito.", user.getUsername(),
+                    user.getEmail());
 
-            log.info("Generando token de autenticación para el usuario {}...", loginRequestDTO.getUsername());
+            log.info("Generando token de autenticación para el usuario {} con email: {}...", user.getUsername(),
+                    user.getEmail());
             String token = jwtService.generateToken(user);
-            log.info("Token de autenticación generado con éxito para el usuario {}.", loginRequestDTO.getUsername());
+            log.info("Token de autenticación generado con éxito para el usuario {} con email: {}.", user.getUsername(),
+                    user.getEmail());
 
             return new AuthResponseDTO(token, userMapper.toOutDTO(user));
         } catch (BadCredentialsException e) {
-            log.warn("Credenciales inválidas para el usuario {}.", loginRequestDTO.getUsername());
+            log.warn("Credenciales inválidas para el usuario con email: {}.", loginRequestDTO.getEmail());
             throw new BadCredentialsInputException();
         }
     }
@@ -121,30 +126,35 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponseDTO loginWithVet(LoginRequestDTO loginRequestDTO) {
         try {
-            log.info("Autenticando al veterinario {}...", loginRequestDTO.getUsername());
+            log.info("Autenticando al veterinario con email: {}...", loginRequestDTO.getEmail());
+
+            log.info("Recuperando los detalles del veterinario con email: {}...", loginRequestDTO.getEmail());
+            User user = userRepositoryAdapter.findByEmail(loginRequestDTO.getEmail())
+                    .orElseThrow(() -> new EmailNotFoundException());
+
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            loginRequestDTO.getUsername(),
+                            user.getUsername(),
                             loginRequestDTO.getPassword()));
-            log.info("Veterinario {} autenticado con éxito.", loginRequestDTO.getUsername());
+            log.info("Veterinario {} con email: {} autenticado con éxito.", user.getUsername(), user.getEmail());
 
-            log.info("Recuperando los detalles del veterinario {}...", loginRequestDTO.getUsername());
-            User user = userRepositoryAdapter.findByUsername(loginRequestDTO.getUsername())
-                    .orElseThrow(() -> new UsernameNotFoundException());
-            
             if (user.getRole() != User.Role.VET) {
-                log.warn("El usuario {} intentó loguearse como VET pero es {}.", loginRequestDTO.getUsername(), user.getRole());
+                log.warn("El usuario {} con email: {} intentó loguearse como VET pero es {}.", user.getUsername(),
+                        user.getEmail(), user.getRole());
                 throw new BadCredentialsInputException();
             }
-            log.info("Detalles del veterinario {} recuperados con éxito.", loginRequestDTO.getUsername());
+            log.info("Detalles del veterinario {} con email: {} recuperados con éxito.", user.getUsername(),
+                    user.getEmail());
 
-            log.info("Generando token de autenticación para el veterinario {}...", loginRequestDTO.getUsername());
+            log.info("Generando token de autenticación para el veterinario {} con email: {}...", user.getUsername(),
+                    user.getEmail());
             String token = jwtService.generateToken(user);
-            log.info("Token de autenticación generado con éxito para el veterinario {}.", loginRequestDTO.getUsername());
+            log.info("Token de autenticación generado con éxito para el veterinario {} con email: {}.",
+                    user.getUsername(), user.getEmail());
 
             return new AuthResponseDTO(token, userMapper.toOutDTO(user));
         } catch (BadCredentialsException e) {
-            log.warn("Credenciales inválidas para el veterinario {}.", loginRequestDTO.getUsername());
+            log.warn("Credenciales inválidas para el veterinario con email: {}.", loginRequestDTO.getEmail());
             throw new BadCredentialsInputException();
         }
     }
