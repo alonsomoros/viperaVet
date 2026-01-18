@@ -55,37 +55,37 @@ public class AuthController {
     }
 
     /**
-     * Endpoint para loggear un usuario existente.
+     * Endpoint para loggear un veterinario existente.
      *
-     * @param loginRequestDto DTO que contiene las credenciales del usuario.
-     * @return ResponseEntity con el token de autenticación y detalles del usuario loggeado.
+     * @param loginRequestDto DTO que contiene las credenciales del veterinario.
+     * @return ResponseEntity con el token de autenticación y detalles del veterinario loggeado.
      */
-    @Operation(summary = "Login de Usuario", description = "Permite un usuario loggearse en el sistema y obtener un token de autenticación.")
+    @Operation(summary = "Login de Veterinario", description = "Permite un veterinario loggearse en el sistema y obtener un token de autenticación.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Usuario loggeado con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponseDTO.class))),
+            @ApiResponse(responseCode = "200", description = "Veterinario loggeado con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponseDTO.class))),
             @ApiResponse(responseCode = "401", description = "Credenciales de entrada inválidas", content = @Content)
     })
     @PostMapping("/login/vet")
     public ResponseEntity<AuthResponseDTO> loginVet(@Valid @RequestBody LoginRequestDTO loginRequestDto) {
-        log.info("Iniciando proceso de login para el usuario: {}", loginRequestDto.getUsername());
+        log.info("Iniciando proceso de login para el veterinario: {}", loginRequestDto.getUsername());
         AuthResponseDTO authResponseDto = authService.loginWithVet(loginRequestDto);
         return ResponseEntity.ok(authResponseDto);
     }
 
     /**
-     * Endpoint para loggear un usuario existente.
+     * Endpoint para loggear un dueño existente.
      *
-     * @param loginRequestDto DTO que contiene las credenciales del usuario.
-     * @return ResponseEntity con el token de autenticación y detalles del usuario loggeado.
+     * @param loginRequestDto DTO que contiene las credenciales del dueño.
+     * @return ResponseEntity con el token de autenticación y detalles del dueño loggeado.
      */
-    @Operation(summary = "Login de Usuario", description = "Permite un usuario loggearse en el sistema y obtener un token de autenticación.")
+    @Operation(summary = "Login de Dueño", description = "Permite un dueño loggearse en el sistema y obtener un token de autenticación.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Usuario loggeado con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponseDTO.class))),
+            @ApiResponse(responseCode = "200", description = "Dueño loggeado con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponseDTO.class))),
             @ApiResponse(responseCode = "401", description = "Credenciales de entrada inválidas", content = @Content)
     })
     @PostMapping("/login/owner")
     public ResponseEntity<AuthResponseDTO> loginOwner(@Valid @RequestBody LoginRequestDTO loginRequestDto) {
-        log.info("Iniciando proceso de login para el usuario: {}", loginRequestDto.getUsername());
+        log.info("Iniciando proceso de login para el dueño: {}", loginRequestDto.getUsername());
         AuthResponseDTO authResponseDto = authService.loginWithOwner(loginRequestDto);
         return ResponseEntity.ok(authResponseDto);
     }

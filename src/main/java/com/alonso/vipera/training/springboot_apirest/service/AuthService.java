@@ -24,7 +24,7 @@ public interface AuthService {
     /**
      * Autentica un propietario de mascotas existente en el sistema.
      *
-     * @param loginRequestDTO DTO con las credenciales de acceso (username/email y password)
+     * @param loginRequestDTO DTO con las credenciales de acceso (email y password)
      * @return Respuesta de autenticación con token JWT y datos del usuario
      * @throws BadCredentialsInputException Si las credenciales proporcionadas son incorrectas
      */
@@ -33,7 +33,7 @@ public interface AuthService {
     /**
      * Autentica un veterinario existente en el sistema.
      *
-     * @param loginRequestDTO DTO con las credenciales de acceso (username/email y password)
+     * @param loginRequestDTO DTO con las credenciales de acceso (email y password)
      * @return Respuesta de autenticación con token JWT y datos del usuario
      * @throws BadCredentialsInputException Si las credenciales proporcionadas son incorrectas
      */
