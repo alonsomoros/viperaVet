@@ -10,8 +10,10 @@ import com.alonso.vipera.training.springboot_apirest.exception.BadCredentialsInp
 import com.alonso.vipera.training.springboot_apirest.exception.EmailNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.exception.EmailTakenException;
 import com.alonso.vipera.training.springboot_apirest.exception.PhoneTakenException;
+import com.alonso.vipera.training.springboot_apirest.exception.RoleNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.exception.UserCreationException;
 import com.alonso.vipera.training.springboot_apirest.exception.UsernameTakenException;
+import com.alonso.vipera.training.springboot_apirest.exception.WrongRoleActionException;
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
 import com.alonso.vipera.training.springboot_apirest.model.user.Role;
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
@@ -58,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
         
         // Fetch persistent role
         UserRole userRole = userRoleJpaRepository.findByRole(registerRequestDTO.getRole())
-            .orElseThrow(() -> new RuntimeException("Role not found: " + registerRequestDTO.getRole()));
+            .orElseThrow(() -> new RoleNotFoundException());
         user.setUserRole(userRole);
 
         user = userRepositoryAdapter.save(user);
@@ -116,7 +118,7 @@ public class AuthServiceImpl implements AuthService {
             if (user.getUserRole().getRole() != Role.USER) {
                 log.warn("El usuario {} con email: {} intentó loguearse como USER pero es {}.", user.getUsername(),
                         user.getEmail(), user.getUserRole());
-                throw new BadCredentialsInputException();
+                throw new WrongRoleActionException();
             }
             log.info("Detalles del usuario {} con email: {} recuperados con éxito.", user.getUsername(),
                     user.getEmail());
@@ -152,7 +154,7 @@ public class AuthServiceImpl implements AuthService {
             if (user.getUserRole().getRole() != Role.VET) {
                 log.warn("El usuario {} con email: {} intentó loguearse como VET pero es {}.", user.getUsername(),
                         user.getEmail(), user.getUserRole());
-                throw new BadCredentialsInputException();
+                throw new WrongRoleActionException();
             }
             log.info("Detalles del veterinario {} con email: {} recuperados con éxito.", user.getUsername(),
                     user.getEmail());
