@@ -54,8 +54,7 @@ public class SecurityConfig {
                                                                 "/api/cat-breeds/save-all",
                                                                 "/breeds/**",
                                                                 "/species/**",
-                                                                "/prueba/**",
-                                                                "/pets/**")
+                                                                "/prueba/**")
                                                 .permitAll() // Endpoints de autenticación son públicos
                                                 .anyRequest().authenticated() // Todos los demás requieren autenticación
                                 )
