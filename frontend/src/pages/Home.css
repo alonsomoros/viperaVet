@@ -55,6 +55,40 @@
     object-fit: cover;
 }
 
+.add-pet-button-container {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--vet-transparent-green);
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-style: dashed;
+    border-color: var(--vet-secondary-green);
+    border-radius: 1rem;
+}
+
+.add-pet-button-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.add-pet-button-icon {
+    /* Que tenga un circulo alrededor */
+    font-size: 2rem;
+    color: var(--vet-primary-green);
+    margin-bottom: 0.5rem;
+    border-radius: 50%;
+    background-color: var(--vet-transparent-green);
+    padding: 0.5rem;
+    display: flex;
+}
+
+.add-pet-button-text {
+    font-size: 1rem;
+    color: var(--vet-primary-green);
+}
+
 .logout-button {
     padding: 0.85rem 2.5rem;
     background-color: #e53e3e;

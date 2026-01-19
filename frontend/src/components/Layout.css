@@ -1,6 +1,8 @@
 /* Veterinary Color Palette */
 :root {
   --vet-primary-green: #2E8B57; /* SeaGreen */
+  --vet-secondary-green: #4eac4e; /* PaleGreen */
+  --vet-transparent-green: rgba(78, 172, 78, 0.3);
   --vet-light-green: #98FB98; /* PaleGreen */
   --vet-accent-blue: #4682B4; /* SteelBlue */
   --vet-bg-white: #F0FFF0; /* Honeydew - very light green tint */

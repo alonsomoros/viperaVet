@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { FaPlus } from 'react-icons/fa';
 import './Home.css';
 
 const Home = () => {
@@ -8,7 +9,6 @@ const Home = () => {
     const navigate = useNavigate();
 
     const animalImages = [
-    'https://images.unsplash.com/photo-1663546874330-f3967787418d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx2ZXRlcmluYXJ5JTIwYW5pbWFscyUyMHBldHN8ZW58MXx8fHwxNzY4NjA2NjU5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
     'https://images.unsplash.com/photo-1609348490161-a879e4327ae9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoYXBweSUyMGRvZyUyMHBvcnRyYWl0fGVufDF8fHx8MTc2ODUzMjYzNnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
     'https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjYXQlMjBwZXR8ZW58MXx8fHwxNzY4NTY4NjM3fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
     'https://images.unsplash.com/photo-1695510864636-38ff5ba5a945?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyYWJiaXQlMjBwZXR8ZW58MXx8fHwxNzY4NTM2NzE5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
@@ -29,6 +29,17 @@ const Home = () => {
 
             
             <div className="animal-images-container"> 
+                <button
+              onClick={""} /*() => setIsModalOpen(true)*/
+              className="add-pet-button-container"
+            >
+              <div className="add-pet-button-icon">
+                <FaPlus />
+              </div>
+              <p className="add-pet-button-text">
+                Dar de alta nueva mascota
+              </p>
+            </button>
                 {animalImages.map((image, index) => (
               <div
                 key={index}
