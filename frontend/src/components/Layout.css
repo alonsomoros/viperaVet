@@ -13,6 +13,11 @@
   --vet-active-button: #2E8B57;
   --vet-inactive-button: #F3F4F6;
   --vet-hover-button: #dbdde2;
+
+  --vet-modal-overlay-bg: rgba(0, 0, 0, 0.5);
+  --vet-modal-overlay-color: #fff;
+  --vet-modal-x-button-color: #666;
+  --vet-modal-x-button-color-hover: #333;
 }
 
 /* Global Reset for Layout handled in index.css */
