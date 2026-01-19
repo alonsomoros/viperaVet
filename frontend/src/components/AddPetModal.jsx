@@ -23,7 +23,7 @@ const AddPetModal = ({ isOpen, onClose }) => {
     const [formData, setFormData] = useState({
         // Mascota
         petName: '',
-        petAge: '',
+        petBirthDate: '',
         petSpecies: '',
         petBreed: '',
         petAllergies: '',
@@ -36,11 +36,18 @@ const AddPetModal = ({ isOpen, onClose }) => {
     });
 
     // --- HANDLERS ---
+
+    // Overlay click handler
     const handleOverlayClick = (e) => {
         if (e.target.className === 'modal-overlay') {
-          onClose();
+            onClose();
         }
-      };
+    };
+
+    // Handle change
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
     // --- CHECK USER EXISTS ---
     const checkUserExists = async () => {
@@ -60,7 +67,7 @@ const AddPetModal = ({ isOpen, onClose }) => {
         setCurrentStep(1);
         setUserExists(null);
         setFormData({
-            petName: '', petAge: '', petSpecies: '', petBreed: '', petAllergies: '', petDiet: '',
+            petName: '', petBirthDate: '', petSpecies: '', petBreed: '', petAllergies: '', petDiet: '',
             userEmail: '', userDni: '', userPhone: '', userName: ''
         });
     };
@@ -83,8 +90,88 @@ const AddPetModal = ({ isOpen, onClose }) => {
                 </div>
                 <hr />
                 <div className="modal-body">
-                    {currentStep === 1 && <h3>Body Mascota</h3>}
-                    {currentStep === 2 && <h3>Body Usuario</h3>}
+                    {currentStep === 1 && (
+                        <div className='modal-pet-form-grid'>
+                            <div className='modal-pet-form-grid-item'>
+                                <label className='required' htmlFor="petName">Nombre</label>
+                                <input
+                                    type="text"
+                                    name="petName"
+                                    placeholder="Nombre de la mascota"
+                                    value={formData.petName}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                            <div className='modal-pet-form-grid-item'>
+                                <label className='required' htmlFor="petBirthDate">Fecha de nacimiento</label>
+                                <input
+                                    type="date"
+                                    name="petBirthDate"
+                                    placeholder="Fecha de nacimiento"
+                                    value={formData.petBirthDate}
+                                    max={new Date().toISOString().split('T')[0]}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                            <div className='modal-pet-form-grid-item'>
+                                <label className='required' htmlFor="petSpecies">Especie</label>
+                                <input
+                                    type="text"
+                                    name="petSpecies"
+                                    placeholder="Especie"
+                                    value={formData.petSpecies}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                            <div className='modal-pet-form-grid-item'>
+                                <label className='required' htmlFor="petBreed">Raza</label>
+                                <input
+                                    type="text"
+                                    name="petBreed"
+                                    placeholder="Raza de la mascota"
+                                    value={formData.petBreed}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                            <div className='modal-pet-form-grid-item full-width'>
+                                <label htmlFor="petAllergies">Alergias</label>
+                                <input
+                                    type="text"
+                                    name="petAllergies"
+                                    placeholder="Alergias conocidas"
+                                    value={formData.petAllergies}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div className='modal-pet-form-grid-item full-width'>
+                                <label htmlFor="petDiet">Dieta Alimenticia</label>
+                                <input
+                                    type="text"
+                                    name="petDiet"
+                                    placeholder="Información sobre la dieta"
+                                    value={formData.petDiet}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+                    )}
+                    {currentStep === 2 && (
+                        <>
+                            <label htmlFor="userEmail">Correo del Usuario</label>
+                            <input
+                                type="text"
+                                name="userEmail"
+                                placeholder="correo@ejemplo.com"
+                                value={formData.userEmail}
+                                onChange={handleChange}
+                            />
+                            <button onClick={checkUserExists}>Verificar</button>
+                        </>
+                    )}
                 </div>
                 <hr />
                 <div className="modal-footer">

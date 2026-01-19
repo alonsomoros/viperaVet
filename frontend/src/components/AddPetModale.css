@@ -41,3 +41,67 @@
 .close-button:hover {
     color: var(--vet-modal-x-button-color-hover);
 }
+
+.modal-steps {
+    display: flex;
+    justify-content: center;
+}
+
+.modal-steps h2 {
+    font-size: medium;
+}
+
+.modal-body {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-body label {
+    font-weight: 500;
+    font-size: small;
+    margin-bottom: 5px;
+}
+
+label.required::after {
+    content: " *";
+    color: red;
+}
+
+.modal-body input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid var(--vet-modal-input-border-color);
+    border-radius: 4px;
+}
+
+.modal-body input[type="date"] {
+    color: var(--vet-modal-input-border-color);
+}
+
+.modal-body input:focus {
+    border-color: var(--vet-primary-green);
+    outline: 1px solid var(--vet-primary-green);
+}
+
+.modal-body input::placeholder {
+    color: var(--vet-modal-input-border-color);
+}
+
+.modal-pet-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.modal-pet-form-grid-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-pet-form-grid-item.full-width {
+    grid-column: 1 / -1;
+}
+
+

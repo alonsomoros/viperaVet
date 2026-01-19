@@ -18,6 +18,8 @@
   --vet-modal-overlay-color: #fff;
   --vet-modal-x-button-color: #666;
   --vet-modal-x-button-color-hover: #333;
+
+  --vet-modal-input-border-color: rgba(82, 82, 82, 0.5);
 }
 
 /* Global Reset for Layout handled in index.css */
