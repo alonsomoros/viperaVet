@@ -4,7 +4,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--vet-modal-overlay-bg);
+    background-color: var(--vet-modal-overlay-bg, rgba(0, 0, 0, 0.5));
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,12 +12,16 @@
 }
 
 .modal-container {
-    background-color: var(--vet-modal-overlay-color);
+    background-color: var(--vet-modal-overlay-color, #ffffff);
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    width: 80%;
-    height: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .modal-header {
@@ -27,72 +31,119 @@
     margin-bottom: 20px;
 }
 
+.modal-header h2 {
+    margin: 0;
+    color: var(--vet-text-color, #333);
+}
+
 .close-button {
     background: none;
     border: none;
     cursor: pointer;
     font-size: 20px;
-    color: var(--vet-modal-x-button-color);
-    border-radius: 50%;
-    width: auto;
-    height: auto;
+    color: var(--vet-modal-x-button-color, #666);
+    padding: 5px;
+    transition: color 0.2s;
 }
 
 .close-button:hover {
-    color: var(--vet-modal-x-button-color-hover);
+    color: var(--vet-modal-x-button-color-hover, #000);
 }
 
-.modal-steps {
+/* --- Step Indicator --- */
+.step-indicator {
     display: flex;
+    align-items: center;
     justify-content: center;
+    margin-bottom: 25px;
 }
 
-.modal-steps h2 {
-    font-size: medium;
+.step-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #aaa;
+    font-weight: 500;
+    font-size: 0.95rem;
 }
 
+.step-item.active {
+    color: var(--vet-primary-green, #2ecc71);
+    font-weight: 700;
+}
+
+.step-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    border: 2px solid #ddd;
+    transition: all 0.3s ease;
+}
+
+.step-item.active .step-circle {
+    background-color: var(--vet-primary-green, #2ecc71);
+    border-color: var(--vet-primary-green, #2ecc71);
+    color: white;
+}
+
+.step-line {
+    width: 60px;
+    height: 2px;
+    background-color: #ddd;
+    margin: 0 20px;
+    transition: all 0.3s ease;
+}
+
+.step-line.active {
+    background-color: var(--vet-primary-green, #2ecc71);
+}
+
+/* --- Form Body --- */
 .modal-body {
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
+    flex: 1;
 }
 
 .modal-body label {
-    font-weight: 500;
-    font-size: small;
-    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    color: #444;
+    display: block;
 }
 
 label.required::after {
     content: " *";
-    color: red;
+    color: #e74c3c;
 }
 
 .modal-body input {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid var(--vet-modal-input-border-color);
-    border-radius: 4px;
-}
-
-.modal-body input[type="date"] {
-    color: var(--vet-modal-input-border-color);
+    padding: 10px 12px;
+    margin-bottom: 15px;
+    border: 1px solid var(--vet-modal-input-border-color, #ccc);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
 }
 
 .modal-body input:focus {
-    border-color: var(--vet-primary-green);
-    outline: 1px solid var(--vet-primary-green);
-}
-
-.modal-body input::placeholder {
-    color: var(--vet-modal-input-border-color);
+    border-color: var(--vet-primary-green, #2ecc71);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.2);
 }
 
 .modal-pet-form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    gap: 15px;
 }
 
 .modal-pet-form-grid-item {
@@ -104,4 +155,135 @@ label.required::after {
     grid-column: 1 / -1;
 }
 
+/* --- Step 2 Specifics --- */
+.role-selection {
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+}
 
+.verify-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.verify-container input {
+    margin-bottom: 0;
+}
+
+.btn-verify {
+    padding: 0 20px;
+    background-color: var(--vet-primary-green, #2ecc71);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+    height: 42px; /* Match input height roughly */
+}
+
+.btn-verify:hover {
+    background-color: #27ae60;
+}
+
+.btn-verify:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.user-status-alert {
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+    margin-bottom: 20px;
+}
+
+.new-user-form {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    margin-top: 10px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Footer --- */
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.modal-footer button {
+    padding: 10px 24px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+button.btn-back {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+button.btn-back:hover {
+    background-color: #d0d0d0;
+}
+
+button.btn-next {
+    background-color: var(--vet-primary-green, #2ecc71);
+    color: white;
+}
+
+button.btn-next:hover {
+    background-color: #27ae60;
+}
+
+button.btn-next:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+@media (max-width: 600px) {
+    .modal-pet-form-grid {
+        grid-template-columns: 1fr;
+    }
+}

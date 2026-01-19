@@ -1,4 +1,5 @@
 import React from 'react';
+import { Toaster } from 'sonner';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
@@ -25,6 +26,7 @@ const RootRedirect = () => {
 function App() {
   return (
     <div className="App">
+      <Toaster position="top-center" richColors />
       <AuthProvider>
         <Router>
             <Routes>
