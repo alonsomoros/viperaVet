@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     FaTimes,
     FaCheck,
@@ -14,6 +14,10 @@ import './AddPetModale.css';
 const AddPetModal = ({ isOpen, onClose }) => {
 
     // --- ESTADOS ---
+    const [currentStep, setCurrentStep] = React.useState(1);
+
+    const nextStep = () => setCurrentStep(currentStep + 1);
+    const prevStep = () => setCurrentStep(currentStep - 1);
 
     // --- FORM DATA ---
     const [formData, setFormData] = useState({
@@ -71,6 +75,21 @@ const AddPetModal = ({ isOpen, onClose }) => {
                     <button onClick={onClose} className="close-button">
                         <FaTimes />
                     </button>
+                </div>
+                <hr />
+                <div className='modal-steps'>
+                    {currentStep === 1 && <h2>Mascota</h2>}
+                    {currentStep === 2 && <h2>Usuario</h2>}
+                </div>
+                <hr />
+                <div className="modal-body">
+                    {currentStep === 1 && <h3>Body Mascota</h3>}
+                    {currentStep === 2 && <h3>Body Usuario</h3>}
+                </div>
+                <hr />
+                <div className="modal-footer">
+                    {currentStep > 1 && <button onClick={prevStep}>Atrás</button>}
+                    {currentStep < 2 && <button onClick={nextStep}>Siguiente</button>}
                 </div>
             </div>
         </div>
