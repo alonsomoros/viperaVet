@@ -10,6 +10,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.alonso.vipera.training.springboot_apirest.exception.CustomAccessDeniedHandler;
+import com.alonso.vipera.training.springboot_apirest.exception.CustomAuthenticationEntryPoint;
+
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -25,6 +28,8 @@ public class SecurityConfig {
 
         private final JwtFilter jwtFilter;
         private final AuthenticationProvider authenticationProvider;
+        private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+        private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
         /**
          * Configura la cadena de filtros de seguridad HTTP.
@@ -38,6 +43,9 @@ public class SecurityConfig {
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http
                                 .csrf(csrf -> csrf.disable())
+                                .exceptionHandling(exception -> exception
+                                                .authenticationEntryPoint(customAuthenticationEntryPoint)
+                                                .accessDeniedHandler(customAccessDeniedHandler))
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers("/users/**")
                                                         .hasAnyRole("VET", "ADMIN")
