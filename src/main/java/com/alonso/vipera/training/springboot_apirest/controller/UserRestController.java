@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alonso.vipera.training.springboot_apirest.model.user.Role;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.UserUpdateDTO;
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserExistOutDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutDTO;
 import com.alonso.vipera.training.springboot_apirest.service.UserService;
 
@@ -73,6 +74,10 @@ public class UserRestController {
                         return ResponseEntity.ok(userService.getUserByFilters(id, username, email, role, pageable));
                 } else
                         return ResponseEntity.ok(userService.getAll(pageable));
+        }
+        @GetMapping("/check-email")
+        public ResponseEntity<UserExistOutDTO> checkEmail(@RequestParam String email) {
+                return ResponseEntity.ok(userService.checkEmail(email));
         }
 
         // DELETE calls

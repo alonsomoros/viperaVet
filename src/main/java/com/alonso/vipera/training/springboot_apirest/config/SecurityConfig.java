@@ -52,6 +52,7 @@ public class SecurityConfig {
                                                                 "/api/dog-breeds/save-all",
                                                                 "/api/cat-breeds",
                                                                 "/api/cat-breeds/save-all",
+                                                                "/users/check-email",
                                                                 "/breeds/**",
                                                                 "/species/**",
                                                                 "/prueba/**")

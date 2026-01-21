@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import com.alonso.vipera.training.springboot_apirest.exception.IdNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.model.user.Role;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.UserUpdateDTO;
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserExistOutDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutDTO;
 
 /**
@@ -85,5 +86,13 @@ public interface UserService {
      *                             especificado
      */
     UserOutDTO updateUser(Long userId, UserUpdateDTO updateDTO, String username);
+
+    /**
+     * Verifica si existe un usuario con el email proporcionado.
+     *
+     * @param email Dirección de correo electrónico a verificar
+     * @return true si existe un usuario con el email, false en caso contrario
+     */
+    UserExistOutDTO checkEmail(String email);
 
 }
