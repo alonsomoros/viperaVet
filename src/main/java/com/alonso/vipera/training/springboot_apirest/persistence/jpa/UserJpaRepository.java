@@ -54,7 +54,7 @@ public interface UserJpaRepository extends JpaRepository<User, Long> {
         @Query("SELECT u FROM User u WHERE " +
                         "(:id IS NULL OR u.id = :id) AND " +
                         "(:username IS NULL OR u.username LIKE %:username%) AND " +
-                        "(:email IS NULL OR u.email LIKE %:email%) AND " +
+                        "(:email IS NULL OR u.email = :email) AND " +
                         "(:role IS NULL OR u.userRole.role = :role)")
         Page<User> findByFilters(
                         @Param("id") Long id,
