@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { FaTimes, FaSpinner, FaSearch } from 'react-icons/fa';
 import { toast } from 'sonner';
+import { useAuth } from '../context/AuthContext';
+import { checkEmail } from '../services/userService';
 import './AddPetModale.css';
 
 const AddPetModal = ({ isOpen, onClose }) => {
+    const { user } = useAuth();
 
     // --- STATES ---
     const [currentStep, setCurrentStep] = useState(1);
@@ -51,18 +54,33 @@ const AddPetModal = ({ isOpen, onClose }) => {
         }
 
         setIsCheckingEmail(true);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setIsCheckingEmail(false);
+        try {
+            const token = user?.token; // Get token from auth context
+            console.log("Token sending:", token); // Debug info
+            
+            const response = await checkEmail(formData.userEmail, token);
+            const exists = response.exist;
+            setUserExists(exists);
 
-        // Simulation: "test@test.com" exists
-        const exists = formData.userEmail === 'test@test.com';
-        setUserExists(exists);
-
-        if (exists) {
-            toast.success('Usuario encontrado. Se vinculará automáticamente.');
-        } else {
-            toast.info('Usuario no encontrado. Por favor completa los datos del propietario.');
+            if (exists) {
+                toast.success('Usuario encontrado. Se vinculará automáticamente.');
+                // We might want to fill user data if returned?
+                if (response.user) {
+                   setFormData(prev => ({
+                       ...prev,
+                       userName: response.user.username || '', 
+                       // Map other fields if available
+                   }));
+                }
+            } else {
+                toast.info('Usuario no encontrado. Por favor completa los datos del propietario.');
+            }
+        } catch (error) {
+            console.error("Error checking email:", error);
+            toast.error(error.message || 'Error al verificar el usuario');
+            setUserExists(null);
+        } finally {
+            setIsCheckingEmail(false);
         }
     };
 
