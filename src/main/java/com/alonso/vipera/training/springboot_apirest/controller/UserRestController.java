@@ -75,6 +75,19 @@ public class UserRestController {
                 } else
                         return ResponseEntity.ok(userService.getAll(pageable));
         }
+        
+        /**
+         * Endpoint para verificar si un email existe.
+         *
+         * @param email Email a verificar.
+         * @return ResponseEntity con el resultado de la verificación.
+         */
+        @Operation(summary = "Verificar si un email existe", description = "Verifica si un email ya está registrado en el sistema.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Email verificado con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserExistOutDTO.class))),
+                        @ApiResponse(responseCode = "403", description = "Acceso denegado. Se necesita un token válido", content = @Content),
+                        @ApiResponse(responseCode = "401", description = "Token no válido o expirado", content = @Content)
+        })
         @GetMapping("/check-email")
         public ResponseEntity<UserExistOutDTO> checkEmail(@RequestParam String email) {
                 return ResponseEntity.ok(userService.checkEmail(email));
