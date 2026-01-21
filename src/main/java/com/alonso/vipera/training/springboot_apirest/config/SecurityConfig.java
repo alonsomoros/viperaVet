@@ -39,6 +39,8 @@ public class SecurityConfig {
                 http
                                 .csrf(csrf -> csrf.disable())
                                 .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers("/users/**")
+                                                        .hasAnyRole("VET", "ADMIN")
                                                 .requestMatchers("/auth/**",
                                                                 "/swagger-ui.html",
                                                                 "/swagger-ui/**",
@@ -52,11 +54,11 @@ public class SecurityConfig {
                                                                 "/api/dog-breeds/save-all",
                                                                 "/api/cat-breeds",
                                                                 "/api/cat-breeds/save-all",
-                                                                "/users/check-email",
                                                                 "/breeds/**",
                                                                 "/species/**",
                                                                 "/prueba/**")
                                                 .permitAll() // Endpoints de autenticación son públicos
+                                                .requestMatchers("/users/**").hasAnyRole("USER", "VET", "ADMIN")
                                                 .anyRequest().authenticated() // Todos los demás requieren autenticación
                                 )
                                 .sessionManagement(session -> session

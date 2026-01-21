@@ -15,7 +15,6 @@ import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
 import com.alonso.vipera.training.springboot_apirest.model.user.Role;
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.UserUpdateDTO;
-import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserExistOutDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.adapter.UserRepositoryAdapter;
 
@@ -128,11 +127,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepositoryAdapter.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException());
-    }
-
-    @Override
-    public UserExistOutDTO checkEmail(String email) {
-        return new UserExistOutDTO(userRepositoryAdapter.existsByEmail(email));
     }
 
 }

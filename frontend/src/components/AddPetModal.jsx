@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FaTimes, FaSpinner, FaSearch } from 'react-icons/fa';
 import { toast } from 'sonner';
 import { useAuth } from '../context/AuthContext';
-import { checkEmail } from '../services/userService';
+import { getUserByEmail } from '../services/userService';
 import './AddPetModale.css';
 
 const AddPetModal = ({ isOpen, onClose }) => {
@@ -58,20 +58,17 @@ const AddPetModal = ({ isOpen, onClose }) => {
             const token = user?.token; // Get token from auth context
             console.log("Token sending:", token); // Debug info
             
-            const response = await checkEmail(formData.userEmail, token);
-            const exists = response.exist;
+            const response = await getUserByEmail(formData.userEmail, token);
+            const exists = response?.content?.length > 0;
             setUserExists(exists);
 
             if (exists) {
                 toast.success('Usuario encontrado. Se vinculará automáticamente.');
                 // We might want to fill user data if returned?
-                if (response.user) {
-                   setFormData(prev => ({
-                       ...prev,
-                       userName: response.user.username || '', 
-                       // Map other fields if available
-                   }));
-                }
+                setFormData(prev => ({
+                    ...prev,
+                    userName: response.content[0].username || '',
+                }));
             } else {
                 toast.info('Usuario no encontrado. Por favor completa los datos del propietario.');
             }

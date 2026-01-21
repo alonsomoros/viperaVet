@@ -1,7 +1,7 @@
 
 const API_URL = '/users';
 
-export const checkEmail = async (email, token) => {
+export const getUserByEmail = async (email, token) => {
     const headers = {
         'Content-Type': 'application/json',
     };
@@ -10,7 +10,7 @@ export const checkEmail = async (email, token) => {
         headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const response = await fetch(`${API_URL}/check-email?email=${encodeURIComponent(email)}`, {
+    const response = await fetch(`${API_URL}?email=${encodeURIComponent(email)}`, {
         method: 'GET',
         headers: headers,
     });
