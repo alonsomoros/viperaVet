@@ -2,8 +2,10 @@ package com.alonso.vipera.training.springboot_apirest.service;
 
 import com.alonso.vipera.training.springboot_apirest.exception.BadCredentialsInputException;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.LoginRequestDTO;
-import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.RegisterRequestDTO;
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.OwnerCreationRequestDTO;
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.VetRegisterRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.AuthResponseDTO;
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutDTO;
 
 /**
  * Servicio de autenticación y autorización del sistema.
@@ -19,7 +21,17 @@ public interface AuthService {
      * @return Respuesta de autenticación con token JWT y datos del usuario
      * @throws IllegalArgumentException Si el username o email ya existen en el sistema
      */
-    AuthResponseDTO register(RegisterRequestDTO registerRequestDTO);
+    AuthResponseDTO registerVet(VetRegisterRequestDTO registerRequestDTO);
+
+    /**
+     * Registra un nuevo usuario en el sistema.
+     * Valida que el username y email no existan previamente.
+     *
+     * @param registerRequestDTO DTO con los datos del usuario a registrar (username, email, password)
+     * @return Respuesta de autenticación con token JWT y datos del usuario
+     * @throws IllegalArgumentException Si el username o email ya existen en el sistema
+     */
+    UserOutDTO ownerCreation(OwnerCreationRequestDTO registerRequestDTO);
 
     /**
      * Autentica un propietario de mascotas existente en el sistema.

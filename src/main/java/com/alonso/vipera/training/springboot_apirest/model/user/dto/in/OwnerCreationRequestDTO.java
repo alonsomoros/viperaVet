@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterRequestDTO {
+public class OwnerCreationRequestDTO {
 
     @Schema(description = "Nombre del usuario.", example = "Iñigo", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "Nombre necesario")
@@ -31,24 +31,20 @@ public class RegisterRequestDTO {
     @Size(min = 2, max = 50, message = "Los apellidos deben tener entre 2 y 50 caracteres")
     private String surnames;
 
-    @Schema(description = "Email único del usuario. Debe ser un formato de email válido.", example = "alonso@gmail.com", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Email único del usuario. Debe ser un formato de email válido.", example = "iñigo@vet.com", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "Email necesario")
     @Email(message = "Email inválido")
     private String email;
-
-    @Schema(description = "Contraseña. Debe tener al menos 6 caracteres.", example = "P4ssw0rd!", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "Password necesario")
-    @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
-    private String password;
 
     @Schema(description = "Contraseña. Debe tener al menos 6 caracteres.", example = "P4ssw0rd!", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "Teléfono necesario")
     @Pattern(regexp = "^\\+?[0-9 .()\\-]{7,25}$", message = "Invalid phone number")
     private String phone;
 
-    @Schema(description = "Dirección del usuario. Debe tener entre 3 y 100 caracteres.", example = "Calle Falsa 123, Ciudad, País", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    @Size(max = 100, message = "La dirección debe tener entre 3 y 100 caracteres")
-    private String address;
+    @Schema(description = "DNI del usuario.", example = "12345678A", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotBlank(message = "DNI necesario")
+    @Pattern(regexp = "^[0-9]{8}[A-Za-z]", message = "Invalid DNI")
+    private String dni;
 
     @Schema(description = "Rol del usuario en el sistema.", example = "USER", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "Rol necesario")

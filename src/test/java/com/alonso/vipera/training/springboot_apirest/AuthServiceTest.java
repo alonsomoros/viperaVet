@@ -26,7 +26,7 @@ import com.alonso.vipera.training.springboot_apirest.exception.UserCreationExcep
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
 import com.alonso.vipera.training.springboot_apirest.model.user.Role;
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
-import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.RegisterRequestDTO;
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.VetRegisterRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.AuthResponseDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.jpa.UserRoleJpaRepository;
@@ -68,7 +68,7 @@ class AuthServiceTest {
     @InjectMocks
     private AuthServiceImpl authServiceImpl;
 
-    private RegisterRequestDTO registerRequestDTO;
+    private VetRegisterRequestDTO registerRequestDTO;
     private User userEntity;
     private UserOutDTO userOutDTO;
     private AuthResponseDTO authResponseDTO;
@@ -76,7 +76,7 @@ class AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-        registerRequestDTO = new RegisterRequestDTO();
+        registerRequestDTO = new VetRegisterRequestDTO();
         registerRequestDTO.setName(NAME);
         registerRequestDTO.setSurnames(SURNAMES);
         registerRequestDTO.setEmail(EMAIL);
@@ -126,7 +126,7 @@ class AuthServiceTest {
         when(jwtService.generateToken(userEntity)).thenReturn(JWT_TOKEN);
 
         // Act
-        AuthResponseDTO result = authServiceImpl.register(registerRequestDTO);
+        AuthResponseDTO result = authServiceImpl.registerVet(registerRequestDTO);
 
         // Assert
         assertNotNull(result);
@@ -149,7 +149,7 @@ class AuthServiceTest {
         when(userRepositoryAdapter.existsByEmail(EMAIL)).thenReturn(true);
 
         // Act & Assert
-        assertThrows(EmailTakenException.class, () -> authServiceImpl.register(registerRequestDTO));
+        assertThrows(EmailTakenException.class, () -> authServiceImpl.registerVet(registerRequestDTO));
 
         // Verify
         verify(userRepositoryAdapter, times(1)).existsByEmail(EMAIL);
@@ -167,7 +167,7 @@ class AuthServiceTest {
         when(userRepositoryAdapter.save(any(User.class))).thenReturn(null);
 
         // Act & Assert
-        assertThrows(UserCreationException.class, () -> authServiceImpl.register(registerRequestDTO));
+        assertThrows(UserCreationException.class, () -> authServiceImpl.registerVet(registerRequestDTO));
 
         // Verify
         verify(userRepositoryAdapter, times(1)).existsByEmail(EMAIL);

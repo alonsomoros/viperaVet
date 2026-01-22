@@ -17,12 +17,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LoginRequestDTO {
 
-    @Schema(description = "Email único del usuario. Debe ser un formato de email válido.", example = "alonso@gmail.com", required = true)
+    @Schema(description = "Email único del usuario. Debe ser un formato de email válido.", example = "alonso@gmail.com", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "Email necesario")
     @Email(message = "Email inválido")
     private String email;
 
-    @Schema(description = "Contraseña del usuario.", example = "P4ssw0rd!", required = true)
+    @Schema(description = "Contraseña del usuario.", example = "P4ssw0rd!", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "Password necesario")
     private String password;
 }

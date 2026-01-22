@@ -56,7 +56,7 @@ public class User extends BaseEntity implements UserDetails {
     /**
      * Contraseña del usuario en el sistema.
      */
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String password;
 
     /**
@@ -76,6 +76,12 @@ public class User extends BaseEntity implements UserDetails {
      */
     @Column(nullable = true, unique = false)
     private String address;
+
+    /**
+     * DNI del usuario en el sistema.
+     */
+    @Column(nullable = true, unique = true)
+    private String dni;
 
     /**
      * Rol del usuario en el sistema (USER o VET).

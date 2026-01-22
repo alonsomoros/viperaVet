@@ -28,7 +28,7 @@ import com.alonso.vipera.training.springboot_apirest.exception.EmailNotFoundExce
 import com.alonso.vipera.training.springboot_apirest.exception.IdNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
-import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.RegisterRequestDTO;
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.VetRegisterRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.adapter.UserRepositoryAdapter;
 import com.alonso.vipera.training.springboot_apirest.service.UserServiceImpl;
@@ -56,7 +56,7 @@ class UserServiceTest {
 
     private Pageable testPageable;
 
-    private RegisterRequestDTO registerRequestDTO;
+    private VetRegisterRequestDTO registerRequestDTO;
     private User userEntity;
     private UserOutDTO userOutDTO;
 
@@ -64,7 +64,7 @@ class UserServiceTest {
     void setUp() {
         testPageable = PageRequest.of(0, 10);
 
-        registerRequestDTO = new RegisterRequestDTO();
+        registerRequestDTO = new VetRegisterRequestDTO();
         registerRequestDTO.setName(NAME);
         registerRequestDTO.setSurnames(SURNAMES);
         registerRequestDTO.setEmail(EMAIL);
