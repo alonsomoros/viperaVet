@@ -23,13 +23,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.alonso.vipera.training.springboot_apirest.exception.EmailTakenException;
 import com.alonso.vipera.training.springboot_apirest.exception.UserCreationException;
-import com.alonso.vipera.training.springboot_apirest.exception.UsernameTakenException;
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
 import com.alonso.vipera.training.springboot_apirest.model.user.Role;
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.RegisterRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.AuthResponseDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutDTO;
+import com.alonso.vipera.training.springboot_apirest.persistence.jpa.UserRoleJpaRepository;
+import com.alonso.vipera.training.springboot_apirest.model.user.UserRole;
 import com.alonso.vipera.training.springboot_apirest.persistence.adapter.UserRepositoryAdapter;
 import com.alonso.vipera.training.springboot_apirest.service.AuthServiceImpl;
 import com.alonso.vipera.training.springboot_apirest.service.JwtService;
@@ -38,7 +39,8 @@ import com.alonso.vipera.training.springboot_apirest.service.JwtService;
 class AuthServiceTest {
 
     // Constants
-    private static final String USERNAME = "Juan";
+    private static final String NAME = "Juan";
+    private static final String SURNAMES = "Perez Garcia";
     private static final String EMAIL = "juan@gmail.com";
     private static final String PASSWORD = "password123";
     private static final String ENCODED_PASSWORD = "encodedPassword";
@@ -60,6 +62,9 @@ class AuthServiceTest {
     @Mock
     private AuthenticationManager authenticationManager;
 
+    @Mock
+    private UserRoleJpaRepository userRoleJpaRepository;
+
     @InjectMocks
     private AuthServiceImpl authServiceImpl;
 
@@ -67,21 +72,30 @@ class AuthServiceTest {
     private User userEntity;
     private UserOutDTO userOutDTO;
     private AuthResponseDTO authResponseDTO;
+    private UserRole userRole;
 
     @BeforeEach
     void setUp() {
         registerRequestDTO = new RegisterRequestDTO();
-        registerRequestDTO.setUsername(USERNAME);
+        registerRequestDTO.setName(NAME);
+        registerRequestDTO.setSurnames(SURNAMES);
         registerRequestDTO.setEmail(EMAIL);
         registerRequestDTO.setPassword(PASSWORD);
 
         userEntity = new User();
         userEntity.setId(USER_ID);
-        userEntity.setUsername(USERNAME);
+        userEntity.setName(NAME);
+        userEntity.setSurnames(SURNAMES);
         userEntity.setEmail(EMAIL);
         userEntity.setPassword(ENCODED_PASSWORD);
 
-        userOutDTO = new UserOutDTO(USER_ID, USERNAME, EMAIL, Role.USER, LocalDateTime.now());
+        userRole = new UserRole();
+        userRole.setRole(Role.USER);
+        userEntity.setUserRole(userRole);
+
+        registerRequestDTO.setRole(Role.USER);
+
+        userOutDTO = new UserOutDTO(USER_ID, NAME, SURNAMES, EMAIL, Role.USER, LocalDateTime.now());
 
         authResponseDTO = new AuthResponseDTO();
         authResponseDTO.setToken(JWT_TOKEN);
@@ -103,10 +117,10 @@ class AuthServiceTest {
     @Test
     void testRegister_whenValidData_shouldCreateUserSuccessfully() {
         // Arrange
-        when(userRepositoryAdapter.existsByUsername(USERNAME)).thenReturn(false);
         when(userRepositoryAdapter.existsByEmail(EMAIL)).thenReturn(false);
         when(passwordEncoder.encode(PASSWORD)).thenReturn(ENCODED_PASSWORD);
         when(userMapper.toEntity(registerRequestDTO)).thenReturn(userEntity);
+        when(userRoleJpaRepository.findByRole(Role.USER)).thenReturn(java.util.Optional.of(userRole));
         when(userMapper.toOutDTO(userEntity)).thenReturn(userOutDTO);
         when(userRepositoryAdapter.save(any(User.class))).thenReturn(userEntity);
         when(jwtService.generateToken(userEntity)).thenReturn(JWT_TOKEN);
@@ -117,10 +131,10 @@ class AuthServiceTest {
         // Assert
         assertNotNull(result);
         assertEquals(JWT_TOKEN, result.getToken());
-        assertEquals(USERNAME, result.getUser().getUsername());
+        assertEquals(NAME, result.getUser().getName());
+        assertEquals(SURNAMES, result.getUser().getSurnames());
 
         // Verify
-        verify(userRepositoryAdapter, times(1)).existsByUsername(USERNAME);
         verify(userRepositoryAdapter, times(1)).existsByEmail(EMAIL);
         verify(passwordEncoder, times(1)).encode(PASSWORD);
         verify(userMapper, times(1)).toEntity(registerRequestDTO);
@@ -128,32 +142,16 @@ class AuthServiceTest {
         verify(jwtService, times(1)).generateToken(userEntity);
     }
 
-    @Test
-    void testRegister_whenUsernameTaken_shouldThrowUsernameTakenException() {
-        // Arrange
-        when(userRepositoryAdapter.existsByUsername(USERNAME)).thenReturn(true);
-
-        // Act & Assert
-        assertThrows(UsernameTakenException.class, () -> authServiceImpl.register(registerRequestDTO));
-
-        // Verify
-        verify(userRepositoryAdapter, times(1)).existsByUsername(USERNAME);
-        verify(userRepositoryAdapter, times(0)).existsByEmail(EMAIL);
-        verify(passwordEncoder, times(0)).encode(any());
-        verify(userRepositoryAdapter, times(0)).save(any(User.class));
-    }
 
     @Test
     void testRegister_whenEmailTaken_shouldThrowEmailTakenException() {
         // Arrange
-        when(userRepositoryAdapter.existsByUsername(USERNAME)).thenReturn(false);
         when(userRepositoryAdapter.existsByEmail(EMAIL)).thenReturn(true);
 
         // Act & Assert
         assertThrows(EmailTakenException.class, () -> authServiceImpl.register(registerRequestDTO));
 
         // Verify
-        verify(userRepositoryAdapter, times(1)).existsByUsername(USERNAME);
         verify(userRepositoryAdapter, times(1)).existsByEmail(EMAIL);
         verify(passwordEncoder, times(0)).encode(any());
         verify(userRepositoryAdapter, times(0)).save(any(User.class));
@@ -162,17 +160,16 @@ class AuthServiceTest {
     @Test
     void testRegister_whenUserNotSaved_shouldThrowUserCreationException() {
         // Arrange
-        when(userRepositoryAdapter.existsByUsername(USERNAME)).thenReturn(false);
         when(userRepositoryAdapter.existsByEmail(EMAIL)).thenReturn(false);
         when(passwordEncoder.encode(PASSWORD)).thenReturn(ENCODED_PASSWORD);
         when(userMapper.toEntity(registerRequestDTO)).thenReturn(userEntity);
+        when(userRoleJpaRepository.findByRole(Role.USER)).thenReturn(java.util.Optional.of(userRole));
         when(userRepositoryAdapter.save(any(User.class))).thenReturn(null);
 
         // Act & Assert
         assertThrows(UserCreationException.class, () -> authServiceImpl.register(registerRequestDTO));
 
         // Verify
-        verify(userRepositoryAdapter, times(1)).existsByUsername(USERNAME);
         verify(userRepositoryAdapter, times(1)).existsByEmail(EMAIL);
         verify(passwordEncoder, times(1)).encode(PASSWORD);
         verify(userMapper, times(1)).toEntity(registerRequestDTO);

@@ -1,5 +1,7 @@
 package com.alonso.vipera.training.springboot_apirest;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -37,6 +40,9 @@ public class UserControllerTest {
     private UserService userService;
 
     @MockBean
+    private UserDetailsService userDetailsService;
+
+    @MockBean
     private UserMapper userMapper;
 
     private Pageable testPageable;
@@ -52,54 +58,58 @@ public class UserControllerTest {
 
         createdUser1 = new User();
         createdUser1.setId(1L);
-        createdUser1.setUsername("Juan");
+        createdUser1.setName("Juan");
+        createdUser1.setSurnames("Garcia");
         createdUser1.setEmail("juan@gmail.com");
         createdUser1.setPassword("password123");
 
         createdUser2 = new User();
         createdUser2.setId(2L);
-        createdUser2.setUsername("Cesar");
+        createdUser2.setName("Cesar");
+        createdUser2.setSurnames("Alonso");
         createdUser2.setEmail("cesar@gmail.com");
         createdUser2.setPassword("password123");
 
         userOutDTO1 = new UserOutDTO();
         userOutDTO1.setId(1L);
-        userOutDTO1.setUsername("Juan");
+        userOutDTO1.setName("Juan");
+        userOutDTO1.setSurnames("Garcia");
         userOutDTO1.setEmail("juan@gmail.com");
 
         userOutDTO2 = new UserOutDTO();
         userOutDTO2.setId(2L);
-        userOutDTO2.setUsername("Cesar");
+        userOutDTO2.setName("Cesar");
+        userOutDTO2.setSurnames("Alonso");
         userOutDTO2.setEmail("cesar@gmail.com");
 
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "VET")
     void testGetAllUsers_whenValidResponse_shouldReturnOkAndUserPage() throws Exception {
         List<UserOutDTO> usersOutDtoList = List.of(userOutDTO1, userOutDTO2);
         Page<UserOutDTO> userPage = new PageImpl<>(usersOutDtoList, testPageable, usersOutDtoList.size());
 
-        when(userService.getAll(testPageable)).thenReturn(userPage);
+        when(userService.getAll(any(Pageable.class))).thenReturn(userPage);
 
         mockMvc.perform(get("/users")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(usersOutDtoList.size()))
-                .andExpect(jsonPath("$[0].username").value(createdUser1.getUsername()))
-                .andExpect(jsonPath("$[1].username").value(createdUser2.getUsername()));
+                .andExpect(jsonPath("$.content.length()").value(usersOutDtoList.size()))
+                .andExpect(jsonPath("$.content[0].name").value(createdUser1.getName()))
+                .andExpect(jsonPath("$.content[1].name").value(createdUser2.getName()));
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "VET")
     void testGetUserById_whenIdExists_shouldReturnOkAndUser() throws Exception {
-        when(userService.getById(createdUser1.getId())).thenReturn(userOutDTO1);
+        when(userService.getById(anyLong())).thenReturn(userOutDTO1);
 
         mockMvc.perform(get("/users/{id}", createdUser1.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(createdUser1.getId()))
-                .andExpect(jsonPath("$.username").value(createdUser1.getUsername()))
+                .andExpect(jsonPath("$.name").value(createdUser1.getName()))
                 .andExpect(jsonPath("$.email").value(createdUser1.getEmail()));
     }
 

@@ -80,12 +80,12 @@ public interface PetJpaRepository extends JpaRepository<Pet, Long> {
         List<Optional<Pet>> findBySpecieName(String specie);
 
         /**
-         * Busca mascotas por el nombre de usuario del propietario.
+         * Busca mascotas por el email del propietario.
          * 
-         * @param username Nombre de usuario del propietario de la mascota
+         * @param email Email del propietario de la mascota
          * @return Lista de mascotas que pertenecen al usuario especificado
          */
-        List<Optional<Pet>> findByUserUsername(String username);
+        List<Optional<Pet>> findByUserEmail(String email);
 
         /**
          * Verifica si existe una mascota con el nombre especificado.

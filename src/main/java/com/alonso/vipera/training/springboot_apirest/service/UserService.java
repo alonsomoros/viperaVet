@@ -42,27 +42,19 @@ public interface UserService {
      */
     UserOutDTO getByEmail(String email);
 
-    /**
-     * Busca un usuario por su nombre de usuario único.
-     *
-     * @param username Nombre de usuario a buscar
-     * @return DTO del usuario encontrado
-     * @throws IdNotFoundException Si no se encuentra un usuario con el username
-     *                             especificado
-     */
-    UserOutDTO getByUsername(String username);
 
     /**
      * Busca usuarios aplicando múltiples filtros opcionales de forma paginada.
      *
      * @param id       ID del usuario (opcional)
-     * @param username Nombre de usuario (opcional)
+     * @param name     Nombre (opcional)
+     * @param surnames Apellidos (opcional)
      * @param email    Dirección de correo electrónico (opcional)
      * @param role     Rol del usuario (opcional)
      * @param pageable Información de paginación (página, tamaño, ordenamiento)
      * @return Página con los usuarios que coinciden con los filtros aplicados
      */
-    Page<UserOutDTO> getUserByFilters(Long id, String username, String email, Role role, Pageable pageable);
+    Page<UserOutDTO> getUserByFilters(Long id, String name, String surnames, String email, Role role, Pageable pageable);
 
     /**
      * Elimina un usuario por su ID.
@@ -73,17 +65,6 @@ public interface UserService {
      */
     void delete(Long id);
 
-    /**
-     * Actualiza la información de un usuario existente.
-     *
-     * @param userId    ID del usuario a actualizar
-     * @param updateDTO DTO con los datos a actualizar
-     * @param username  Nombre de usuario del solicitante que realiza la
-     *                  actualización
-     * @return DTO del usuario actualizado
-     * @throws IdNotFoundException Si no se encuentra un usuario con el ID
-     *                             especificado
-     */
-    UserOutDTO updateUser(Long userId, UserUpdateDTO updateDTO, String username);
+    UserOutDTO updateUser(Long userId, UserUpdateDTO updateDTO, String requesterEmail);
 
 }

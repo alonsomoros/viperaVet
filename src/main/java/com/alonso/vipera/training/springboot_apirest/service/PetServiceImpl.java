@@ -7,8 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.alonso.vipera.training.springboot_apirest.exception.EmailNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.exception.IdNotFoundException;
-import com.alonso.vipera.training.springboot_apirest.exception.UsernameNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.mapper.PetMapper;
 import com.alonso.vipera.training.springboot_apirest.model.pet.Breed;
 import com.alonso.vipera.training.springboot_apirest.model.pet.Pet;
@@ -40,13 +40,13 @@ public class PetServiceImpl implements PetService {
     private final PetMapper petMapper;
 
     @Override
-    public List<PetOutDTO> getPetsByUserUsername(String username) {
-        log.debug("Buscando mascotas del usuario dueño: {}", username);
-        List<PetOutDTO> pets = petRepositoryAdapter.findPetsByUserUsername(username)
+    public List<PetOutDTO> getPetsByUserEmail(String email) {
+        log.debug("Buscando mascotas del usuario dueño por email: {}", email);
+        List<PetOutDTO> pets = petRepositoryAdapter.findPetsByUserEmail(email)
                 .stream()
                 .map(petMapper::toOutDTO)
                 .toList();
-        log.debug("Se han encontrado {} mascotas para el usuario: {}", pets.size(), username);
+        log.debug("Se han encontrado {} mascotas para el usuario con email: {}", pets.size(), email);
         return pets;
     }
 
@@ -112,12 +112,12 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public PetOutDTO save(PetInDTO petInDTO, String username) {
-        log.info("Guardando nueva mascota para el usuario: {}", username);
+    public PetOutDTO save(PetInDTO petInDTO, String email) {
+        log.info("Guardando nueva mascota para el usuario: {}", email);
 
-        log.debug("Buscando usuario dueño: {}", username);
-        User user = userRepositoryAdapter.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException());
-        log.debug("Usuario {} encontrado. ID: {}", username, user.getId());
+        log.debug("Buscando usuario dueño: {}", email);
+        User user = userRepositoryAdapter.findByEmail(email).orElseThrow(() -> new EmailNotFoundException());
+        log.debug("Usuario con email {} encontrado. ID: {}", email, user.getId());
 
         log.debug("Buscando especie: {}", petInDTO.getSpecieId());
         Specie specie = specieRepositoryAdapter.findById(petInDTO.getSpecieId())
@@ -152,13 +152,13 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public PetOutDTO updatePet(Long petId, PetUpdateDTO petUpdateDTO, String username) {
+    public PetOutDTO updatePet(Long petId, PetUpdateDTO petUpdateDTO, String email) {
 
         log.debug("Buscando mascota con ID: {} para actualizar...", petId);
         Pet pet = petRepositoryAdapter.findById(petId).orElseThrow(() -> new IdNotFoundException());
-        log.debug("Mascota con ID: {} encontrada. Verificando permisos del usuario: {}", petId, username);
+        log.debug("Mascota con ID: {} encontrada. Verificando permisos del usuario con email: {}", petId, email);
 
-        if (!username.equals(pet.getUser().getUsername())) {
+        if (!email.equals(pet.getUser().getEmail())) {
             throw new SecurityException("No tienes permiso para actualizar esta mascota.");
         }
         log.debug("Permisos verificados. Actualizando información de la mascota...");

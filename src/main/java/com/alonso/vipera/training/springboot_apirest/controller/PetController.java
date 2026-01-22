@@ -62,8 +62,8 @@ public class PetController {
     })
     @GetMapping("/my-pets")
     public ResponseEntity<List<PetOutDTO>> getMyPets(@AuthenticationPrincipal UserDetails userDetails) {
-        String username = userDetails.getUsername();
-        return ResponseEntity.status(HttpStatus.OK).body(petService.getPetsByUserUsername(username));
+        String email = userDetails.getUsername();
+        return ResponseEntity.status(HttpStatus.OK).body(petService.getPetsByUserEmail(email));
     }
 
     /**
@@ -116,8 +116,8 @@ public class PetController {
     @PostMapping
     public ResponseEntity<PetOutDTO> registerPet(@AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody PetInDTO petInDTO) {
-        String username = userDetails.getUsername();
-        return ResponseEntity.status(HttpStatus.OK).body(petService.save(petInDTO, username));
+        String email = userDetails.getUsername();
+        return ResponseEntity.status(HttpStatus.OK).body(petService.save(petInDTO, email));
     }
 
     // DELETE calls

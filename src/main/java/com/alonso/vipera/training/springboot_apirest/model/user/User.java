@@ -42,10 +42,16 @@ import lombok.NoArgsConstructor;
 public class User extends BaseEntity implements UserDetails {
 
     /**
-     * Nombre de usuario único en el sistema.
+     * Nombre del usuario.
      */
-    @Column(nullable = false, unique = true)
-    private String username;
+    @Column(nullable = false)
+    private String name;
+
+    /**
+     * Apellidos del usuario.
+     */
+    @Column(nullable = false)
+    private String surnames;
 
     /**
      * Contraseña del usuario en el sistema.
@@ -95,6 +101,11 @@ public class User extends BaseEntity implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + this.userRole.getRole()));
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
     }
 
 }

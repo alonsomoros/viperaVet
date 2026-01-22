@@ -23,8 +23,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import com.alonso.vipera.training.springboot_apirest.exception.EmailNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.exception.IdNotFoundException;
-import com.alonso.vipera.training.springboot_apirest.exception.UsernameNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.mapper.PetMapper;
 import com.alonso.vipera.training.springboot_apirest.model.pet.Breed;
 import com.alonso.vipera.training.springboot_apirest.model.pet.Pet;
@@ -41,7 +41,7 @@ import com.alonso.vipera.training.springboot_apirest.service.PetServiceImpl;
 @ExtendWith(MockitoExtension.class)
 public class PetServiceTest {
 
-    private static final String USERNAME = "Alonso";
+    private static final String EMAIL = "alonso@gmail.com";
     private static final String PET_NAME = "Obi";
     private static final Long BREED_ID = 50L;
     private static final String BREED_NAME = "Border Collie";
@@ -85,7 +85,7 @@ public class PetServiceTest {
 
         user = new User();
         user.setId(1L);
-        user.setUsername(USERNAME);
+        user.setEmail(EMAIL);
 
         specie = new Specie();
         specie.setId(1L);
@@ -113,13 +113,13 @@ public class PetServiceTest {
     }
 
     @Test
-    public void testGetPetsByUserUsername_whenPetsFound_returnPageOfPets() {
+    public void testGetPetsByUserEmail_whenPetsFound_returnPageOfPets() {
         // Arrange
-        when(petRepositoryAdapter.findPetsByUserUsername(USERNAME)).thenReturn(List.of(pet));
+        when(petRepositoryAdapter.findPetsByUserEmail(EMAIL)).thenReturn(List.of(pet));
         when(petMapper.toOutDTO(pet)).thenReturn(petOutDTO);
 
         // Act
-        List<PetOutDTO> pets = petServiceImpl.getPetsByUserUsername(USERNAME);
+        List<PetOutDTO> pets = petServiceImpl.getPetsByUserEmail(EMAIL);
 
         // Assert
         assertNotNull(pets);
@@ -127,24 +127,24 @@ public class PetServiceTest {
         assertEquals(PET_NAME, pets.get(0).getName());
 
         // Verify
-        verify(petRepositoryAdapter, times(1)).findPetsByUserUsername(USERNAME);
+        verify(petRepositoryAdapter, times(1)).findPetsByUserEmail(EMAIL);
         verify(petMapper, times(1)).toOutDTO(pet);
     }
 
     @Test
-    public void testGetPetsByUserUsername_whenPetsNotFound_returnEmptyList() {
+    public void testGetPetsByUserEmail_whenPetsNotFound_returnEmptyList() {
         // Arrange
-        when(petRepositoryAdapter.findPetsByUserUsername(USERNAME)).thenReturn(List.of());
+        when(petRepositoryAdapter.findPetsByUserEmail(EMAIL)).thenReturn(List.of());
 
         // Act
-        List<PetOutDTO> pets = petServiceImpl.getPetsByUserUsername(USERNAME);
+        List<PetOutDTO> pets = petServiceImpl.getPetsByUserEmail(EMAIL);
 
         // Assert
         assertNotNull(pets);
         assertEquals(0, pets.size());
 
         // Verify
-        verify(petRepositoryAdapter, times(1)).findPetsByUserUsername(USERNAME);
+        verify(petRepositoryAdapter, times(1)).findPetsByUserEmail(EMAIL);
     }
 
     @Test
@@ -325,7 +325,7 @@ public class PetServiceTest {
     @Test
     public void testSave_whenValidData_returnSavedPet() {
         // Arrange
-        when(userRepositoryAdapter.findByUsername(USERNAME)).thenReturn(Optional.of(user));
+        when(userRepositoryAdapter.findByEmail(EMAIL)).thenReturn(Optional.of(user));
         when(specieRepositoryAdapter.findById(SPECIE_ID)).thenReturn(Optional.of(specie));
         when(breedRepositoryAdapter.findById(BREED_ID)).thenReturn(Optional.of(breed));
         when(petMapper.toEntity(petInDTO)).thenReturn(pet);
@@ -333,29 +333,29 @@ public class PetServiceTest {
         when(petMapper.toOutDTO(pet)).thenReturn(petOutDTO);
 
         // Act
-        PetOutDTO result = petServiceImpl.save(petInDTO, USERNAME);
+        PetOutDTO result = petServiceImpl.save(petInDTO, EMAIL);
 
         // Assert
         assertNotNull(result);
         assertEquals(petOutDTO.getName(), result.getName());
 
         // Verify
-        verify(userRepositoryAdapter, times(1)).findByUsername(USERNAME);
+        verify(userRepositoryAdapter, times(1)).findByEmail(EMAIL);
         verify(specieRepositoryAdapter, times(1)).findById(SPECIE_ID);
         verify(breedRepositoryAdapter, times(1)).findById(BREED_ID);
         verify(petRepositoryAdapter, times(1)).save(any(Pet.class));
     }
 
     @Test
-    public void testSave_whenUserNotFound_throwsUsernameNotFoundException() {
+    public void testSave_whenUserNotFound_throwsEmailNotFoundException() {
         // Arrange
-        when(userRepositoryAdapter.findByUsername(USERNAME)).thenReturn(Optional.empty());
+        when(userRepositoryAdapter.findByEmail(EMAIL)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(UsernameNotFoundException.class, () -> petServiceImpl.save(petInDTO, USERNAME));
+        assertThrows(EmailNotFoundException.class, () -> petServiceImpl.save(petInDTO, EMAIL));
 
         // Verify
-        verify(userRepositoryAdapter, times(1)).findByUsername(USERNAME);
+        verify(userRepositoryAdapter, times(1)).findByEmail(EMAIL);
         verify(specieRepositoryAdapter, times(0)).findByName(any());
         verify(breedRepositoryAdapter, times(0)).findByName(any());
         verify(petRepositoryAdapter, times(0)).save(any());
@@ -364,14 +364,14 @@ public class PetServiceTest {
     @Test
     public void testSave_whenSpecieNotFound_throwsIdNotFoundException() {
         // Arrange
-        when(userRepositoryAdapter.findByUsername(USERNAME)).thenReturn(Optional.of(user));
+        when(userRepositoryAdapter.findByEmail(EMAIL)).thenReturn(Optional.of(user));
         when(specieRepositoryAdapter.findById(SPECIE_ID)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(IdNotFoundException.class, () -> petServiceImpl.save(petInDTO, USERNAME));
+        assertThrows(IdNotFoundException.class, () -> petServiceImpl.save(petInDTO, EMAIL));
 
         // Verify
-        verify(userRepositoryAdapter, times(1)).findByUsername(USERNAME);
+        verify(userRepositoryAdapter, times(1)).findByEmail(EMAIL);
         verify(specieRepositoryAdapter, times(1)).findById(SPECIE_ID);
         verify(breedRepositoryAdapter, times(0)).findByName(any());
         verify(petRepositoryAdapter, times(0)).save(any());
@@ -380,15 +380,15 @@ public class PetServiceTest {
     @Test
     public void testSave_whenBreedNotFound_throwsIdNotFoundException() {
         // Arrange
-        when(userRepositoryAdapter.findByUsername(USERNAME)).thenReturn(Optional.of(user));
+        when(userRepositoryAdapter.findByEmail(EMAIL)).thenReturn(Optional.of(user));
         when(specieRepositoryAdapter.findById(SPECIE_ID)).thenReturn(Optional.of(specie));
         when(breedRepositoryAdapter.findById(BREED_ID)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(IdNotFoundException.class, () -> petServiceImpl.save(petInDTO, USERNAME));
+        assertThrows(IdNotFoundException.class, () -> petServiceImpl.save(petInDTO, EMAIL));
 
         // Verify
-        verify(userRepositoryAdapter, times(1)).findByUsername(USERNAME);
+        verify(userRepositoryAdapter, times(1)).findByEmail(EMAIL);
         verify(specieRepositoryAdapter, times(1)).findById(SPECIE_ID);
         verify(breedRepositoryAdapter, times(1)).findById(BREED_ID);
         verify(petRepositoryAdapter, times(0)).save(any());

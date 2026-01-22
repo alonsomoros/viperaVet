@@ -24,7 +24,8 @@ public class UserMapper {
         if (dto == null)
             return null;
         return User.builder()
-                .username(dto.getUsername())
+                .name(dto.getName())
+                .surnames(dto.getSurnames())
                 .email(dto.getEmail())
                 .password(dto.getPassword())
                 .phone(dto.getPhone())
@@ -42,8 +43,8 @@ public class UserMapper {
     public UserOutDTO toOutDTO(User entity) {
         if (entity == null)
             return null;
-        return new UserOutDTO(entity.getId(), entity.getUsername(), entity.getEmail(), entity.getUserRole().getRole(),
-                entity.getCreatedAt());
+        return new UserOutDTO(entity.getId(), entity.getName(), entity.getSurnames(), entity.getEmail(),
+                entity.getUserRole().getRole(), entity.getCreatedAt());
     }
 
 }

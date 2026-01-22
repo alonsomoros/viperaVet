@@ -30,22 +30,15 @@ public interface UserJpaRepository extends JpaRepository<User, Long> {
         @EntityGraph(attributePaths = "userRole")
         Optional<User> findByEmail(String email);
 
-        /**
-         * Busca un usuario por su nombre de usuario.
-         * 
-         * @param username Nombre de usuario a buscar
-         * @return Optional que contiene el usuario encontrado o vacío si no existe
-         */
-        @EntityGraph(attributePaths = "userRole")
-        Optional<User> findByUsername(String username);
 
         /**
          * Busca usuarios aplicando múltiples filtros opcionales.
-         * Permite filtrar por ID, nombre de usuario, correo electrónico y rol.
+         * Permite filtrar por ID, nombre, apellidos, correo electrónico y rol.
          * Si un filtro es nulo, no se aplica en la consulta.
          *
          * @param id       ID del usuario (opcional)
-         * @param username Nombre de usuario (opcional)
+         * @param name     Nombre (opcional)
+         * @param surnames Apellidos (opcional)
          * @param email    Correo electrónico (opcional)
          * @param role     Rol del usuario (opcional)
          * @param pageable Información de paginación
@@ -53,12 +46,14 @@ public interface UserJpaRepository extends JpaRepository<User, Long> {
          */
         @Query("SELECT u FROM User u WHERE " +
                         "(:id IS NULL OR u.id = :id) AND " +
-                        "(:username IS NULL OR u.username LIKE %:username%) AND " +
+                        "(:name IS NULL OR u.name LIKE %:name%) AND " +
+                        "(:surnames IS NULL OR u.surnames LIKE %:surnames%) AND " +
                         "(:email IS NULL OR u.email = :email) AND " +
                         "(:role IS NULL OR u.userRole.role = :role)")
         Page<User> findByFilters(
                         @Param("id") Long id,
-                        @Param("username") String username,
+                        @Param("name") String name,
+                        @Param("surnames") String surnames,
                         @Param("email") String email,
                         @Param("role") Role role,
                         Pageable pageable);
@@ -73,26 +68,6 @@ public interface UserJpaRepository extends JpaRepository<User, Long> {
          */
         boolean existsByEmail(String email);
 
-        /**
-         * Comprueba si un nombre de usuario existe físicamente en la BBDD,
-         * ignorando el filtro de soft-delete.
-         * Se usa para validar el registro y evitar violaciones de UNIQUE constraint.
-         *
-         * @param username El nombre de usuario a comprobar.
-         * @return true si el usuario existe (borrado o no), false en caso contrario.
-         */
-        boolean existsByUsername(String username);
-
-        /**
-         * Comprueba si un nombre de usuario existe FÍSICAMENTE en la BBDD,
-         * ignorando el filtro de soft-delete.
-         * Se usa para validar el registro y evitar violaciones de UNIQUE constraint.
-         *
-         * @param username El nombre de usuario a comprobar.
-         * @return Un Optional no vacío si el usuario existe (borrado o no).
-         */
-        @Query(value = "SELECT 1 FROM users WHERE username = :username LIMIT 1", nativeQuery = true)
-        Optional<Object> checkIfUsernameExistsNative(@Param("username") String username);
 
         /**
          * Comprueba si un email existe FÍSICAMENTE en la BBDD,

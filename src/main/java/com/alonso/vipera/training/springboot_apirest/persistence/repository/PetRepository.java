@@ -23,12 +23,12 @@ public interface PetRepository {
     Optional<Pet> findById(Long id);
 
     /**
-     * Busca mascotas por el nombre de su dueño.
+     * Busca mascotas por el email de su dueño.
      * 
-     * @param username Nombre de usuario del dueño.
+     * @param email Email del dueño.
      * @return Lista de mascotas pertenecientes al dueño especificado.
      */
-    List<Pet> findPetsByUserUsername(String username);
+    List<Pet> findPetsByUserEmail(String email);
 
     /**
      * Busca mascotas por su nombre.

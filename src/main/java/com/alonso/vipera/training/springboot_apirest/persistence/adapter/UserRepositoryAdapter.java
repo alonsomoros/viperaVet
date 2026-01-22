@@ -34,10 +34,6 @@ public class UserRepositoryAdapter implements UserRepository {
         return userRepository.findById(id);
     }
 
-    @Override
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
 
     @Override
     public Optional<User> findByEmail(String email) {
@@ -45,8 +41,8 @@ public class UserRepositoryAdapter implements UserRepository {
     }
 
     @Override
-    public Page<User> findByFilters(Long id, String username, String email, Role role, Pageable pageable) {
-        return userRepository.findByFilters(id, username, email, role, pageable);
+    public Page<User> findByFilters(Long id, String name, String surnames, String email, Role role, Pageable pageable) {
+        return userRepository.findByFilters(id, name, surnames, email, role, pageable);
     }
 
     @Override
@@ -59,10 +55,6 @@ public class UserRepositoryAdapter implements UserRepository {
         return userRepository.checkIfEmailExistsNative(email).isPresent();
     }
 
-    @Override
-    public boolean existsByUsername(String username) {
-        return userRepository.checkIfUsernameExistsNative(username).isPresent();
-    }
 
     @Override
     public boolean existsByPhone(String phone) {

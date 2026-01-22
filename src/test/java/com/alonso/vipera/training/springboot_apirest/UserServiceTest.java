@@ -26,7 +26,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.alonso.vipera.training.springboot_apirest.exception.EmailNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.exception.IdNotFoundException;
-import com.alonso.vipera.training.springboot_apirest.exception.UsernameNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.RegisterRequestDTO;
@@ -37,7 +36,8 @@ import com.alonso.vipera.training.springboot_apirest.service.UserServiceImpl;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    private static final String USERNAME = "Juan";
+    private static final String NAME = "Juan";
+    private static final String SURNAMES = "Perez Garcia";
     private static final String EMAIL = "juan@gmail.com";
     private static final String PASSWORD = "password123";
     private static final String ENCODED_PASSWORD = "encodedPassword";
@@ -65,20 +65,23 @@ class UserServiceTest {
         testPageable = PageRequest.of(0, 10);
 
         registerRequestDTO = new RegisterRequestDTO();
-        registerRequestDTO.setUsername(USERNAME);
+        registerRequestDTO.setName(NAME);
+        registerRequestDTO.setSurnames(SURNAMES);
         registerRequestDTO.setEmail(EMAIL);
         registerRequestDTO.setPassword(PASSWORD);
 
         userEntity = new User();
         userEntity.setId(USER_ID);
-        userEntity.setUsername(USERNAME);
+        userEntity.setName(NAME);
+        userEntity.setSurnames(SURNAMES);
         userEntity.setEmail(EMAIL);
         userEntity.setPassword(ENCODED_PASSWORD);
         userEntity.setAddress(ADDRESS);
 
         userOutDTO = new UserOutDTO();
         userOutDTO.setId(USER_ID);
-        userOutDTO.setUsername(USERNAME);
+        userOutDTO.setName(NAME);
+        userOutDTO.setSurnames(SURNAMES);
         userOutDTO.setEmail(EMAIL);
         userOutDTO.setCreatedAt(CREATED_AT);
     }
@@ -86,7 +89,7 @@ class UserServiceTest {
     @Test
     void testGetAllUsers_whenUsersFound_shouldReturnUserPage() {
         List<User> userList = List.of(userEntity);
-        Page<User> userPage = new PageImpl<>(userList, testPageable, userList.size());
+        Page<User> userPage = new PageImpl<>(userList, (org.springframework.data.domain.Pageable) testPageable, userList.size());
 
         // Arrange
         when(userRepositoryAdapter.findAll(testPageable)).thenReturn(userPage);
@@ -130,8 +133,8 @@ class UserServiceTest {
         UserOutDTO user = userServiceImpl.getById(USER_ID);
 
         // Assert
-        assertNotNull(user);
-        assertEquals(USERNAME, user.getUsername());
+        assertEquals(NAME, user.getName());
+        assertEquals(SURNAMES, user.getSurnames());
 
         // Verify
         verify(userRepositoryAdapter, times(1)).findById(USER_ID);
@@ -151,36 +154,6 @@ class UserServiceTest {
         verify(userMapper, times(0)).toOutDTO(userEntity);
     }
 
-    @Test
-    void testGetUserByUsername_whenUserFound_shouldReturnUser() {
-        // Arrange
-        when(userRepositoryAdapter.findByUsername(USERNAME)).thenReturn(Optional.of(userEntity));
-        when(userMapper.toOutDTO(userEntity)).thenReturn(userOutDTO);
-
-        // Act
-        UserOutDTO user = userServiceImpl.getByUsername(USERNAME);
-
-        // Assert
-        assertNotNull(user);
-        assertEquals(USERNAME, user.getUsername());
-
-        // Verify
-        verify(userRepositoryAdapter, times(1)).findByUsername(USERNAME);
-        verify(userMapper, times(1)).toOutDTO(userEntity);
-    }
-
-    @Test
-    void testGetUserByUsername_whenUsernameNotFound_shouldThrowUsernameNotFoundException() {
-        // Arrange
-        when(userRepositoryAdapter.findByUsername(USERNAME)).thenReturn(Optional.empty());
-
-        // Act & Assert
-        assertThrows(UsernameNotFoundException.class, () -> userServiceImpl.getByUsername(USERNAME));
-
-        // Verify
-        verify(userRepositoryAdapter, times(1)).findByUsername(USERNAME);
-        verify(userMapper, times(0)).toOutDTO(userEntity);
-    }
 
     @Test
     void testGetUserByEmail_whenUserFound_shouldReturnUser() {
@@ -216,29 +189,29 @@ class UserServiceTest {
     @Test
     void testLoadUserDetails_whenUserFound_shouldReturnUserDetails() {
         // Arrange
-        when(userRepositoryAdapter.findByUsername(USERNAME)).thenReturn(Optional.of(userEntity));
+        when(userRepositoryAdapter.findByEmail(EMAIL)).thenReturn(Optional.of(userEntity));
 
         // Act
-        UserDetails userDetails = userServiceImpl.loadUserByUsername(USERNAME);
+        UserDetails userDetails = userServiceImpl.loadUserByUsername(EMAIL);
 
         // Assert
         assertNotNull(userDetails);
-        assertEquals(USERNAME, userDetails.getUsername());
+        assertEquals(EMAIL, userDetails.getUsername());
 
         // Verify
-        verify(userRepositoryAdapter, times(1)).findByUsername(USERNAME);
+        verify(userRepositoryAdapter, times(1)).findByEmail(EMAIL);
     }
 
     @Test
-    void testLoadUserDetails_whenUsernameNotFound_shouldThrowUsernameNotFoundException() {
+    void testLoadUserDetails_whenEmailNotFound_shouldThrowEmailNotFoundException() {
         // Arrange
-        when(userRepositoryAdapter.findByUsername(USERNAME)).thenReturn(Optional.empty());
+        when(userRepositoryAdapter.findByEmail(EMAIL)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(UsernameNotFoundException.class, () -> userServiceImpl.loadUserByUsername(USERNAME));
+        assertThrows(EmailNotFoundException.class, () -> userServiceImpl.loadUserByUsername(EMAIL));
 
         // Verify
-        verify(userRepositoryAdapter, times(1)).findByUsername(USERNAME);
+        verify(userRepositoryAdapter, times(1)).findByEmail(EMAIL);
     }
 
     @Test

@@ -19,6 +19,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserUpdateDTO {
 
+    @Schema(description = "Nombre del usuario", example = "Juan")
+    @Size(min = 2, max = 50, message = "El nombre debe tener entre 2 y 50 caracteres")
+    private String name;
+
+    @Schema(description = "Apellidos del usuario", example = "Pérez García")
+    @Size(min = 2, max = 100, message = "Los apellidos deben tener entre 2 y 100 caracteres")
+    private String surnames;
+
     @Schema(description = "Teléfono del usuario", example = "666555444")
     @Pattern(regexp = "^\\+?[0-9 .()\\-]{7,25}$", message = "Invalid phone number")
     private String phone;

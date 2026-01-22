@@ -54,40 +54,41 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserOutDTO getByEmail(String email) {
         log.debug("Buscando usuario por email: {}", email);
         User userSaved = userRepositoryAdapter.findByEmail(email).orElseThrow(() -> new EmailNotFoundException());
-        log.debug("Usuario encontrado: {} (Email: {})", userSaved.getUsername(), userSaved.getEmail());
+        log.debug("Usuario encontrado: {} (Email: {})", userSaved.getEmail(), userSaved.getEmail());
         return userMapper.toOutDTO(userSaved);
     }
 
-    @Override
-    @Cacheable(value = "usersByUsername", key = "#username")
-    public UserOutDTO getByUsername(String username) {
-        log.debug("Buscando usuario por username: {}", username);
-        User userSaved = userRepositoryAdapter.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException());
-        log.debug("Usuario encontrado: {} (ID: {})", userSaved.getUsername(), userSaved.getId());
-        return userMapper.toOutDTO(userSaved);
-    }
 
     @Override
-    public Page<UserOutDTO> getUserByFilters(Long id, String username, String email, Role role, Pageable pageable) {
-        log.debug("Buscando usuarios con filtros - ID: {}, Username: {}, Email: {}, Role: {}", id, username, email,
+    public Page<UserOutDTO> getUserByFilters(Long id, String name, String surnames, String email, Role role, Pageable pageable) {
+        log.debug("Buscando usuarios con filtros - ID: {}, Name: {}, Surnames: {}, Email: {}, Role: {}", id, name, surnames, email,
                 role);
-        Page<User> users = userRepositoryAdapter.findByFilters(id, username, email, role, pageable);
+        Page<User> users = userRepositoryAdapter.findByFilters(id, name, surnames, email, role, pageable);
 
         log.debug("Se han encontrado {} usuarios con los filtros proporcionados.", users.getContent().size());
         return users.map(userMapper::toOutDTO);
     }
 
     @Override
-    public UserOutDTO updateUser(Long userId, UserUpdateDTO userUpdateDTO, String username) {
+    public UserOutDTO updateUser(Long userId, UserUpdateDTO userUpdateDTO, String requesterEmail) {
         log.debug("Actualizando usuario con ID: {}", userId);
         User userSaved = userRepositoryAdapter.findById(userId).orElseThrow(() -> new IdNotFoundException());
-        log.debug("Usuario con ID: {} encontrado. Verificando permisos del usuario: {}", userId, username);
+        log.debug("Usuario con ID: {} encontrado. Verificando permisos del usuario: {}", userId, requesterEmail);
 
-        if (!username.equals(userSaved.getUsername())) {
+        if (!requesterEmail.equals(userSaved.getEmail())) {
             throw new SecurityException("No tienes permiso para actualizar este usuario.");
         }
         log.debug("Permisos verificados. Actualizando información del usuario...");
+
+        if (userUpdateDTO.getName() != null) {
+            userSaved.setName(userUpdateDTO.getName());
+            log.debug("Actualizado nombre a: {}", userUpdateDTO.getName());
+        }
+
+        if (userUpdateDTO.getSurnames() != null) {
+            userSaved.setSurnames(userUpdateDTO.getSurnames());
+            log.debug("Actualizados apellidos a: {}", userUpdateDTO.getSurnames());
+        }
 
         if (userUpdateDTO.getPhone() != null) {
             userSaved.setPhone(userUpdateDTO.getPhone());
@@ -111,7 +112,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @CacheEvict(value = { "usersByUsername", "detailsByUsername" }, allEntries = true)
+    @CacheEvict(value = { "usersByEmail", "detailsByEmail" }, allEntries = true)
     public void delete(Long id) {
         log.debug("Eliminando usuario con ID: {}", id);
         if (!userRepositoryAdapter.existsById(id)) {
@@ -123,10 +124,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @Cacheable(value = "detailsByUsername", key = "#username")
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepositoryAdapter.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException());
+    @Cacheable(value = "detailsByEmail", key = "#email")
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepositoryAdapter.findByEmail(email)
+                .orElseThrow(() -> new EmailNotFoundException());
     }
 
 }

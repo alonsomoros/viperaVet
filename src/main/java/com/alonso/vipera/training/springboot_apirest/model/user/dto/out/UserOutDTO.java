@@ -27,10 +27,16 @@ public class UserOutDTO {
     private Long id;
 
     /**
-     * Nombre de usuario único.
+     * Nombre del usuario.
      */
-    @Schema(description = "Nombre de usuario único.", example = "alonso.dev")
-    private String username;
+    @Schema(description = "Nombre del usuario.", example = "Alonso")
+    private String name;
+
+    /**
+     * Apellidos del usuario.
+     */
+    @Schema(description = "Apellidos del usuario.", example = "Moros")
+    private String surnames;
 
     /**
      * Email del usuario.

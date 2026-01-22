@@ -12,7 +12,6 @@ import com.alonso.vipera.training.springboot_apirest.exception.EmailTakenExcepti
 import com.alonso.vipera.training.springboot_apirest.exception.PhoneTakenException;
 import com.alonso.vipera.training.springboot_apirest.exception.RoleNotFoundException;
 import com.alonso.vipera.training.springboot_apirest.exception.UserCreationException;
-import com.alonso.vipera.training.springboot_apirest.exception.UsernameTakenException;
 import com.alonso.vipera.training.springboot_apirest.exception.WrongRoleActionException;
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
 import com.alonso.vipera.training.springboot_apirest.model.user.Role;
@@ -46,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponseDTO register(RegisterRequestDTO registerRequestDTO) {
-        log.info("Iniciando registro para el usuario: {}", registerRequestDTO.getUsername());
+        log.info("Iniciando registro para el usuario: {} {}", registerRequestDTO.getName(), registerRequestDTO.getSurnames());
 
         log.debug("Verificando inputs para el registro...");
         verifyRegisterInputs(registerRequestDTO);
@@ -66,7 +65,7 @@ public class AuthServiceImpl implements AuthService {
         user = userRepositoryAdapter.save(user);
         verifyRegisterOutputs(user);
 
-        log.info("Usuario {} registrado con éxito. ID: {}", user.getUsername(), user.getId());
+        log.info("Usuario {} registrado con éxito. ID: {}", user.getEmail(), user.getId());
 
         log.debug("Generando token JWT para el usuario ID: {}", user.getId());
         String token = jwtService.generateToken(user);
@@ -77,10 +76,6 @@ public class AuthServiceImpl implements AuthService {
 
     private void verifyRegisterInputs(RegisterRequestDTO registerRequestDTO) {
 
-        if (existsByUsername(registerRequestDTO.getUsername())) {
-            log.warn("El nombre de usuario {} ya está en uso.", registerRequestDTO.getUsername());
-            throw new UsernameTakenException();
-        }
         if (existsByEmail(registerRequestDTO.getEmail())) {
             log.warn("El email {} ya está en uso.", registerRequestDTO.getEmail());
             throw new EmailTakenException();
@@ -172,10 +167,6 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
-    @Override
-    public boolean existsByUsername(String username) {
-        return userRepositoryAdapter.existsByUsername(username);
-    }
 
     @Override
     public boolean existsByEmail(String email) {

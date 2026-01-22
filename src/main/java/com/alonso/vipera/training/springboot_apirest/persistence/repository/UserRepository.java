@@ -29,13 +29,6 @@ public interface UserRepository {
      */
     Optional<User> findById(Long id);
 
-    /**
-     * Busca un usuario por su nombre de usuario.
-     * 
-     * @param username Nombre de usuario a buscar
-     * @return Optional que contiene el usuario encontrado o vacío si no existe
-     */
-    Optional<User> findByUsername(String username);
 
     /**
      * Busca un usuario por su correo electrónico.
@@ -49,13 +42,14 @@ public interface UserRepository {
      * Busca usuarios que coincidan con los filtros proporcionados.
      * 
      * @param id       ID del usuario a buscar (opcional)
-     * @param username Nombre de usuario a buscar (opcional)
+     * @param name     Nombre a buscar (opcional)
+     * @param surnames Apellidos a buscar (opcional)
      * @param email    Correo electrónico a buscar (opcional)
      * @param role     Rol del usuario a buscar (opcional)
      * @param pageable Información de paginación
      * @return Página de usuarios que coinciden con los filtros
      */
-    Page<User> findByFilters(Long id, String username, String email, Role role, Pageable pageable);
+    Page<User> findByFilters(Long id, String name, String surnames, String email, Role role, Pageable pageable);
 
     /**
      * Verifica si existe un usuario con el ID especificado.
@@ -73,13 +67,6 @@ public interface UserRepository {
      */
     boolean existsByEmail(String email);
 
-    /**
-     * Verifica si existe un usuario con el nombre de usuario especificado.
-     * 
-     * @param username Nombre de usuario del usuario a verificar
-     * @return true si existe un usuario con ese nombre de usuario, false en caso contrario
-     */
-    boolean existsByUsername(String username);
 
     /**
      * Verifica si existe un usuario con el teléfono especificado.

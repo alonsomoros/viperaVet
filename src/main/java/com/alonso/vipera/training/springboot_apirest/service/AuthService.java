@@ -39,13 +39,6 @@ public interface AuthService {
      */
     AuthResponseDTO loginWithVet(LoginRequestDTO loginRequestDTO);
 
-    /**
-     * Verifica si existe un propietario de mascotas con el nombre de usuario especificado.
-     *
-     * @param username Nombre de usuario a verificar
-     * @return true si existe un propietario de mascotas con ese username, false en caso contrario
-     */
-    boolean existsByUsername(String username);
 
     /**
      * Verifica si existe un veterinario o propietario de mascotas con el email especificado.
