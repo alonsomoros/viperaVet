@@ -30,3 +30,35 @@ export const searchPets = async (filters = {}) => {
     const data = await response.json();
     return extractData(data);
 };
+
+/**
+{
+    "name": "Obi",
+    "birthDate": "2022-02-23",
+    "specieId": 1,
+    "breedId": 37,
+    "weight": 26,
+    "dietInfo": "Le flipan los filetes"
+}
+ */
+export const registerPet = async (petData, token) => {
+    try {
+        const response = await fetch('/pets', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(petData),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || 'Error al registrar la mascota');
+        }
+
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+};

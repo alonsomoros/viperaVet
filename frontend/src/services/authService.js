@@ -1,5 +1,11 @@
 const API_URL = '/auth';
 
+/*
+{
+    "email": "alon@gmail.com",
+    "password": "password"
+} 
+*/
 export const loginUser = async (email, password, role) => {
     try {
         const endpoint = role === 'user' ? `${API_URL}/login/user` : `${API_URL}/login/vet`;
@@ -25,10 +31,19 @@ export const loginUser = async (email, password, role) => {
         throw error;
     }
 };
-
+/**
+{
+    "name": "Alon",
+    "surnames": "Owner",
+    "email": "alon@gmail.com",
+    "phone": "625375613",
+    "dni": "54191902R",
+    "role": "USER"
+}
+*/
 export const registerUser = async (userData) => {
     try {
-        const response = await fetch(`${API_URL}/register`, {
+        const response = await fetch(`${API_URL}/register/user`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -39,7 +54,6 @@ export const registerUser = async (userData) => {
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
 
-            // Structured error throwing for frontend mapping
             if (response.status === 409) {
                 const msg = errorData.message || 'El usuario o email ya existe';
                 if (msg.toLowerCase().includes('email')) throw { email: 'Este email ya está en uso' };
