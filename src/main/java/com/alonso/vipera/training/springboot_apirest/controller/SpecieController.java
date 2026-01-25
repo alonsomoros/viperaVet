@@ -3,13 +3,13 @@ package com.alonso.vipera.training.springboot_apirest.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alonso.vipera.training.springboot_apirest.model.pet.dto.out.SpecieOutDTO;
-import com.alonso.vipera.training.springboot_apirest.service.SpecieServiceImpl;
+import com.alonso.vipera.training.springboot_apirest.service.SpecieService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SpecieController {
 
-    private final SpecieServiceImpl specieServiceImpl;
+    private final SpecieService specieService;
 
     // GET calls - Obtener todas las especies
 
@@ -46,8 +46,7 @@ public class SpecieController {
             @ApiResponse(responseCode = "401", description = "Token no válido o expirado", content = @Content)
     })
     @GetMapping
-    @PreAuthorize("hasRole('USER') or hasRole('VET')")
     public ResponseEntity<List<SpecieOutDTO>> getAllSpecies() {
-        return ResponseEntity.ok(specieServiceImpl.getAll());
+        return ResponseEntity.ok(specieService.getAll());
     }
 }

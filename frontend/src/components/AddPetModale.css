@@ -124,7 +124,8 @@ label.required::after {
     color: #e74c3c;
 }
 
-.modal-body input {
+.modal-body input,
+.modal-body select {
     width: 100%;
     padding: 10px 12px;
     margin-bottom: 15px;
@@ -132,9 +133,11 @@ label.required::after {
     border-radius: 6px;
     font-size: 0.95rem;
     transition: border-color 0.2s;
+    background-color: white;
 }
 
-.modal-body input:focus {
+.modal-body input:focus,
+.modal-body select:focus {
     border-color: var(--vet-primary-green, #2ecc71);
     outline: none;
     box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.2);

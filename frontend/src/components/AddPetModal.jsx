@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaTimes, FaSpinner, FaSearch } from 'react-icons/fa';
 import { toast } from 'sonner';
 import { useAuth } from '../context/AuthContext';
+import { registerUser } from '../services/authService';
+import { registerPet, getSpecies, getBreedsBySpecies } from '../services/petService';
 import { getUserByEmail } from '../services/userService';
 import './AddPetModale.css';
 
@@ -11,7 +13,8 @@ const AddPetModal = ({ isOpen, onClose }) => {
     // --- STATES ---
     const [currentStep, setCurrentStep] = useState(1);
     const [isCheckingEmail, setIsCheckingEmail] = useState(false);
-    // userExists: null = not checked, true = found, false = not found (new user)
+    const [speciesList, setSpeciesList] = useState([]);
+    const [breedsList, setBreedsList] = useState([]);
     const [userExists, setUserExists] = useState(null);
 
     // --- FORM DATA ---
@@ -21,6 +24,7 @@ const AddPetModal = ({ isOpen, onClose }) => {
         petBirthDate: '',
         petSpecies: '',
         petBreed: '',
+        petWeight: '',
         petAllergies: '',
         petDiet: '',
         // User Data
@@ -29,6 +33,37 @@ const AddPetModal = ({ isOpen, onClose }) => {
         userPhone: '',
         userName: ''
     });
+
+    // CARGA DE ESPECIES
+    useEffect(() => {
+        const loadSpecies = async () => {
+            try {
+                const data = await getSpecies();
+                // Si el backend devuelve { content: [...] }, asegúrate de extraer el array
+                setSpeciesList(Array.isArray(data) ? data : data.content || []);
+            } catch (error) {
+                toast.error("Error al cargar especies");
+            }
+        };
+        if (isOpen) loadSpecies();
+    }, [isOpen]);
+
+    // CARGA DE RAZAS
+    useEffect(() => {
+        const loadBreeds = async () => {
+            if (!formData.petSpecies) {
+                setBreedsList([]);
+                return;
+            }
+            try {
+                const data = await getBreedsBySpecies(formData.petSpecies);
+                setBreedsList(Array.isArray(data) ? data : data.content || []);
+            } catch (error) {
+                console.error("Error cargando razas", error);
+            }
+        };
+        loadBreeds();
+    }, [formData.petSpecies]);
 
     // --- HANDLERS ---
 
@@ -44,6 +79,17 @@ const AddPetModal = ({ isOpen, onClose }) => {
         if (name === 'userEmail') {
             setUserExists(null);
         }
+
+        // Reset breed if species changes
+        if (name === 'petSpecies') {
+            setFormData(prev => ({
+                ...prev,
+                petSpecies: value,
+                petBreed: '' // Reset selection
+            }));
+            return;
+        }
+
         setFormData({ ...formData, [name]: value });
     };
 
@@ -57,7 +103,7 @@ const AddPetModal = ({ isOpen, onClose }) => {
         try {
             const token = user?.token; // Get token from auth context
             console.log("Token sending:", token); // Debug info
-            
+
             const response = await getUserByEmail(formData.userEmail, token);
             const exists = response?.content?.length > 0;
             setUserExists(exists);
@@ -115,7 +161,7 @@ const AddPetModal = ({ isOpen, onClose }) => {
             // If user exists, we can submit directly
             if (userExists === true) {
                 submitFinalData();
-            } 
+            }
             // If user likely new, validate their details then submit
             else if (userExists === false) {
                 if (validateNewUser()) {
@@ -125,10 +171,42 @@ const AddPetModal = ({ isOpen, onClose }) => {
         }
     };
 
-    const submitFinalData = () => {
+    const submitFinalData = async () => {
         console.log("Enviando datos finales:", formData);
-        toast.success("Mascota registrada correctamente");
-        handleClose();
+        const token = user?.token;
+        const petData = {
+            name: formData.petName,
+            birthDate: formData.petBirthDate,
+            specieId: formData.petSpecies ? Number(formData.petSpecies) : null,
+            breedId: formData.petBreed ? Number(formData.petBreed) : null,
+            weight: formData.petWeight ? Number(formData.petWeight) : 0,
+            dietInfo: formData.petDiet,
+            email: formData.userEmail // Enviar el correo del dueño
+        };
+        try {
+            // si userExists es true, POST a /pets
+            if (userExists) {
+                await registerPet(petData, token);
+            } 
+            // si userExists es false, POST a /users y luego POST a /pets
+            else {
+                const userData = {
+                    name: formData.userName,
+                    surnames: "Owner",
+                    email: formData.userEmail,
+                    phone: formData.userPhone,
+                    dni: formData.userDni,
+                    role: "USER"
+                };
+                await registerUser(userData);
+                await registerPet(petData, token);
+            }
+            toast.success("Mascota registrada correctamente");
+            handleClose();
+        } catch (error) {
+            console.error("Error en el registro:", error);
+            toast.error(error.message || "Error al completar el registro");
+        }
     };
 
     const handleClose = () => {
@@ -141,7 +219,7 @@ const AddPetModal = ({ isOpen, onClose }) => {
         setUserExists(null);
         setIsCheckingEmail(false);
         setFormData({
-            petName: '', petBirthDate: '', petSpecies: '', petBreed: '', petAllergies: '', petDiet: '',
+            petName: '', petBirthDate: '', petSpecies: '', petBreed: '', petWeight: '', petAllergies: '', petDiet: '',
             userEmail: '', userDni: '', userPhone: '', userName: ''
         });
     };
@@ -199,21 +277,43 @@ const AddPetModal = ({ isOpen, onClose }) => {
                             </div>
                             <div className='modal-pet-form-grid-item'>
                                 <label className='required' htmlFor="petSpecies">Especie</label>
-                                <input
-                                    type="text"
+                                <select
                                     name="petSpecies"
-                                    placeholder="Perro, Gato..."
                                     value={formData.petSpecies}
                                     onChange={handleChange}
-                                />
+                                >
+                                    <option value="">Seleccionar especie...</option>
+                                    {speciesList.map(specie => (
+                                        <option key={specie.id} value={specie.id}>
+                                            {specie.name}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <div className='modal-pet-form-grid-item'>
                                 <label className='required' htmlFor="petBreed">Raza</label>
-                                <input
-                                    type="text"
+                                <select
                                     name="petBreed"
-                                    placeholder="Raza"
                                     value={formData.petBreed}
+                                    onChange={handleChange}
+                                    disabled={!formData.petSpecies}
+                                >
+                                    <option value="">Seleccionar raza...</option>
+                                    {breedsList.map(breed => (
+                                        <option key={breed.id} value={breed.id}>
+                                            {breed.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className='modal-pet-form-grid-item'>
+                                <label htmlFor="petWeight">Peso (kg)</label>
+                                <input
+                                    type="number"
+                                    name="petWeight"
+                                    step="0.1"
+                                    placeholder="0.0"
+                                    value={formData.petWeight}
                                     onChange={handleChange}
                                 />
                             </div>
@@ -252,12 +352,12 @@ const AddPetModal = ({ isOpen, onClose }) => {
                                     value={formData.userEmail}
                                     onChange={handleChange}
                                 />
-                                <button 
-                                    className="btn-verify" 
-                                    onClick={checkUserExists} 
+                                <button
+                                    className="btn-verify"
+                                    onClick={checkUserExists}
                                     disabled={isCheckingEmail || !formData.userEmail}
                                 >
-                                    {isCheckingEmail ? <FaSpinner className="spinner" /> : <FaSearch />} 
+                                    {isCheckingEmail ? <FaSpinner className="spinner" /> : <FaSearch />}
                                     {isCheckingEmail ? 'Verificando...' : 'Verificar'}
                                 </button>
                             </div>
@@ -275,7 +375,7 @@ const AddPetModal = ({ isOpen, onClose }) => {
                                     <div className="user-status-alert alert-info">
                                         <strong>Nuevo Propietario.</strong> El usuario no existe. Por favor, completa sus datos básicos. Se le enviará un correo para terminar el registro.
                                     </div>
-                                    
+
                                     <label className="required">Nombre Completo</label>
                                     <input
                                         type="text"
@@ -321,7 +421,7 @@ const AddPetModal = ({ isOpen, onClose }) => {
                         style={{ visibility: currentStep === 1 ? 'hidden' : 'visible' }}
                     >
                         Atrás
-                    </button>   
+                    </button>
                     <button
                         className="btn-next"
                         onClick={handleNextStep}

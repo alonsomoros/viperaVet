@@ -38,7 +38,8 @@ export const searchPets = async (filters = {}) => {
     "specieId": 1,
     "breedId": 37,
     "weight": 26,
-    "dietInfo": "Le flipan los filetes"
+    "dietInfo": "Le flipan los filetes",
+    "email": "alonso@gmail.com"
 }
  */
 export const registerPet = async (petData, token) => {

@@ -73,7 +73,13 @@ public interface PetService {
      */
     List<PetOutDTO> getBySpecieName(String specie);
 
-    PetOutDTO save(PetInDTO petInDTO, String email);
+    /**
+     * Guarda una nueva mascota.
+     *
+     * @param petInDTO Datos de la mascota a guardar
+     * @return La mascota guardada
+     */
+    PetOutDTO save(PetInDTO petInDTO);
 
     /**
      * Elimina una mascota por su ID.

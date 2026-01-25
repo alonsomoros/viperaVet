@@ -3,8 +3,10 @@ package com.alonso.vipera.training.springboot_apirest.model.pet.dto.in;
 import java.sql.Date;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -24,21 +26,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PetInDTO {
 
-    @Schema(description = "Nombre de la mascota. Debe tener entre 2 y 50 caracteres.", example = "Max", required = true)
+    @Schema(description = "Nombre de la mascota. Debe tener entre 2 y 50 caracteres.", example = "Max", requiredMode = RequiredMode.REQUIRED)
     @NotBlank
     @Size(min = 2, max = 50)
     private String name;
 
-    @Schema(description = "Fecha de nacimiento de la mascota.", example = "2020-05-15", required = true)
+    @Schema(description = "Fecha de nacimiento de la mascota.", example = "2020-05-15", requiredMode = RequiredMode.REQUIRED)
     @NotNull
     private Date birthDate;
 
-    @Schema(description = "ID de la especie de la mascota.", example = "1 (Perro)", required = true)
+    @Schema(description = "ID de la especie de la mascota.", example = "1 (Perro)", requiredMode = RequiredMode.REQUIRED)
     @NotNull
     @Positive
     private Long specieId;
 
-    @Schema(description = "ID de la raza de la mascota.", example = "1", required = true)
+    @Schema(description = "ID de la raza de la mascota.", example = "1", requiredMode = RequiredMode.REQUIRED)
     @NotNull
     @Positive
     private Long breedId;
@@ -51,4 +53,9 @@ public class PetInDTO {
     @Schema(description = "Información sobre la dieta especial de la mascota.", example = "Comida sin gluten, 3 veces al día")
     @Size(max = 500)
     private String dietInfo;
+
+    @Schema(description = "Email del usuario propietario de la mascota.", example = "alonso@gmail.com", requiredMode = RequiredMode.REQUIRED)
+    @NotNull
+    @Email(message = "Email inválido")
+    private String email;
 }

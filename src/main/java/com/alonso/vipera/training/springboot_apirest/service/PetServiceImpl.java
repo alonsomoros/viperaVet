@@ -112,12 +112,12 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public PetOutDTO save(PetInDTO petInDTO, String email) {
-        log.info("Guardando nueva mascota para el usuario: {}", email);
+    public PetOutDTO save(PetInDTO petInDTO) {
+        log.info("Guardando nueva mascota para el usuario: {}", petInDTO.getEmail());
 
-        log.debug("Buscando usuario dueño: {}", email);
-        User user = userRepositoryAdapter.findByEmail(email).orElseThrow(() -> new EmailNotFoundException());
-        log.debug("Usuario con email {} encontrado. ID: {}", email, user.getId());
+        log.debug("Buscando usuario dueño: {}", petInDTO.getEmail());
+        User user = userRepositoryAdapter.findByEmail(petInDTO.getEmail()).orElseThrow(() -> new EmailNotFoundException());
+        log.debug("Usuario con email {} encontrado. ID: {}", petInDTO.getEmail(), user.getId());
 
         log.debug("Buscando especie: {}", petInDTO.getSpecieId());
         Specie specie = specieRepositoryAdapter.findById(petInDTO.getSpecieId())

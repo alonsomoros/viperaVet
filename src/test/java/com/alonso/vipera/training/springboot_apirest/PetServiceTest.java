@@ -97,7 +97,7 @@ public class PetServiceTest {
         breed.setSpecie(specie);
         breed.setExternalApiId("50");
 
-        petInDTO = new PetInDTO(PET_NAME, BIRTH_DATE, SPECIE_ID, BREED_ID, WEIGHT, DIET_INFO);
+        petInDTO = new PetInDTO(PET_NAME, BIRTH_DATE, SPECIE_ID, BREED_ID, WEIGHT, DIET_INFO, EMAIL);
 
         pet = new Pet();
         pet.setId(PET_ID);
@@ -333,7 +333,7 @@ public class PetServiceTest {
         when(petMapper.toOutDTO(pet)).thenReturn(petOutDTO);
 
         // Act
-        PetOutDTO result = petServiceImpl.save(petInDTO, EMAIL);
+        PetOutDTO result = petServiceImpl.save(petInDTO);
 
         // Assert
         assertNotNull(result);
@@ -352,7 +352,7 @@ public class PetServiceTest {
         when(userRepositoryAdapter.findByEmail(EMAIL)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(EmailNotFoundException.class, () -> petServiceImpl.save(petInDTO, EMAIL));
+        assertThrows(EmailNotFoundException.class, () -> petServiceImpl.save(petInDTO));
 
         // Verify
         verify(userRepositoryAdapter, times(1)).findByEmail(EMAIL);
@@ -368,7 +368,7 @@ public class PetServiceTest {
         when(specieRepositoryAdapter.findById(SPECIE_ID)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(IdNotFoundException.class, () -> petServiceImpl.save(petInDTO, EMAIL));
+        assertThrows(IdNotFoundException.class, () -> petServiceImpl.save(petInDTO));
 
         // Verify
         verify(userRepositoryAdapter, times(1)).findByEmail(EMAIL);
@@ -385,7 +385,7 @@ public class PetServiceTest {
         when(breedRepositoryAdapter.findById(BREED_ID)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(IdNotFoundException.class, () -> petServiceImpl.save(petInDTO, EMAIL));
+        assertThrows(IdNotFoundException.class, () -> petServiceImpl.save(petInDTO));
 
         // Verify
         verify(userRepositoryAdapter, times(1)).findByEmail(EMAIL);

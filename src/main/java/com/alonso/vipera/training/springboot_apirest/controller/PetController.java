@@ -114,10 +114,8 @@ public class PetController {
     })
     @PreAuthorize("hasRole('VET')")
     @PostMapping
-    public ResponseEntity<PetOutDTO> registerPet(@AuthenticationPrincipal UserDetails userDetails,
-            @Valid @RequestBody PetInDTO petInDTO) {
-        String email = userDetails.getUsername();
-        return ResponseEntity.status(HttpStatus.OK).body(petService.save(petInDTO, email));
+    public ResponseEntity<PetOutDTO> registerPet(@Valid @RequestBody PetInDTO petInDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(petService.save(petInDTO));
     }
 
     // DELETE calls
