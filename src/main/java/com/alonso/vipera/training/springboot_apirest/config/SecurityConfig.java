@@ -47,8 +47,6 @@ public class SecurityConfig {
                                                 .authenticationEntryPoint(customAuthenticationEntryPoint)
                                                 .accessDeniedHandler(customAccessDeniedHandler))
                                 .authorizeHttpRequests(auth -> auth
-                                                .requestMatchers("/users/**")
-                                                        .hasAnyRole("VET", "ADMIN")
                                                 .requestMatchers("/auth/**",
                                                                 "/swagger-ui.html",
                                                                 "/swagger-ui/**",
@@ -65,9 +63,9 @@ public class SecurityConfig {
                                                                 "/breeds/**",
                                                                 "/species/**",
                                                                 "/prueba/**")
-                                                .permitAll() // Endpoints de autenticación son públicos
+                                                .permitAll()
                                                 .requestMatchers("/users/**").hasAnyRole("USER", "VET", "ADMIN")
-                                                .anyRequest().authenticated() // Todos los demás requieren autenticación
+                                                .anyRequest().authenticated()
                                 )
                                 .sessionManagement(session -> session
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

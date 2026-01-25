@@ -67,12 +67,6 @@ const AddPetModal = ({ isOpen, onClose }) => {
 
     // --- HANDLERS ---
 
-    const handleOverlayClick = (e) => {
-        if (e.target.className === 'modal-overlay') {
-            handleClose();
-        }
-    };
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         // Reset verification if email changes
@@ -198,7 +192,7 @@ const AddPetModal = ({ isOpen, onClose }) => {
                     dni: formData.userDni,
                     role: "USER"
                 };
-                await registerUser(userData);
+                await registerUser(userData, token);
                 await registerPet(petData, token);
             }
             toast.success("Mascota registrada correctamente");
@@ -227,7 +221,7 @@ const AddPetModal = ({ isOpen, onClose }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="modal-overlay" onClick={handleOverlayClick}>
+        <div className="modal-overlay">
             <div className="modal-container">
                 {/* Header */}
                 <div className="modal-header">

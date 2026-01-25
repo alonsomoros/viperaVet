@@ -41,13 +41,16 @@ export const loginUser = async (email, password, role) => {
     "role": "USER"
 }
 */
-export const registerUser = async (userData) => {
+export const registerUser = async (userData, token) => {
     try {
+        const headers = {
+            'Content-Type': 'application/json',
+        };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+
         const response = await fetch(`${API_URL}/register/user`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: headers,
             body: JSON.stringify(userData),
         });
 
