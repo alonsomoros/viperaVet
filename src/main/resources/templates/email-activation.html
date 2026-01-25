@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Activación de Cuenta - ViperaVet</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            background-color: #ffffff;
+            margin: 0 auto;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #2c3e50;
+            font-size: 24px;
+        }
+        .content {
+            color: #5d6d7e;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .button {
+            background-color: #27ae60;
+            color: white !important;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 12px;
+            color: #bdc3c7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>¡Bienvenido a ViperaVet!</h1>
+        </div>
+        <div class="content">
+            <p>Hola,</p>
+            <p>Gracias por registrarte en nuestra plataforma. Para activar tu cuenta y empezar a gestionar tus mascotas, por favor haz clic en el siguiente botón:</p>
+        </div>
+        <div class="button-container">
+            <a th:href="@{http://localhost:5173/activate(token=${token})}" class="button">Activar mi cuenta</a>
+        </div>
+        <div class="content">
+            <p>Si el botón no funciona, puedes copiar y pegar este enlace en tu navegador:</p>
+            <p th:text="'http://localhost:5173/activate?token=' + ${token}"></p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2026 ViperaVet. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</body>
+</html>
