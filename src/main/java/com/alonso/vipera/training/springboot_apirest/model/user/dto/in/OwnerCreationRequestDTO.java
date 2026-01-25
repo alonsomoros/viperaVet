@@ -36,7 +36,7 @@ public class OwnerCreationRequestDTO {
     @Email(message = "Email inválido")
     private String email;
 
-    @Schema(description = "Contraseña. Debe tener al menos 6 caracteres.", example = "P4ssw0rd!", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Teléfono del usuario.", example = "600112233", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "Teléfono necesario")
     @Pattern(regexp = "^\\+?[0-9 .()\\-]{7,25}$", message = "Invalid phone number")
     private String phone;

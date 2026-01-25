@@ -1,6 +1,7 @@
 package com.alonso.vipera.training.springboot_apirest.service;
 
 import com.alonso.vipera.training.springboot_apirest.exception.BadCredentialsInputException;
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.ActivateAccountRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.LoginRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.OwnerCreationRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.VetRegisterRequestDTO;
@@ -32,6 +33,14 @@ public interface AuthService {
      * @throws IllegalArgumentException Si el username o email ya existen en el sistema
      */
     UserOutDTO ownerCreation(OwnerCreationRequestDTO registerRequestDTO);
+
+    /**
+     * Activa la cuenta de un usuario mediante un token y establece su contraseña.
+     *
+     * @param request DTO con el token y la nueva contraseña
+     * @return Datos del usuario activado
+     */
+    UserOutDTO activateAccount(ActivateAccountRequestDTO request);
 
     /**
      * Autentica un propietario de mascotas existente en el sistema.

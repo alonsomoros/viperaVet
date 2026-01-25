@@ -208,6 +208,45 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Maneja excepciones cuando un token ha expirado.
+     */
+    @ExceptionHandler({ TokenExpiredException.class })
+    public ResponseEntity<ErrorResponse> handleTokenExpiredException(TokenExpiredException exception) {
+        log.warn("Token expirado: {}", exception.getMessage());
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                exception.getMessage(),
+                System.currentTimeMillis());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Maneja excepciones cuando un token no existe.
+     */
+    @ExceptionHandler({ TokenNotFoundException.class })
+    public ResponseEntity<ErrorResponse> handleTokenNotFoundException(TokenNotFoundException exception) {
+        log.warn("Token no encontrado: {}", exception.getMessage());
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                exception.getMessage(),
+                System.currentTimeMillis());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Maneja excepciones cuando las contraseñas no coinciden.
+     */
+    @ExceptionHandler({ PasswordsDoNotMatchException.class })
+    public ResponseEntity<ErrorResponse> handlePasswordsDoNotMatchException(PasswordsDoNotMatchException exception) {
+        log.warn("Contraseñas no coinciden: {}", exception.getMessage());
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                exception.getMessage(),
+                System.currentTimeMillis());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
      * Maneja excepciones de runtime no capturadas por otros handlers específicos.
      * 
      * Este handler actúa como un "catch-all" para errores inesperados que no tienen

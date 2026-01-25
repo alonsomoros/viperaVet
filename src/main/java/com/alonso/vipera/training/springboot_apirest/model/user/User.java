@@ -90,8 +90,14 @@ public class User extends BaseEntity implements UserDetails {
     @JoinColumn(name = "role_id", nullable = false)
     private UserRole userRole;
 
-    // OneToMany (User 1 -> N Pets)
+    /**
+     * Indica si el usuario está habilitado (activado por email).
+     */
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean enabled = false;
 
+    // OneToMany (User 1 -> N Pets)
     /**
      * Lista de mascotas asociadas al usuario.
      */
@@ -100,7 +106,6 @@ public class User extends BaseEntity implements UserDetails {
     private List<Pet> pets = new ArrayList<>();
 
     // UserDetails methods
-
     /**
      * Obtiene las autoridades/granted authorities del usuario.
      */
@@ -114,4 +119,23 @@ public class User extends BaseEntity implements UserDetails {
         return this.email;
     }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
 }

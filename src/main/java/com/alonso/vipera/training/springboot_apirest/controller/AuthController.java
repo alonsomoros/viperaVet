@@ -1,10 +1,14 @@
 package com.alonso.vipera.training.springboot_apirest.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.ActivateAccountRequestDTO;
 
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.LoginRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.OwnerCreationRequestDTO;
@@ -69,6 +73,7 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Formato de email inválido.", content = @Content),
             @ApiResponse(responseCode = "409", description = "'X' parámetro está ya está en uso", content = @Content)
     })
+    @PreAuthorize("hasRole('VET') or hasRole('ADMIN')")
     @PostMapping("/register/user")
     public ResponseEntity<UserOutDTO> registerUser(@Valid @RequestBody OwnerCreationRequestDTO ownerCreationRequest) {
         log.info("Iniciando proceso de registro para el usuario: {}", ownerCreationRequest.getEmail());
@@ -110,5 +115,24 @@ public class AuthController {
         log.info("Iniciando proceso de login para el dueño con email: {}", loginRequestDto.getEmail());
         AuthResponseDTO authResponseDto = authService.loginWithUser(loginRequestDto);
         return ResponseEntity.ok(authResponseDto);
+    }
+
+    /**
+     * Endpoint para activar una cuenta de usuario.
+     *
+     * @param request DTO con el token y la nueva contraseña.
+     * @return ResponseEntity con los detalles del usuario activado.
+     */
+    @Operation(summary = "Activación de Cuenta", description = "Permite a un usuario activar su cuenta estableciendo una contraseña.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cuenta activada con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserOutDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Token expirado o contraseñas no coinciden", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Token no encontrado", content = @Content)
+    })
+    @PostMapping("/activate")
+    public ResponseEntity<UserOutDTO> activateAccount(@Valid @RequestBody ActivateAccountRequestDTO request) {
+        log.info("Iniciando proceso de activación de cuenta.");
+        UserOutDTO userOutDto = authService.activateAccount(request);
+        return ResponseEntity.ok(userOutDto);
     }
 }

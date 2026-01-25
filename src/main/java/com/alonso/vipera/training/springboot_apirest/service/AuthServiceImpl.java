@@ -16,6 +16,8 @@ import com.alonso.vipera.training.springboot_apirest.exception.WrongRoleActionEx
 import com.alonso.vipera.training.springboot_apirest.mapper.UserMapper;
 import com.alonso.vipera.training.springboot_apirest.model.user.Role;
 import com.alonso.vipera.training.springboot_apirest.model.user.User;
+import com.alonso.vipera.training.springboot_apirest.model.user.UserRole;
+import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.ActivateAccountRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.LoginRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.OwnerCreationRequestDTO;
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.VetRegisterRequestDTO;
@@ -23,7 +25,14 @@ import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.AuthResp
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.out.UserOutDTO;
 import com.alonso.vipera.training.springboot_apirest.persistence.adapter.UserRepositoryAdapter;
 import com.alonso.vipera.training.springboot_apirest.persistence.jpa.UserRoleJpaRepository;
-import com.alonso.vipera.training.springboot_apirest.model.user.UserRole;
+import com.alonso.vipera.training.springboot_apirest.persistence.repository.ConfirmationTokenRepository;
+import com.alonso.vipera.training.springboot_apirest.model.user.ConfirmationToken;
+import com.alonso.vipera.training.springboot_apirest.exception.TokenNotFoundException;
+import com.alonso.vipera.training.springboot_apirest.exception.TokenExpiredException;
+import com.alonso.vipera.training.springboot_apirest.exception.PasswordsDoNotMatchException;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +53,8 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final UserRoleJpaRepository userRoleJpaRepository;
+    private final ConfirmationTokenRepository confirmationTokenRepository;
+    private final EmailService emailService;
 
     @Override
     public AuthResponseDTO registerVet(VetRegisterRequestDTO registerRequestDTO) {
@@ -63,6 +74,7 @@ public class AuthServiceImpl implements AuthService {
         UserRole userRole = userRoleJpaRepository.findByRole(registerRequestDTO.getRole())
             .orElseThrow(() -> new RoleNotFoundException());
         user.setUserRole(userRole);
+        user.setEnabled(true);
 
         user = userRepositoryAdapter.save(user);
         verifyRegisterOutputs(user);
@@ -78,24 +90,73 @@ public class AuthServiceImpl implements AuthService {
     
     @Override
     public UserOutDTO ownerCreation(OwnerCreationRequestDTO ownerCreationRequest) {
-        log.info("Iniciando registro para el propietario: {} {}", ownerCreationRequest.getName(), ownerCreationRequest.getSurnames());
+        log.info("Iniciando creación de propietario (Shadow User): {} {}", ownerCreationRequest.getName(), ownerCreationRequest.getSurnames());
 
-        log.debug("Verificando inputs para el registro...");
         verifyRegisterInputs(ownerCreationRequest);
-        log.debug("Inputs verificados con éxito.");
 
-        log.debug("Guardando el propietario en la base de datos...");
         User user = userMapper.toEntity(ownerCreationRequest);
         
         // Fetch persistent role
         UserRole userRole = userRoleJpaRepository.findByRole(ownerCreationRequest.getRole())
             .orElseThrow(() -> new RoleNotFoundException());
         user.setUserRole(userRole);
+        
+        // Shadow User logic: starting as disabled
+        user.setEnabled(false);
+        // Password will be set during activation, setting a random UUID as initial password placeholder
+        user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
 
         user = userRepositoryAdapter.save(user);
         verifyRegisterOutputs(user);
 
-        log.info("Propietario {} registrado con éxito. ID: {}", user.getEmail(), user.getId());
+        // Generate activation token
+        String token = UUID.randomUUID().toString();
+        ConfirmationToken confirmationToken = ConfirmationToken.builder()
+                .token(token)
+                .createdAt(LocalDateTime.now())
+                .expiresAt(LocalDateTime.now().plusHours(24))
+                .user(user)
+                .build();
+        
+        confirmationTokenRepository.save(confirmationToken);
+
+        // Send activation email
+        emailService.sendActivationEmail(user.getEmail(), token);
+
+        log.info("Propietario {} creado con éxito en modo inactivo. ID: {}", user.getEmail(), user.getId());
+
+        return userMapper.toOutDTO(user);
+    }
+
+    @Override
+    public UserOutDTO activateAccount(ActivateAccountRequestDTO request) {
+        log.info("Intentando activar cuenta con token...");
+
+        ConfirmationToken confirmationToken = confirmationTokenRepository.findByToken(request.token())
+                .orElseThrow(() -> new TokenNotFoundException());
+
+        if (confirmationToken.getConfirmedAt() != null) {
+            throw new IllegalStateException("Esta cuenta ya ha sido activada");
+        }
+
+        if (confirmationToken.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new TokenExpiredException();
+        }
+
+        if (!request.newPassword().equals(request.confirmPassword())) {
+            throw new PasswordsDoNotMatchException();
+        }
+
+        User user = confirmationToken.getUser();
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
+        user.setEnabled(true);
+
+        userRepositoryAdapter.save(user);
+
+        confirmationToken.setConfirmedAt(LocalDateTime.now());
+        confirmationTokenRepository.save(confirmationToken);
+
+        log.info("Cuenta del usuario {} activada con éxito.", user.getEmail());
 
         return userMapper.toOutDTO(user);
     }
