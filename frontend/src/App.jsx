@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import Home from './pages/Home';
 import Layout from './components/Layout';
 import SearchPets from './pages/SearchPets';
+import ActivateAccount from './pages/ActivateAccount';
 import './App.css'; // Default styles or empty
 
 const ProtectedRoute = ({ children }) => {
@@ -43,6 +44,7 @@ function App() {
                     <Route path="/search" element={<SearchPets />} />
                 </Route>
 
+                <Route path="/activate" element={<ActivateAccount />} />
                 <Route path="/" element={<RootRedirect />} />
             </Routes>
         </Router>

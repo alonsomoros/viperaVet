@@ -270,6 +270,26 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
+    public void verifyToken(String token) {
+        log.info("Verificando token de activación...");
+
+        ConfirmationToken confirmationToken = confirmationTokenRepository.findByToken(token)
+                .orElseThrow(() -> new TokenNotFoundException());
+
+        if (confirmationToken.getConfirmedAt() != null) {
+            log.warn("El token ya fue confirmado.");
+            throw new IllegalStateException("Esta cuenta ya ha sido activada");
+        }
+
+        if (confirmationToken.getExpiresAt().isBefore(LocalDateTime.now())) {
+            log.warn("El token ha expirado.");
+            throw new TokenExpiredException();
+        }
+
+        log.info("Token válido.");
+    }
+
+    @Override
     public boolean existsByEmail(String email) {
         return userRepositoryAdapter.existsByEmail(email);
     }

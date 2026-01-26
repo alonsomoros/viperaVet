@@ -77,4 +77,12 @@ public interface AuthService {
      */
     boolean existsByPhone(String phone);
 
+    /**
+     * Verifica si un token de confirmación es válido.
+     *
+     * @param token Token de confirmación a verificar
+     * @throws IllegalArgumentException Si el token no es válido o ha expirado
+     */
+    void verifyToken(String token);
+
 }

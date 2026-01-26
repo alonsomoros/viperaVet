@@ -77,3 +77,39 @@ export const registerUser = async (userData, token) => {
         throw error;
     }
 };
+
+export const verifyToken = async (token) => {
+    try {
+        const response = await fetch(`${API_URL}/verify?token=${token}`, {
+            method: 'GET',
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || 'Token no válido o expirado');
+        }
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const activateAccount = async (activationData) => {
+    try {
+        const response = await fetch(`${API_URL}/activate`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(activationData),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || 'Error al activar la cuenta');
+        }
+
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+};

@@ -3,9 +3,11 @@ package com.alonso.vipera.training.springboot_apirest.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alonso.vipera.training.springboot_apirest.model.user.dto.in.ActivateAccountRequestDTO;
@@ -134,5 +136,19 @@ public class AuthController {
         log.info("Iniciando proceso de activación de cuenta.");
         UserOutDTO userOutDto = authService.activateAccount(request);
         return ResponseEntity.ok(userOutDto);
+    }
+
+    @Operation(summary = "Verificación de Token", description = "Verifica si un token de activación es válido y no ha expirado.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Token válido"),
+            @ApiResponse(responseCode = "400", description = "Token expirado"),
+            @ApiResponse(responseCode = "404", description = "Token no encontrado"),
+            @ApiResponse(responseCode = "409", description = "Token ya utilizado")
+    })
+    @GetMapping("/verify")
+    public ResponseEntity<Void> verifyToken(@RequestParam String token) {
+        log.info("Iniciando proceso de verificación de token.");
+        authService.verifyToken(token);
+        return ResponseEntity.ok().build();
     }
 }
