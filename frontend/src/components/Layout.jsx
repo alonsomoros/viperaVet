@@ -10,7 +10,7 @@ const Layout = () => {
         <div className="app-layout">
             <header className="app-header">
                 <div className="logo-container" onClick={() => navigate('/home')}>
-                    <img src={logo} alt="VetPet Logo" className="logo-image" />
+                    <img src={logo} alt="ViperaVet Logo" className="logo-image" />
                     <span className="brand-name">ViperaVet</span>
                 </div>
                 <nav className="nav-menu">
